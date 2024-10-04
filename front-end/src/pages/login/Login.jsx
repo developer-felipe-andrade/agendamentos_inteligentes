@@ -12,6 +12,7 @@ const Login = () => {
 
   const handleLogin = () => {
     window.alert(`email: ${email} / senha: ${password}`);
+    navigate('/inicio');
   };
 
   const handleForgotPassword = () => {
