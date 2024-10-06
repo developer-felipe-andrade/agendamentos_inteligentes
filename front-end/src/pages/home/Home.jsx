@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, CssBaseline } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, CssBaseline } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import BugReport from '@mui/icons-material/BugReport';
-import TestPage from '../testPage/TestPage';
-import TestPage2 from '../testPage2/TestPage2';
+import Calendar from '../calendar/Calendar';
+import { CalendarMonth, Inventory2, Person, Class } from '@mui/icons-material';
+import Users from '../users/Users';
+import Inventory from '../inventory/Inventory';
+import Room from '../rooms/Room';
 
 const drawerWidth = 240;
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);
   const [selectedComponent, setSelectedComponent] = useState('Inbox');
-  
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -22,20 +24,22 @@ export default function Home() {
 
   const renderComponent = () => {
     switch (selectedComponent) {
-      case 'Teste':
-        return <TestPage />;
-      case 'Teste2':
-        return <TestPage2 />;
+      case 'agenda':
+        return <Calendar />;
+      case 'users':
+        return <Users />;
+      case 'inventory':
+        return <Inventory />;
+      case 'room':
+        return <Room />;
       default:
         return <h2>Home Component</h2>;
     }
   };
 
   return (
-    <div style={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden'}}>
       <CssBaseline />
-      
-      {/* AppBar */}
       <AppBar position="fixed">
         <Toolbar>
           <IconButton
@@ -53,7 +57,6 @@ export default function Home() {
         </Toolbar>
       </AppBar>
 
-      {/* Drawer */}
       <Drawer
         variant="temporary"
         open={open}
@@ -67,29 +70,46 @@ export default function Home() {
           },
         }}
       >
-        <Toolbar />
-        <List>
-          <ListItem button onClick={() => handleMenuClick('Teste')}>
+        <List className="cursor-pointer">
+          <ListItem onClick={() => handleMenuClick('agenda')}>
             <ListItemIcon>
-              <BugReport />
+              <CalendarMonth />
             </ListItemIcon>
-            <ListItemText primary="Teste" />
+            <ListItemText primary="Agenda" />
           </ListItem>
-          <ListItem button onClick={() => handleMenuClick('Teste2')}>
+          <ListItem onClick={() => handleMenuClick('users')}>
             <ListItemIcon>
-              <BugReport />
+              <Person />
             </ListItemIcon>
-            <ListItemText primary="Teste 2" />
+            <ListItemText primary="Usuários" />
+          </ListItem>
+          <ListItem onClick={() => handleMenuClick('inventory')}>
+            <ListItemIcon>
+              <Inventory2 />
+            </ListItemIcon>
+            <ListItemText primary="Recursos" />
+          </ListItem>
+          <ListItem onClick={() => handleMenuClick('room')}>
+            <ListItemIcon>
+              <Class />
+            </ListItemIcon>
+            <ListItemText primary="Salas" />
           </ListItem>
         </List>
       </Drawer>
 
-      {/* Main Content */}
-      <main style={{ flexGrow: 1, padding: '16px' }}>
-        <Toolbar />
-        <h1>Content goes here</h1>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          mt: 8,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         {renderComponent()}
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 }
