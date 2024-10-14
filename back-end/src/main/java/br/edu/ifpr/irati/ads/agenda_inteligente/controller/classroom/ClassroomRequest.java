@@ -1,4 +1,4 @@
-package br.edu.ifpr.irati.ads.agenda_inteligente.controller;
+package br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
