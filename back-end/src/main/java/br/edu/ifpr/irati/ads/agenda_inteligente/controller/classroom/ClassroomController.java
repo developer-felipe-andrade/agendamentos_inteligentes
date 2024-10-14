@@ -1,7 +1,6 @@
-package br.edu.ifpr.irati.ads.agenda_inteligente.controller;
+package br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom;
 
 
-import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
