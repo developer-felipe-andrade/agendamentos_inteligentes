@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

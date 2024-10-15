@@ -23,6 +23,14 @@ public class User implements UserDetails {
     private String login;
     private String password;
     private UserRole role;
+    private boolean enabled;
+
+    public User(String login, String password, UserRole role) {
+        this.login = login;
+        this.password = password;
+        this.role = role;
+        this.enabled = false;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -30,6 +38,7 @@ public class User implements UserDetails {
 
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
+
 
     @Override
     public String getUsername() {
@@ -53,6 +62,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }
