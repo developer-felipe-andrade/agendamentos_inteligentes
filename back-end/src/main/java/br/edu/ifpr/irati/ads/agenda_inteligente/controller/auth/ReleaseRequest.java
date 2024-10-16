@@ -1,8 +1,7 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth;
 
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.user.User;
-
 import java.util.List;
+import java.util.UUID;
 
-public record ReleaseRequest(List<User> users) {
+public record ReleaseRequest(List<String> users) {
 }
