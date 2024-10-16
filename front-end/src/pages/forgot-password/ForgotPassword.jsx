@@ -18,7 +18,7 @@ const ForgotPassword = () => {
     <div className="flex items-center justify-center h-screen">
       <Container maxWidth="sm" className="mt-10">
         <Paper elevation={3} className="p-6">
-          <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+          <h2 className="text-2xl font-bold mb-4 text-center">Esqueceu a senha?</h2>
           <div className="space-y-4">
             <div>
               <TextField
@@ -32,23 +32,21 @@ const ForgotPassword = () => {
             
             <div className="flex justify-center">
               <Button
-                onClick={handleLogin}
-                variant="contained"
-                color="primary"
-                className="w-full bg-blue-500 text-white"
-              >
-                Voltar
-              </Button>
-            </div>
-            
-            <div className="flex justify-center">
-              <Button
                 onClick={handleSubmit}
                 variant="contained"
                 color="primary"
                 className="w-full bg-blue-500 text-white"
               >
                 Redefinir Senha
+              </Button>
+            </div>
+
+            <div className="flex justify-center">
+              <Button
+                onClick={handleLogin}
+                variant="text"
+              >
+                Voltar
               </Button>
             </div>
           </div>
