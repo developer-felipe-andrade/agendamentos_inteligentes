@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name = "classrooms")
@@ -43,7 +44,10 @@ public class Classroom {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Classroom (ClassroomRequest classroom) {
+    @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reservation> reservations;
+
+    public Classroom(ClassroomRequest classroom) {
         this.id = classroom.id();
         this.name = classroom.name();
         this.qtdPlace = classroom.qtdPlace();
