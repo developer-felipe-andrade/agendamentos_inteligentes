@@ -12,7 +12,9 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    window.alert(`email: ${email} / senha: ${password}`);
+    
+
+
     navigate('/inicio');
   };
 
