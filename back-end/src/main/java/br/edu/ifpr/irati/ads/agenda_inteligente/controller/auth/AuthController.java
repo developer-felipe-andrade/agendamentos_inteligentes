@@ -11,10 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("auth")
@@ -42,6 +39,8 @@ public class AuthController {
         return ResponseEntity.ok(new ResponseDTO(token));
     }
 
+
+
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody @Valid RegisterRequest data) {
         if (this.userRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
@@ -52,5 +51,15 @@ public class AuthController {
         this.userRepository.save(user);
 
         return ResponseEntity.status(201).build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String tokenHeader) {
+        if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+            String token = tokenHeader.substring(7);
+            tokenService.revokeToken(token);
+            return ResponseEntity.ok("Logout successful.");
+        }
+        return ResponseEntity.badRequest().body("Token not provided or invalid.");
     }
 }
