@@ -26,6 +26,7 @@ const RegisterUser = () => {
     try {
       auth.register(data);
       window.alert('cadastrado');
+      handleLogin();
     } catch (error) {
       window.alert(error)
     }

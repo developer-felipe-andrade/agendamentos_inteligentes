@@ -12,9 +12,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    
-
-
     navigate('/inicio');
   };
 
