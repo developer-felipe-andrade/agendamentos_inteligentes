@@ -3,7 +3,9 @@ CREATE TABLE users (
     login TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     role TEXT NOT NULL,
-    enabled BOOLEAN DEFAULT FALSE
+    enabled BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO users (id, login, password, role, enabled)

@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String id;
 
     private String name;
 
@@ -46,6 +46,17 @@ public class Classroom {
 
     @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Reservation> reservations;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     public Classroom(ClassroomRequest classroom) {
         this.id = classroom.id();
