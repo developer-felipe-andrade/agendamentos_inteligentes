@@ -1,4 +1,4 @@
-package br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth;
+package br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth.requests;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.user.UserRole;
 

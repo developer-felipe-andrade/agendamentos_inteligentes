@@ -25,7 +25,7 @@ public class ClassroomController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Classroom> getClassroom(
-            @PathVariable UUID id
+            @PathVariable String id
     ) {
         Classroom classroom = classroomService.getClassroomById(id);
 
@@ -41,7 +41,7 @@ public class ClassroomController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Classroom> update(
-        @PathVariable UUID id,
+        @PathVariable String id,
         @RequestBody Classroom data
     ) {
         Classroom updated = classroomService.updateClassroom(id, data);
@@ -50,7 +50,7 @@ public class ClassroomController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(
-            @PathVariable UUID id
+            @PathVariable String id
     ) {
         classroomService.deleteClassroom(id);
 

@@ -7,7 +7,18 @@ const ForgotPassword = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    window.alert('login');
+    const data = {
+      login: email,
+      password: password
+    }
+
+    try {
+      auth.recover(data);
+      window.alert('senha recuperada');
+      handleLogin();
+    } catch (error) {
+      window.alert(error)
+    }
   };
   
   const handleLogin = () => {

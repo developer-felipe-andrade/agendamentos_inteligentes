@@ -16,7 +16,7 @@ public class ClassroomService {
     @Autowired
     private ClassroomRepository classroomRepository;
 
-    public Classroom updateClassroom(UUID id, Classroom updatedClassroom) {
+    public Classroom updateClassroom(String id, Classroom updatedClassroom) {
         Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
 
         if (optionalClassroom.isPresent()) {
@@ -33,7 +33,7 @@ public class ClassroomService {
         }
     }
 
-    public boolean deleteClassroom(UUID id) {
+    public boolean deleteClassroom(String id) {
         Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
         if (optionalClassroom.isPresent()) {
             classroomRepository.delete(optionalClassroom.get());
@@ -44,7 +44,7 @@ public class ClassroomService {
         return false;
     }
 
-    public Classroom getClassroomById(UUID id) {
+    public Classroom getClassroomById(String id) {
         Optional<Classroom> classroom = classroomRepository.findById(id);
         return classroom.orElse(null);
     }

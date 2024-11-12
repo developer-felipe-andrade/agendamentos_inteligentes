@@ -7,6 +7,10 @@ const register = {
 
   async login(data) {
     return api.post('/auth/login', data);
+  },
+
+  async recover(data) {
+    return api.post('/auth/recover', data);
   }
 }
 

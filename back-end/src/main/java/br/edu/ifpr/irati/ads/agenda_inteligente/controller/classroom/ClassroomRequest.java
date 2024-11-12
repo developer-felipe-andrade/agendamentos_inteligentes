@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 public record ClassroomRequest(
-        UUID id,
+        String id,
 
         @NotBlank
         String name,
