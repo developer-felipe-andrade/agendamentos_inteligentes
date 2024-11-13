@@ -21,19 +21,13 @@ public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
     private String name;
-
     @Column(name = "qtd_place")
     private int qtdPlace;
-
     private String block;
-
     @Column(name = "is_acessibled")
     private boolean isAcessibled;
-
     private String status;
-
     private boolean confirmation;
 
     @CreationTimestamp
@@ -44,7 +38,7 @@ public class Classroom {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "classroom",  fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     @PrePersist

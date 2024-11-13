@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 public class Notification {
 
     @Id
-    @Column(length = 255)
     private String id;
 
+    @Column(name = "anticipation_time")
     private LocalDateTime anticipationTime;
 
     private String form;

@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model.user;
 
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -28,6 +29,8 @@ public class User implements UserDetails {
     private String password;
     private UserRole role;
     private boolean enabled;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
