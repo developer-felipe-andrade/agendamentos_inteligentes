@@ -10,9 +10,9 @@ CREATE TABLE reservations (
 
 CREATE TABLE notifications (
     id TEXT PRIMARY KEY,
-    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    anticipationTime TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    anticipation_time TIMESTAMP,
     form VARCHAR(255),
     reservation_id TEXT,
     CONSTRAINT fk_reservation

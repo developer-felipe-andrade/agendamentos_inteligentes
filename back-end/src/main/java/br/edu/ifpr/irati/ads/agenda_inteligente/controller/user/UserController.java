@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUser(@PathVariable String id) {
+    public ResponseEntity delete(@PathVariable String id) {
         Optional<User> loadedUser = userRepository.findById(id);
         if(loadedUser.isPresent()) {
             User user = loadedUser.get();
@@ -69,7 +69,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
         User loadedUser =(User) userRepository.findByLogin(user);
-        UserInfoDTO dto = new UserInfoDTO(loadedUser.getLogin(), loadedUser.getRole());
+        UserResponse dto = new UserResponse(loadedUser.getId(), loadedUser.getLogin(), loadedUser.getRole());
 
         return ResponseEntity.ok(dto);
     }

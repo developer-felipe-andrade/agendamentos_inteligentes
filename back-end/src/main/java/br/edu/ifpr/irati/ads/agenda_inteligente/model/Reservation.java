@@ -19,12 +19,14 @@ import java.util.List;
 public class Reservation {
 
     @Id
-    @Column(length = 255)  // Define o tamanho máximo da string
+    @Column(length = 255)
     private String id;
 
-    private LocalDateTime dt_start;
+    @Column(name = "dt_start")
+    private LocalDateTime dtStart;
 
-    private LocalDateTime dt_end;
+    @Column(name = "dt_end")
+    private LocalDateTime dtEnd;
 
     private String status;
 
@@ -40,11 +42,11 @@ public class Reservation {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "classroom_id", nullable = true)
+    @JoinColumn(name = "classroom_id", nullable = false)
     private Classroom classroom;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
