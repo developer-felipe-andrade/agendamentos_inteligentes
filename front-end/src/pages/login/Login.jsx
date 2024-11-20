@@ -3,7 +3,8 @@ import { TextField, Button, Container, Paper, FormControl, InputLabel, OutlinedI
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/UseAlert';
-import auth from '../../api/requests/auth'
+import auth from '../../api/requests/auth';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,16 +17,28 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const data = {
+      if (!email || !password) {
+        addAlert('Por favor, preencha todos os campos!', 'warning');
+        return;
+      }
+
+      const request = {
         login: email,
         password: password
       };
       
-      await auth.login(data);
+      const { data } = await auth.login(request);
+
+      Cookies.set('authToken', data.token, { 
+        expires: 7,
+        path: '/'
+      });
+      
       addAlert('Login efetuado com sucesso!', 'success');
+
       navigate('/inicio');
     } catch (error) {
-      alert('erro')
+      console.log(error);
       addAlert('Erro ao acessar!', 'error');
     }
   };

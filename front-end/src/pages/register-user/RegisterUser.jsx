@@ -3,8 +3,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, Paper, TextField, Container, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Select, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-
+import Alert from '../../components/UseAlert';
 
 const RegisterUser = () => {
   const [email, setEmail] = useState('');
@@ -12,23 +11,25 @@ const RegisterUser = () => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const [role, setRole] = useState('');
+  const { renderAlerts, addAlert } = Alert();
+
 
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    const data = {
+  const handleSubmit = async () => {
+    const request = {
       login: email,
       password: password,
       role: role
     }
-    console.log(data);
 
     try {
-      auth.register(data);
-      window.alert('cadastrado');
+      await auth.register(request);
+      
       handleLogin();
+      addAlert('Cadastro efetuado com sucesso!', 'success');
     } catch (error) {
-      window.alert(error)
+      addAlert(error, 'error');
     }
   };
   
@@ -42,6 +43,7 @@ const RegisterUser = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
+      {renderAlerts()}
       <Container maxWidth="sm" className="mt-10">
         <Paper elevation={3} className="p-6">
           <h2 className="text-2xl font-bold mb-4 text-center">Cadastrar</h2>
