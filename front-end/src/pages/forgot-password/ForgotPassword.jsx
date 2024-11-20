@@ -1,23 +1,27 @@
 import { useState } from 'react';
 import { TextField, Button, Container, Paper} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import Alert from '../../components/UseAlert';
+
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
+  const { renderAlerts, addAlert } = Alert();
 
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     const data = {
       login: email,
       password: password
     }
 
     try {
-      auth.recover(data);
-      window.alert('senha recuperada');
+      await auth.recover(data);
+      addAlert('Solicitação de senha para recuperar requisitada com sucesso!', 'success');
       handleLogin();
     } catch (error) {
-      window.alert(error)
+      addAlert(error, 'error');
     }
   };
   

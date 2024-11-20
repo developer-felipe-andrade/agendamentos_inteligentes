@@ -2,20 +2,38 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, CssBaseline } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Calendar from '../calendar/Calendar';
-import { CalendarMonth, Inventory2, Person, Class } from '@mui/icons-material';
+import { CalendarMonth, Inventory2, Person, Class, Logout } from '@mui/icons-material';
 import Users from '../users/Users';
-import Inventory from '../inventory/Inventory';
+import Inventory from '../resources/Resource';
 import Room from '../rooms/Room';
+import auth from '../../api/requests/auth';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import Alert from '../../components/UseAlert';
 
 const drawerWidth = 240;
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);
   const [selectedComponent, setSelectedComponent] = useState('Inbox');
+  const { renderAlerts, addAlert } = Alert();
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await auth.logout();
+      Cookies.remove('authToken', { path: '/' });
+    } catch(error) {
+      addAlert('Ocorreu um erro ao deslogar, entre em contato com o Administrador!', 'error');
+    } finally {
+      navigate('/');
+    }
+  }
 
   const handleMenuClick = (componentName) => {
     setSelectedComponent(componentName);
@@ -39,9 +57,10 @@ export default function Home() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden'}}>
+      {renderAlerts()}
       <CssBaseline />
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton
             edge="start"
             color="inherit"
@@ -54,6 +73,15 @@ export default function Home() {
           <Typography variant="h6" noWrap>
             My App
           </Typography>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="logout"
+            onClick={handleLogout}
+            sx={{ ml: 'auto' }}
+          >
+            <Logout />
+          </IconButton>
         </Toolbar>
       </AppBar>
 

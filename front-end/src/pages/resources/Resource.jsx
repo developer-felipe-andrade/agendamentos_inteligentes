@@ -10,14 +10,26 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import resource from '../../api/requests/resource';
+import Alert from '../../components/UseAlert';
+import { useEffect, useState } from 'react';
 
 const Invetory = () => {
-  const data = [
-    { id: 1, resourceName: 'Projetor', quantity: 2, condition: 'Bom' },
-    { id: 2, resourceName: 'Computador', quantity: 5, condition: 'Excelente' },
-    { id: 3, resourceName: 'Quadro Branco', quantity: 1, condition: 'Usado' },
-  ];
+  var [dataValues, setDataValues] = useState([]);
+  const { renderAlerts, addAlert } = Alert();
 
+
+  const getData = async () => {
+    try {
+      const { data } = await resource.getAll();
+      console.log(data.content);
+      setDataValues(data.content);
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao recuperar os dados!', 'error');
+    }
+  }
+  
   const handleEdit = (id) => {
     console.log(`Editar recurso com ID: ${id}`);
   };
@@ -26,8 +38,14 @@ const Invetory = () => {
     console.log(`Excluir recurso com ID: ${id}`);
   };
 
+  useEffect(() => {
+    getData();
+  }, [])
+
   return (
     <div className="h-screen w-screen overflow-hidden p-4">
+      {renderAlerts()}
+
       <div className="flex justify-end mb-4">
         <Button
           variant="contained"
@@ -44,18 +62,16 @@ const Invetory = () => {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>Nome do Recurso</TableCell>
-            <TableCell>Quantidade</TableCell>
-            <TableCell>Condição</TableCell>
+            <TableCell>Tipo</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
+          {dataValues.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.id}</TableCell>
-              <TableCell>{row.resourceName}</TableCell>
-              <TableCell>{row.quantity}</TableCell>
-              <TableCell>{row.condition}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.type}</TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => handleEdit(row.id)}

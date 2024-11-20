@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/resources")
+@RequestMapping("/resource")
 public class ResourceController {
     @Autowired
     private ResourceService service;
