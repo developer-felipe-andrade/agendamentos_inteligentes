@@ -1,14 +1,15 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ClassroomService {
@@ -24,8 +25,8 @@ public class ClassroomService {
             classroom.setName(updatedClassroom.getName());
             classroom.setQtdPlace(updatedClassroom.getQtdPlace());
             classroom.setBlock(updatedClassroom.getBlock());
-            classroom.setAcessibled(updatedClassroom.isAcessibled());
-            classroom.setStatus(updatedClassroom.getStatus());
+            classroom.setActive(updatedClassroom.isActive());
+            classroom.setAcessible(updatedClassroom.isAcessible());
             classroom.setConfirmation(updatedClassroom.isConfirmation());
             return classroomRepository.save(classroom);
         } else {
@@ -44,13 +45,14 @@ public class ClassroomService {
         return false;
     }
 
-    public Classroom getClassroomById(String id) {
+    public ClassroomResponse getClassroomById(String id) {
         Optional<Classroom> classroom = classroomRepository.findById(id);
-        return classroom.orElse(null);
+
+        return classroom.map(ClassroomResponse::fromEntity).orElse(null);
     }
 
-    public List<Classroom> getAll() {
-        return classroomRepository.findAll();
+    public Page<ClassroomResponse> findAll(Pageable pageable) {
+        return classroomRepository.findAll(pageable).map(ClassroomResponse::fromEntity);
     }
 
     public void register(ClassroomRequest data) {

@@ -5,7 +5,7 @@ import Calendar from '../calendar/Calendar';
 import { CalendarMonth, Inventory2, Person, Class, Logout } from '@mui/icons-material';
 import Users from '../users/Users';
 import Inventory from '../resources/Resource';
-import Room from '../rooms/Room';
+import Classroom from '../classrooms/Classroom';
 import auth from '../../api/requests/auth';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -48,8 +48,8 @@ export default function Home() {
         return <Users />;
       case 'inventory':
         return <Inventory />;
-      case 'room':
-        return <Room />;
+      case 'classroom':
+        return <Classroom />;
       default:
         return <h2>Home Component</h2>;
     }
@@ -117,7 +117,7 @@ export default function Home() {
             </ListItemIcon>
             <ListItemText primary="Recursos" />
           </ListItem>
-          <ListItem onClick={() => handleMenuClick('room')}>
+          <ListItem onClick={() => handleMenuClick('classroom')}>
             <ListItemIcon>
               <Class />
             </ListItemIcon>

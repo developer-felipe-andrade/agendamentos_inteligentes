@@ -4,6 +4,9 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ClassroomService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +20,17 @@ public class ClassroomController {
     private ClassroomService classroomService;
 
     @GetMapping
-    public ResponseEntity<List<Classroom>> getAll() {
-        List<Classroom> classrooms = classroomService.getAll();
+    public ResponseEntity<Page<ClassroomResponse>> getAll(@PageableDefault(size = 10, sort = "name") Pageable pageable) {
+        Page<ClassroomResponse> classrooms = classroomService.findAll(pageable);
 
         return ResponseEntity.ok(classrooms);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Classroom> getClassroom(
+    public ResponseEntity<ClassroomResponse> getClassroom(
             @PathVariable String id
     ) {
-        Classroom classroom = classroomService.getClassroomById(id);
+        ClassroomResponse classroom = classroomService.getClassroomById(id);
 
         return ResponseEntity.ok(classroom);
     }

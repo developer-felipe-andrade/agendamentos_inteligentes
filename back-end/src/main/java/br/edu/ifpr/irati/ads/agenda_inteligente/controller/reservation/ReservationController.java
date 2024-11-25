@@ -75,7 +75,7 @@ public class ReservationController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/status/{status}")
+    @GetMapping("/active/{active}")
     public ResponseEntity<Page<ReservationResponse>> findByStatus(
             @PathVariable String status,
             @PageableDefault(size = 10, sort = "dtStart") Pageable pageable) {
@@ -100,7 +100,7 @@ public class ReservationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}/active")
     public ResponseEntity<ReservationResponse> updateStatus(
             @PathVariable String id,
             @RequestParam String status) {

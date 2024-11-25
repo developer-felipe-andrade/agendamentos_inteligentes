@@ -3,9 +3,9 @@ CREATE TABLE classrooms (
     name VARCHAR(255) NOT NULL,
     qtd_place INT NOT NULL,
     block VARCHAR(255),
-    is_acessibled BOOLEAN,
-    status VARCHAR(50),
-    confirmation BOOLEAN,
+    is_accessible BOOLEAN DEFAULT FALSE,
+    active BOOLEAN DEFAULT FALSE,
+    confirmation BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

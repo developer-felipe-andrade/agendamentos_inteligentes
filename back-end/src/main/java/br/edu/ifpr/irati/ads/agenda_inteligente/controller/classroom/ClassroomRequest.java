@@ -3,8 +3,6 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.UUID;
-
 public record ClassroomRequest(
         String id,
 
@@ -17,10 +15,10 @@ public record ClassroomRequest(
         String block,
 
         @NotNull
-        boolean isAcessibled,
+        boolean acessible,
 
         @NotNull
-        String status,
+        Boolean active,
 
         @NotBlank
         boolean confirmation
