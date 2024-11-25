@@ -36,7 +36,7 @@ public class ResourceService {
 
     public Page<ResourceResponse> findAll(Pageable pageable) {
         return repository.findAll(pageable)
-                .map(ResourceResponse::new);  // Usa o construtor que recebe Resource
+                .map(ResourceResponse::new);
     }
 
     public ResourceResponse update(String id, ResourceRequest request) {

@@ -53,8 +53,13 @@ const Inventory = () => {
   };
 
   const handleDelete = async (id) => {
-    await resource.delete(id);
-    getData();
+    try {
+      await resource.delete(id);
+      getData();
+      addAlert('Recurso excluído com sucesso!', 'success');
+    } catch (error) {
+      addAlert('Erro ao excluir o recurso', 'error');
+    }
   };
 
   const handleOpen = async (id) => {
@@ -135,7 +140,6 @@ const Inventory = () => {
         </TableBody>
       </Table>
 
-      {/* Modal */}
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Cadastrar Recurso</DialogTitle>
         <DialogContent>

@@ -8,7 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Table(name = "classrooms")
 @Entity(name = "classrooms")
@@ -25,16 +24,16 @@ public class Classroom {
     @Column(name = "qtd_place")
     private int qtdPlace;
     private String block;
-    @Column(name = "is_acessibled")
-    private boolean isAcessibled;
-    private String status;
+    @Column(name = "is_accessible")
+    private boolean acessible;
+    private boolean active;
     private boolean confirmation;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    @UpdateTimestamp    
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
@@ -57,8 +56,8 @@ public class Classroom {
         this.name = classroom.name();
         this.qtdPlace = classroom.qtdPlace();
         this.block = classroom.block();
-        this.isAcessibled = classroom.isAcessibled();
+        this.acessible = classroom.acessible();
         this.confirmation = classroom.confirmation();
-        this.status = classroom.status();
+        this.active = classroom.active();
     }
 }
