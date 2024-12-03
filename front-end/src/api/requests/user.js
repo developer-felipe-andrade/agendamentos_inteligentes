@@ -6,7 +6,7 @@ const user = {
   },
 
   async pendingUsers() {
-    return api.get('user/peding-release');
+    return api.get('user/pending-release');
   },
 
   async release(users) {

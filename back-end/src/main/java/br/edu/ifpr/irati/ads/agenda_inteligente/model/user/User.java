@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Table(name = "users")
 @Entity(name = "users")
@@ -25,8 +24,10 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    private String name;
     private String login;
     private String password;
+    @Enumerated(EnumType.STRING)
     private UserRole role;
     private boolean enabled;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -51,7 +52,8 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public User(String login, String password, UserRole role) {
+    public User(String name, String login, String password, UserRole role) {
+        this.name = name;
         this.login = login;
         this.password = password;
         this.role = role;
