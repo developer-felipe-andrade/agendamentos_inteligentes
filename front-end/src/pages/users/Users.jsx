@@ -9,61 +9,70 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import user from '../../api/requests/user'
+import { useEffect, useState } from 'react';
+import Alert from '../../components/UseAlert';
+import { Close, Done } from '@mui/icons-material';
 
 const Users = () => {
-  const data = [
-    { id: 1, name: 'John Doe', age: 28 },
-    { id: 2, name: 'Jane Smith', age: 34 },
-    { id: 3, name: 'Sam Green', age: 22 },
-  ];
+  const { renderAlerts, addAlert } = Alert();
+  const [dataValues, setDataValues] = useState([]);
 
-  const handleEdit = (id) => {
-    console.log(`Editar recurso com ID: ${id}`);
+  const getData = async () => {
+    try {
+      const { data } = await user.pendingUsers();
+      
+      setDataValues(data);
+    } catch (error) {
+      addAlert('Erro ao recuperar os dados!', 'error');
+    }
   };
 
-  const handleDelete = (id) => {
-    console.log(`Excluir recurso com ID: ${id}`);
-  };
+  const handleAprove = async (id) => {
+      try {
+        const data = {users: [id]}
+        await user.release(data);
+
+        addAlert('Usuário aprovado com sucesso');
+      } catch (error) {
+        addAlert('Erro ao aprovar o cadastro do usuário', 'error')
+      } finally {
+        getData();
+      }
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="h-screen w-screen overflow-hidden mt-2">
-      <div className="flex justify-end mb-4">
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<AddIcon />}
-        >
-          Cadastrar
-        </Button>
-      </div>
-
-      {/* Tabela */}
+      {renderAlerts()}
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell>Nome</TableCell>
-            <TableCell>Idade</TableCell>
+            <TableCell>E-mail</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
-            <TableRow key={row.id}>
+          {dataValues.map((row) => (
+            <TableRow key={row.id}> 
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.name}</TableCell>
-              <TableCell>{row.age}</TableCell>
+              <TableCell>{row.login}</TableCell>
               <TableCell>
                 <IconButton
-                  onClick={() => handleEdit(row.id)}
+                  onClick={() => handleAprove(row.id)}
                 >
-                  <EditIcon />
+                  <Done />
                 </IconButton>
                 <IconButton
                   onClick={() => handleDelete(row.id)}
                 >
-                  <DeleteIcon />
+                  <Close />
                 </IconButton>
               </TableCell>
             </TableRow>

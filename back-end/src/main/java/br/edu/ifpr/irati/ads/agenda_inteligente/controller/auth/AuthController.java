@@ -17,7 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -47,7 +47,7 @@ public class AuthController {
         if (this.userRepository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 
         String encrpytPassword = new BCryptPasswordEncoder().encode(data.password());
-        User user = new User(data.login(), encrpytPassword, data.role());
+        User user = new User(data.name(), data.login(), encrpytPassword, data.role());
 
         this.userRepository.save(user);
 

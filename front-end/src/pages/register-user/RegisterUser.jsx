@@ -7,6 +7,7 @@ import Alert from '../../components/UseAlert';
 
 const RegisterUser = () => {
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -18,6 +19,7 @@ const RegisterUser = () => {
 
   const handleSubmit = async () => {
     const request = {
+      name: name,
       login: email,
       password: password,
       role: role
@@ -55,6 +57,16 @@ const RegisterUser = () => {
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <TextField
+                label="Nome"
+                variant="outlined"
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
 

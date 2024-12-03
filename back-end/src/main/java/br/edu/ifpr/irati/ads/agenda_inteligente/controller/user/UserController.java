@@ -44,7 +44,7 @@ public class UserController {
         List<User> usersPending = userRepository.findByEnabledFalse();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
-            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getLogin(), user.getRole(), user.isEnabled());
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
 
