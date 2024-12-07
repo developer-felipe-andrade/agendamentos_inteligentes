@@ -20,6 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import classroom from '../../api/requests/classrooms'
 import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 
 const Classroom = () => {
@@ -27,6 +28,26 @@ const Classroom = () => {
   const { renderAlerts, addAlert } = Alert();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(0);
+
+
+  const handleCloseModal = () => {
+    setModalOpen(false)
+    setSelectedId(0);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      await classroom.delete(selectedId);
+      
+      getData();
+      handleCloseModal();
+      addAlert('Sala excluída com sucesso.', 'success');
+    } catch (error) {
+      addAlert('Erro ao deletar a sala', 'error');
+    }
+  };
 
   const getData = async () => {
     try {
@@ -56,8 +77,8 @@ const Classroom = () => {
   };
 
   const handleDelete = async (id) => {
-    await classroom.delete(id);
-    getData();
+    setModalOpen(true);
+    setSelectedId(id);
   };
 
   const handleOpen = async (id) => {
@@ -97,6 +118,15 @@ const Classroom = () => {
   return (
     <div className="h-screen w-screen overflow-hidden mt-2">
       {renderAlerts()}
+      
+      <ConfirmationModal
+        open={modalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirm}
+        title="Excluir Sala"
+        message="Você tem certeza que deseja excluir essa sala?"
+      />
+
       <div className="flex justify-end mb-4">
         <Button
           variant="contained"
