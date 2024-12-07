@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, CssBaseline } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Calendar from '../calendar/Calendar';
 import { CalendarMonth, Inventory2, Person, Class, Logout } from '@mui/icons-material';
 import Users from '../users/Users';
 import Inventory from '../resources/Resource';
@@ -10,6 +9,7 @@ import auth from '../../api/requests/auth';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/UseAlert';
+import SchedulingCalendar from '../calendar/SchedulingCalendar';
 
 const drawerWidth = 240;
 
@@ -43,7 +43,7 @@ export default function Home() {
   const renderComponent = () => {
     switch (selectedComponent) {
       case 'agenda':
-        return <Calendar />;
+        return <SchedulingCalendar />;
       case 'users':
         return <Users />;
       case 'inventory':
@@ -58,7 +58,7 @@ export default function Home() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden'}}>
       {renderAlerts()}
-      <CssBaseline />
+      
       <AppBar position="fixed">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton
