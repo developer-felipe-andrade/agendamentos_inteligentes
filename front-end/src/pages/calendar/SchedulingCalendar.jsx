@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Grid2, InputLabel, MenuItem, Select, Switch, TextareaAutosize, TextField } from '@mui/material'
 import { useState } from 'react'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function SchedulingCalendar() {
-  const [formData, setFormData] = useState({ name: '', type: '', initialDate: new Date() });
+  const [formData, setFormData] = useState({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
   const [open, setOpen] = useState(false);
 
   const handleOpen = async (date) => {
@@ -21,7 +21,7 @@ export default function SchedulingCalendar() {
 
   const handleClose = () => {
     setOpen(false);
-    setFormData({ name: '', type: '', initialDate: new Date() }); // Limpar o formulário
+    setFormData({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
   };
 
   const handleChange = (e) => {
@@ -30,6 +30,31 @@ export default function SchedulingCalendar() {
   };
 
   const handleSave = () => {};
+
+  const [fields, setFields] = useState([]);
+
+  const addField = () => {
+    setFields((prevFields) => [
+      ...prevFields,
+      { type: "WhatsApp", date: null },
+    ]);
+  };
+
+  const handleTypeChange = (index, value) => {
+    setFields((prevFields) =>
+      prevFields.map((field, i) =>
+        i === index ? { ...field, type: value } : field
+      )
+    );
+  };
+
+  const handleDateChange = (index, newValue) => {
+    setFields((prevFields) =>
+      prevFields.map((field, i) =>
+        i === index ? { ...field, date: newValue } : field
+      )
+    );
+  };
   
   return (
     <div className="h-screen w-screen">
@@ -48,28 +73,77 @@ export default function SchedulingCalendar() {
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Agendar</DialogTitle>
         <DialogContent>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DateTimePicker']}>
-            <DateTimePicker label="Basic date time picker" />
-          </DemoContainer>
-        </LocalizationProvider>
-       
-          <TextField
-            margin="normal"
-            label="Nome do Recurso"
-            name="name"
-            fullWidth
-            value={formData.name}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            label="Tipo"
-            name="type"
-            fullWidth
-            value={formData.type}
-            onChange={handleChange}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DateTimePicker']}>
+              <DateTimePicker value={formData.dtStart} label="Data inicial" />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={['DateTimePicker']}>
+              <DateTimePicker value={formData.dtStart} label="Data final" />
+            </DemoContainer>
+          </LocalizationProvider>
+
+          <FormControl fullWidth>
+            <InputLabel shrink htmlFor="custom-textarea">
+              Nome do Recurso
+            </InputLabel>
+            <TextareaAutosize
+              id="custom-textarea"
+              minRows={4}
+              placeholder="Nome do Recurso"
+              name="name"
+              value={formData.obs}
+              onChange={handleChange}
+              style={{
+                width: "100%",
+                padding: "16.5px 14px",
+                fontSize: "16px",
+                borderRadius: "4px",
+                border: "1px solid rgba(0, 0, 0, 0.23)",
+                backgroundColor: "white",
+                outline: "none",
+                transition: "border-color 0.2s",
+              }}
+              onFocus={(e) => (e.target.style.borderColor = "#1976d2")}
+              onBlur={(e) => (e.target.style.borderColor = "rgba(0, 0, 0, 0.23)")}
+            />
+          </FormControl>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div style={{ padding: "20px" }}>
+              <Button variant="contained" onClick={addField}>
+                Adicionar
+              </Button>
+              <Grid2 container spacing={2} style={{ marginTop: "20px" }}>
+                {fields.map((field, index) => (
+                  <Grid2 item xs={12} key={index} container spacing={2}>
+                    <Grid2 item xs={4}>
+                      <FormControl fullWidth>
+                        <InputLabel>Tipo</InputLabel>
+                        <Select
+                          value={field.type}
+                          onChange={(e) => handleTypeChange(index, e.target.value)}
+                        >
+                          <MenuItem value="WhatsApp">WhatsApp</MenuItem>
+                          <MenuItem value="E-mail">E-mail</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid2>
+                    <Grid2 item xs={8}>
+                      <DateTimePicker
+                        label="Data e Hora"
+                        value={field.date}
+                        onChange={(newValue) => handleDateChange(index, newValue)}
+                        renderInput={(props) => <TextField fullWidth {...props} />}
+                      />
+                    </Grid2>
+                  </Grid2>
+                ))}
+              </Grid2>
+            </div>
+          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
