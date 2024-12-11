@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Grid, Grid2, InputLabel, MenuItem, Select, Switch, TextareaAutosize, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Grid, Grid2, InputLabel, MenuItem, Select, Switch, TextareaAutosize, TextField } from '@mui/material'
 import { useState } from 'react'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -14,13 +14,12 @@ export default function SchedulingCalendar() {
   const [open, setOpen] = useState(false);
 
   const handleOpen = async (date) => {
-    console.log(date)
-
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setFields([])
     setFormData({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
   };
 
@@ -58,16 +57,46 @@ export default function SchedulingCalendar() {
   
   return (
     <div className="h-screen w-screen">
+      <FormControl fullWidth sx={{ m: 2 }}>
+        <InputLabel>Salas de Aula</InputLabel>
+        <Select
+          id={`room`}
+          label="Salas de Aula"
+          onChange={handleChange}
+          sx={{ mr: 3 }}  // Adicionando um espaço à direita
+        >
+          <MenuItem value="EMAIL">Nome: Laboratório 01 - Capacidade: 40 - Bloco: A</MenuItem>
+          <MenuItem value="WHATSAPP">Nome: Laboratório 01 - Capacidade: 40 - Bloco: B</MenuItem>
+        </Select>
+      </FormControl>
+
       <FullCalendar
         plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
+        initialView="dayGridMonth"
         headerToolbar={{
           end: 'dayGridMonth,timeGridWeek,timeGridDay',
+        }}
+        customButtons={{
+          dayGridMonth: {
+            text: 'Mês',
+          },
+          timeGridWeek: {
+            text: 'Semana',
+          },
+          timeGridDay: {
+            text: 'Dia',
+          },
         }}
         height="100%"
         dateClick={(info) => handleOpen(info)}
         dayCellClassNames={(info) => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
         slotLaneClassNames={() => 'cursor-pointer hover:bg-gray-200'}
+        events={[
+          { title: 'Aula POO', start: '2024-12-12T10:30:00', end: '2024-12-12T11:30:00'},
+          { title: 'TCC', start: '2024-12-13T14:30:00', end: '2024-12-13T15:30:00'},
+          { title: 'Algoritmo', start: '2024-12-14T20:30:00', end: '2024-12-14T21:30:00'},
+        ]}
+        
       />
 
       <Dialog open={open} onClose={handleClose} fullWidth>
@@ -75,69 +104,56 @@ export default function SchedulingCalendar() {
         <DialogContent>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DemoContainer components={['DateTimePicker']}>
-              <DateTimePicker value={formData.dtStart} label="Data inicial" />
+              <DateTimePicker label="Data inicial" />
             </DemoContainer>
           </LocalizationProvider>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} cl>
             <DemoContainer components={['DateTimePicker']}>
-              <DateTimePicker value={formData.dtStart} label="Data final" />
+              <DateTimePicker label="Data final" />
             </DemoContainer>
           </LocalizationProvider>
 
-          <FormControl fullWidth>
-            <InputLabel shrink htmlFor="custom-textarea">
-              Nome do Recurso
-            </InputLabel>
-            <TextareaAutosize
-              id="custom-textarea"
-              minRows={4}
-              placeholder="Nome do Recurso"
-              name="name"
+          <div className='pt-2'>
+            <TextField
+              label="Observação"
+              name="obs"
+              fullWidth
               value={formData.obs}
               onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "16.5px 14px",
-                fontSize: "16px",
-                borderRadius: "4px",
-                border: "1px solid rgba(0, 0, 0, 0.23)",
-                backgroundColor: "white",
-                outline: "none",
-                transition: "border-color 0.2s",
-              }}
-              onFocus={(e) => (e.target.style.borderColor = "#1976d2")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(0, 0, 0, 0.23)")}
+              multiline
+              rows={4}
             />
-          </FormControl>
+          </div>
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div style={{ padding: "20px" }}>
-              <Button variant="contained" onClick={addField}>
-                Adicionar
+            <div className='py-2'>
+              <Button disabled={fields.length > 1} variant="contained" onClick={addField}>
+                Adicionar Notificação
               </Button>
-              <Grid2 container spacing={2} style={{ marginTop: "20px" }}>
+              
+              <Grid2 container>
                 {fields.map((field, index) => (
                   <Grid2 item xs={12} key={index} container spacing={2}>
-                    <Grid2 item xs={4}>
-                      <FormControl fullWidth>
+                    <Grid2 item xs={6}>
+                      <FormControl sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel>Tipo</InputLabel>
                         <Select
-                          value={field.type}
-                          onChange={(e) => handleTypeChange(index, e.target.value)}
+                          id={`notification-typ e-${index}`}
+                          label="Tipo"
+                          onChange={handleChange}
                         >
-                          <MenuItem value="WhatsApp">WhatsApp</MenuItem>
-                          <MenuItem value="E-mail">E-mail</MenuItem>
+                          <MenuItem value="EMAIL">E-mail</MenuItem>
+                          <MenuItem value="WHATSAPP">WhatsApp</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid2>
-                    <Grid2 item xs={8}>
-                      <DateTimePicker
-                        label="Data e Hora"
-                        value={field.date}
-                        onChange={(newValue) => handleDateChange(index, newValue)}
-                        renderInput={(props) => <TextField fullWidth {...props} />}
-                      />
+                    <Grid2 item xs={6}>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['DateTimePicker']}>
+                          <DateTimePicker label="Data final" />
+                        </DemoContainer>
+                      </LocalizationProvider>
                     </Grid2>
                   </Grid2>
                 ))}
