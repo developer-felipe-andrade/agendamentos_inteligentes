@@ -28,6 +28,9 @@ public class Classroom {
     private boolean acessible;
     private boolean active;
     private boolean confirmation;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User responsible;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

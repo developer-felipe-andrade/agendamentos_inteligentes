@@ -1,6 +1,7 @@
-package br.edu.ifpr.irati.ads.agenda_inteligente.model.user;
+package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -3,7 +3,7 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.reservation;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.user.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
