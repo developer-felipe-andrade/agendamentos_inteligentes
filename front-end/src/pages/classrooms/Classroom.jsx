@@ -12,7 +12,11 @@ import {
   DialogTitle,
   TextField,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -21,15 +25,17 @@ import classroom from '../../api/requests/classrooms'
 import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import user from '../../api/requests/user';
 
 
 const Classroom = () => {
   const [dataValues, setDataValues] = useState([]);
   const { renderAlerts, addAlert } = Alert();
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true });
+  const [formData, setFormData] = useState({ name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true, idUser: "" });
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
+  const [users, setUsers] = useState([]);
 
 
   const handleCloseModal = () => {
@@ -64,18 +70,6 @@ const Classroom = () => {
     setFormData(data);
   }
 
-  const handleEdit = async (id) => {
-    try {
-      await classroom.update(formData, id);
-      addAlert('Recurso atualizado com sucesso!', 'success');
-    } catch (error) {
-      addAlert('Erro ao atualizar o recurso', 'error');
-    } finally {
-      getData();
-      handleClose();
-    }
-  };
-
   const handleDelete = async (id) => {
     setModalOpen(true);
     setSelectedId(id);
@@ -91,7 +85,7 @@ const Classroom = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setFormData({ name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true });
+    setFormData({ name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true, idUser: "" });
   };  
 
   const handleSave = async () => {
@@ -114,6 +108,21 @@ const Classroom = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    if (formData.confirmation) {
+      const fetchData = async () => {
+        try {
+          const { data } = await user.responsibles();
+          setUsers(data); 
+        } catch (error) {
+          console.error('Erro ao buscar dados da API:', error);
+        }
+      };
+  
+      fetchData();
+    }
+  }, [formData.confirmation]);
 
   return (
     <div className="h-screen w-screen overflow-hidden mt-2">
@@ -161,6 +170,7 @@ const Classroom = () => {
               <TableCell>{row.acessible ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{row.confirmation ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{row.active ? 'Ativo' : 'Inativo'}</TableCell>
+              <TableCell>{row.responsible?.name}</TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => handleOpen(row.id)}
@@ -246,6 +256,26 @@ const Classroom = () => {
           }
           label="Precisa de confirmação?"
         />
+        {formData.confirmation && (
+          <FormControl fullWidth variant="outlined" margin="normal">
+          <InputLabel id="responsible-select-field">Selecione o responsável</InputLabel>
+          <Select
+            labelId="responsible-select-field"
+            id="role-select"
+            value={formData.idUser}
+            onChange={handleChange}
+            label="Selecione o responsável"
+          >
+            {
+              users.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+        )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">

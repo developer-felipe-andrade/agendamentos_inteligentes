@@ -4,7 +4,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.controller.notification.Notifica
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Notification;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.user.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 

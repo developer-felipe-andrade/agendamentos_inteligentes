@@ -9,6 +9,10 @@ const user = {
     return api.get('user/pending-release');
   },
 
+  async responsibles() {
+    return api.get('user/responsibles');
+  },
+
   async release(users) {
     return api.post('/user/release', users);
   } 

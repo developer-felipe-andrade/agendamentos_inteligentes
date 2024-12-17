@@ -1,6 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.infra.security;
 
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.user.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

@@ -21,7 +21,8 @@ public record ClassroomRequest(
         Boolean active,
 
         @NotBlank
-        boolean confirmation
-) {
+        boolean confirmation,
 
-}
+
+        String idUser
+) {}

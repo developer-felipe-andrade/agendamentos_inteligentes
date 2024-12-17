@@ -105,7 +105,7 @@ const RegisterUser = () => {
                     label="Selecione o Cargo"
                   >
                     <MenuItem value="ADMIN">Administrador</MenuItem>
-                    <MenuItem value="COORDINATED">Coordenador</MenuItem>
+                    <MenuItem value="COORDINATOR">Coordenador</MenuItem>coordinator
                     <MenuItem value="USER">Usuário</MenuItem>
                   </Select>
                 </FormControl>
