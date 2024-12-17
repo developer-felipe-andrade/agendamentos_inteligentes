@@ -67,7 +67,16 @@ const Classroom = () => {
 
   const getClassroomById = async (id) => {
     const { data } = await classroom.findById(id);
-    setFormData(data);
+    
+    setFormData({
+      name: data.name,
+      qtdPlace: data.qtdPlace,
+      block: data.block,
+      acessible: data.acessible,
+      active: data.active,
+      confirmation: data.confirmation,
+      idUser: data.responsible?.id
+    });
   }
 
   const handleDelete = async (id) => {
@@ -263,7 +272,9 @@ const Classroom = () => {
             labelId="responsible-select-field"
             id="role-select"
             value={formData.idUser}
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({ ...formData, idUser: e.target.value })
+            }
             label="Selecione o responsável"
           >
             {
