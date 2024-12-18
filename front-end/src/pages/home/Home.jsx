@@ -42,7 +42,7 @@ export default function Home() {
 
   const renderComponent = () => {
     switch (selectedComponent) {
-      case 'agenda':
+      case 'reservar':
         return <SchedulingCalendar />;
       case 'users':
         return <Users />;
@@ -99,11 +99,11 @@ export default function Home() {
         }}
       >
         <List className="cursor-pointer">
-          <ListItem onClick={() => handleMenuClick('agenda')}>
+          <ListItem onClick={() => handleMenuClick('reservar')}>
             <ListItemIcon>
               <CalendarMonth />
             </ListItemIcon>
-            <ListItemText primary="Agenda" />
+            <ListItemText primary="Reservar" />
           </ListItem>
           <ListItem onClick={() => handleMenuClick('users')}>
             <ListItemIcon>

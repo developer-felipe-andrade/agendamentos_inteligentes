@@ -163,9 +163,10 @@ const Classroom = () => {
             <TableCell>Nome da Sala</TableCell>
             <TableCell>Bloco</TableCell>
             <TableCell>Capacidade</TableCell>
-            <TableCell>É acessível?</TableCell>
+            <TableCell>É acessível para pessoas com modalidade reduzida?</TableCell>
             <TableCell>Precisa de confirmação?</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Responsável</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>
@@ -179,7 +180,7 @@ const Classroom = () => {
               <TableCell>{row.acessible ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{row.confirmation ? 'Sim' : 'Não'}</TableCell>
               <TableCell>{row.active ? 'Ativo' : 'Inativo'}</TableCell>
-              <TableCell>{row.responsible?.name}</TableCell>
+              <TableCell>{row.responsible?.name ?? 'Não necessário'}</TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => handleOpen(row.id)}
@@ -237,7 +238,7 @@ const Classroom = () => {
                 color="primary"
               />
             }
-            label="É acessível?"
+            label="É acessível para pessoas com modalidade reduzida?"
           />
           <FormControlLabel
             control={

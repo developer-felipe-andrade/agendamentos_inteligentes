@@ -44,7 +44,7 @@ public class UserController {
         List<User> usersPending = userRepository.findByEnabledFalse();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
-            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.isEnabled());
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
 
@@ -56,7 +56,7 @@ public class UserController {
         List<User> usersPending = userRepository.findByResponsibles();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
-            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.isEnabled());
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
 
@@ -81,7 +81,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String user = authentication.getName();
         User loadedUser =(User) userRepository.findByLogin(user);
-        UserResponse dto = new UserResponse(loadedUser.getId(), loadedUser.getLogin(), loadedUser.getRole(), loadedUser.getName());
+        UserResponse dto = new UserResponse(loadedUser.getId(), loadedUser.getLogin(), loadedUser.getRole(), loadedUser.getProfession(), loadedUser.getName());
 
         return ResponseEntity.ok(dto);
     }

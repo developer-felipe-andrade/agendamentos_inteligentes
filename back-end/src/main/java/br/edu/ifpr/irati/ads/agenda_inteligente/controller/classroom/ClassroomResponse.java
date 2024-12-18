@@ -21,6 +21,7 @@ public record ClassroomResponse(
                     classroom.getResponsible().getId(),
                     classroom.getResponsible().getLogin(),
                     classroom.getResponsible().getRole(),
+                    classroom.getResponsible().getProfession(),
                     classroom.getResponsible().getName()
             );
         }
