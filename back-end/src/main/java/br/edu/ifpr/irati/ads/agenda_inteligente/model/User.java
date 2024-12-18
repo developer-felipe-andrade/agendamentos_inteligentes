@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserProfession;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -30,6 +31,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role;
+    @Enumerated(EnumType.STRING)
+    private UserProfession profession;
     private boolean enabled;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
@@ -53,11 +56,12 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public User(String name, String login, String password, UserRole role) {
+    public User(String name, String login, String password, UserRole role, UserProfession profession) {
         this.name = name;
         this.login = login;
         this.password = password;
         this.role = role;
+        this.profession = profession;
         this.enabled = false;
     }
 
@@ -67,7 +71,6 @@ public class User implements UserDetails {
 
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
 
     @Override
     public String getUsername() {

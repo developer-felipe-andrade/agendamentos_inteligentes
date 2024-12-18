@@ -52,7 +52,7 @@ public class AuthService implements UserDetailsService {
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
-        User user = new User(data.name(), data.login(), encryptedPassword, data.role());
+        User user = new User(data.name(), data.login(), encryptedPassword, data.role(), data.profession());
         repository.save(user);
 
         return true;

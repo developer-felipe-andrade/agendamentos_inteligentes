@@ -6,12 +6,9 @@ import { useNavigate } from "react-router-dom";
 import Alert from '../../components/UseAlert';
 
 const RegisterUser = () => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({email: '', name: '', password: '', role: '', profession: ''});
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const [role, setRole] = useState('');
   const { renderAlerts, addAlert } = Alert();
 
 
@@ -19,10 +16,11 @@ const RegisterUser = () => {
 
   const handleSubmit = async () => {
     const request = {
-      name: name,
-      login: email,
-      password: password,
-      role: role
+      name: formData.email,
+      login: formData.email,
+      password: formData.password,
+      role: formData.role,
+      profession: formData.profession
     }
 
     try {
@@ -39,9 +37,6 @@ const RegisterUser = () => {
     navigate('/');
   };
 
-  const handleChange = (event) => {
-    setRole(event.target.value);
-  };
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -55,8 +50,10 @@ const RegisterUser = () => {
                 label="Email"
                 variant="outlined"
                 fullWidth
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
 
@@ -65,8 +62,10 @@ const RegisterUser = () => {
                 label="Nome"
                 variant="outlined"
                 fullWidth
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
               />
             </div>
 
@@ -76,14 +75,16 @@ const RegisterUser = () => {
                 <OutlinedInput
                   id="outlined-adornment-password"
                   type={showPassword ? 'text' : 'password'}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
                         edge="end"
-                        value={password}
+                        value={formData.password}
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
@@ -100,13 +101,28 @@ const RegisterUser = () => {
                   <Select
                     labelId="role-select-label"
                     id="role-select"
-                    value={role}
-                    onChange={handleChange}
-                    label="Selecione o Cargo"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    label="Selecione o cargo"
                   >
                     <MenuItem value="ADMIN">Administrador</MenuItem>
-                    <MenuItem value="COORDINATOR">Coordenador</MenuItem>coordinator
+                    <MenuItem value="COORDINATOR">Coordenador</MenuItem>
                     <MenuItem value="USER">Usuário</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl fullWidth variant="outlined" margin="normal">
+                  <InputLabel id="profession-select-label">Selecione o papel dentro da faculdade</InputLabel>
+                  <Select
+                    labelId="profession-select-label"
+                    id="profession-select"
+                    value={formData.profession}
+                    onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
+                    label="Selecione o papel dentro da faculdade"
+                  >
+                    <MenuItem value="WORKER">Aluno</MenuItem>
+                    <MenuItem value="STUDENT">Servidor</MenuItem>
+                    <MenuItem value="EXTERNAL_COMUNITY">Comunidade Externa</MenuItem>
                   </Select>
                 </FormControl>
             </div>

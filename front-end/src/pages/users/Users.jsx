@@ -1,5 +1,6 @@
 import {
   Button,
+  Dialog,
   IconButton,
   Table,
   TableBody,
@@ -13,10 +14,16 @@ import user from '../../api/requests/user'
 import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
 import { Close, Done } from '@mui/icons-material';
+import { translateProfession, translateRole} from '../../helpers/translate'
 
 const Users = () => {
   const { renderAlerts, addAlert } = Alert();
   const [dataValues, setDataValues] = useState([]);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = async (date) => {
+    setOpen(true);
+  };
 
   const getData = async () => {
     try {
@@ -54,6 +61,8 @@ const Users = () => {
             <TableCell>ID</TableCell>
             <TableCell>Nome</TableCell>
             <TableCell>E-mail</TableCell>
+            <TableCell>Cargo</TableCell>
+            <TableCell>Papel dentro da faculdade</TableCell>
             <TableCell>Ações</TableCell>
           </TableRow>
         </TableHead>
@@ -63,6 +72,8 @@ const Users = () => {
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.login}</TableCell>
+              <TableCell>{translateRole(row.role)}</TableCell>
+              <TableCell>{translateProfession(row.profession)}</TableCell>
               <TableCell>
                 <IconButton
                   onClick={() => handleAprove(row.id)}
@@ -70,7 +81,7 @@ const Users = () => {
                   <Done />
                 </IconButton>
                 <IconButton
-                  onClick={() => handleDelete(row.id)}
+                  onClick={() => handleOpen()}
                 >
                   <Close />
                 </IconButton>
@@ -79,6 +90,9 @@ const Users = () => {
           ))}
         </TableBody>
       </Table>
+      <Dialog>
+        
+      </Dialog>
     </div>
   );
 };

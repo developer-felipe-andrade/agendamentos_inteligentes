@@ -36,7 +36,7 @@ public class TokenService {
 
     public String isValidToken(String token) {
         try {
-            if (blacklist.contains(token)) { // Verifica se o token está na blacklist
+            if (blacklist.contains(token)) {
                 return "";
             }
 
@@ -52,7 +52,7 @@ public class TokenService {
     }
 
     public void revokeToken(String token) {
-        blacklist.add(token); // Adiciona o token à blacklist no logout
+        blacklist.add(token);
     }
 
     private Instant generateExpirationDate() {
