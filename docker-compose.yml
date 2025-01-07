@@ -1,6 +1,7 @@
 volumes:
   db_data:
     driver: local
+  maven-cache: 
 
 services:
   db:
@@ -14,3 +15,37 @@ services:
       POSTGRES_PASSWORD: 123
     ports:
       - 5432:5432
+
+  frontend:
+    container_name: smart-scheduling-front
+    build:
+      context: ./front-end
+    ports:
+      - "5137:5137"
+    volumes:
+      - ./front-end:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Para hot reload no Docker
+    stdin_open: true
+    tty: true
+    command: npm run dev --host=0.0.0.0 --port=5137
+    depends_on:
+      - backend
+
+  backend:
+    container_name: smart-scheduling-back
+    build:
+      context: ./back-end
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./back-end/src:/app/src  # Mapeia apenas o diretório src
+      - ./back-end/pom.xml:/app/pom.xml  # Mapeia o pom.xml
+      - maven-cache:/root/.m2  # Cache do Maven usando volume nomeado
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    depends_on:
+      - db
