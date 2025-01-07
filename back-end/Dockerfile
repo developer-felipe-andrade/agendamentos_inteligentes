@@ -18,5 +18,5 @@ COPY src ./src
 
 # Executar com configurações para development
 CMD ["mvn", "spring-boot:run", \
-     "-Dspring-boot.run.jvmArguments='-XX:TieredStopAtLevel=1 -Dspring.devtools.restart.enabled=true'", \
+     "-Dspring-boot.run.jvmArguments=-XX:TieredStopAtLevel=1 -Dspring.devtools.restart.enabled=true", \
      "-Dspring-boot.run.profiles=dev"]
