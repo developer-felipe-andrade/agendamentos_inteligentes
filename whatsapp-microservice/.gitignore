@@ -1,0 +1,25 @@
+# Ignorar dependências do Node.js
+node_modules/
+
+# Ignorar cache do WhatsApp Web
+.session/
+.whatsapp-session/
+.wwebjs_cache/
+
+# Ignorar arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar build (caso utilize)
+dist/
+build/
+
+# Ignorar variáveis de ambiente
+.env
+.env.local
+.env.*.local

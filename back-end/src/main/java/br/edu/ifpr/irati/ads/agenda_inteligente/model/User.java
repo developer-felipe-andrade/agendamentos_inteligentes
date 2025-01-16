@@ -33,6 +33,7 @@ public class User implements UserDetails {
     private UserRole role;
     @Enumerated(EnumType.STRING)
     private UserProfession profession;
+    private String phoneNumber;
     private boolean enabled;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Reservation> reservations;
@@ -56,13 +57,14 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public User(String name, String login, String password, UserRole role, UserProfession profession) {
+    public User(String name, String login, String password, UserRole role, UserProfession profession, String phoneNumber) {
         this.name = name;
         this.login = login;
         this.password = password;
         this.role = role;
         this.profession = profession;
         this.enabled = false;
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
