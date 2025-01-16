@@ -44,7 +44,11 @@ public class UserController {
         List<User> usersPending = userRepository.findByEnabledFalse();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
+<<<<<<< HEAD
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.getPhoneNumber(), user.isEnabled());
+=======
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.isEnabled());
+>>>>>>> 18fc4838d38c065ee20f714083a5495dac80ef25
             responseUsersList.add(responseUsers);
         }
 
@@ -56,7 +60,11 @@ public class UserController {
         List<User> usersPending = userRepository.findByResponsibles();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
+<<<<<<< HEAD
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(),user.getPhoneNumber(), user.isEnabled());
+=======
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.isEnabled());
+>>>>>>> 18fc4838d38c065ee20f714083a5495dac80ef25
             responseUsersList.add(responseUsers);
         }
 
