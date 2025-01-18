@@ -13,6 +13,10 @@ const register = {
     return api.post('/auth/recover', data);
   },
 
+  async recoverRequest(data) {
+    return api.post('auth/request-recover', data);
+  },
+
   async logout() {
     return api.post('/auth/logout');
   }

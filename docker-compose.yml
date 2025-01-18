@@ -1,7 +1,6 @@
 volumes:
   db_data:
     driver: local
-  evolution_instances:
   # maven-cache: 
 
 services:
@@ -16,17 +15,6 @@ services:
       POSTGRES_PASSWORD: 123
     ports:
       - 5432:5432
-
-  evolution-api:
-    container_name: evolution_api
-    image: atendai/evolution-api:v2.1.1
-    restart: always
-    ports:
-      - "8080:8080"
-    env_file:
-      - .env
-    volumes:
-      - evolution_instances:/evolution/instances  
 
   # frontend:
   #   container_name: smart-scheduling-front

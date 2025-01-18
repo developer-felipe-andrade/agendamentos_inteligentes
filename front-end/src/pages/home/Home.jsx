@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, CssBaseline } from '@mui/material';
+import React, { useEffect } from 'react';
+import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { CalendarMonth, Inventory2, Person, Class, Logout } from '@mui/icons-material';
-import Users from '../users/Users';
-import Inventory from '../resources/Resource';
-import Classroom from '../classrooms/Classroom';
 import auth from '../../api/requests/auth';
+import user from '../../api/requests/user';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/UseAlert';
-import SchedulingCalendar from '../calendar/SchedulingCalendar';
 
 const drawerWidth = 240;
 
 export default function Home() {
   const [open, setOpen] = React.useState(false);
-  const [selectedComponent, setSelectedComponent] = useState('Inbox');
   const { renderAlerts, addAlert } = Alert();
 
   const toggleDrawer = () => {
@@ -29,31 +25,44 @@ export default function Home() {
       await auth.logout();
       Cookies.remove('authToken', { path: '/' });
     } catch(error) {
+      console.log(error);
       addAlert('Ocorreu um erro ao deslogar, entre em contato com o Administrador!', 'error');
     } finally {
-      navigate('/');
+      navigate('/login');
     }
   }
 
   const handleMenuClick = (componentName) => {
-    setSelectedComponent(componentName);
+    switch (componentName) {
+      case 'reserve':
+        navigate('/reserve');
+        break;
+      case 'users':
+        navigate('/users');
+        break;
+      case 'inventory':
+        navigate('/inventory');
+        break;
+      case 'classroom':
+        navigate('/classroom');
+        break;
+      default:
+        navigate('/');
+    }
+    
     setOpen(false);
   };
 
-  const renderComponent = () => {
-    switch (selectedComponent) {
-      case 'reservar':
-        return <SchedulingCalendar />;
-      case 'users':
-        return <Users />;
-      case 'inventory':
-        return <Inventory />;
-      case 'classroom':
-        return <Classroom />;
-      default:
-        return <h2>Home Component</h2>;
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        await user.me();
+      } catch {
+        navigate('/login');
+      }
     }
-  };
+    fetchData();
+  }, []);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden'}}>
@@ -99,7 +108,7 @@ export default function Home() {
         }}
       >
         <List className="cursor-pointer">
-          <ListItem onClick={() => handleMenuClick('reservar')}>
+          <ListItem onClick={() => handleMenuClick('reserve')}>
             <ListItemIcon>
               <CalendarMonth />
             </ListItemIcon>
@@ -125,19 +134,6 @@ export default function Home() {
           </ListItem>
         </List>
       </Drawer>
-
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          mt: 8,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        {renderComponent()}
-      </Box>
     </Box>
   );
 }

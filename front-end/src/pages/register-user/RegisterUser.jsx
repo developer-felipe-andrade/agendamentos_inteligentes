@@ -38,10 +38,15 @@ const RegisterUser = () => {
   };
 
   const isFormValid = useMemo(() => {
-    return Object.values(formData).every(value => value.trim() !== '') && 
-           validateEmail(formData.email) && 
-           !emailError;
+    const { phoneNumber, ...fieldsToValidate } = formData;
+  
+    return (
+      Object.values(fieldsToValidate).every(value => value.trim() !== '') &&
+      validateEmail(formData.email) &&
+      !emailError
+    );
   }, [formData, emailError]);
+  
 
   const formatPhone = (value) => {
     const numbers = value.replace(/\D/g, '');
@@ -92,11 +97,14 @@ const RegisterUser = () => {
   };
   
   const handleLogin = () => {
-    navigate('/');
+    navigate('/login');
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div 
+      className="flex items-center justify-center h-screen"
+      onKeyDown={(e) => e.key === 'Enter' && isFormValid && handleSubmit()}
+    >
       {renderAlerts()}
       <Container maxWidth="md" className="mt-10">
         <Paper elevation={3} className="p-6">
@@ -154,7 +162,6 @@ const RegisterUser = () => {
                 label="Telefone"
                 variant="outlined"
                 fullWidth
-                required
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
                 placeholder="(XX) XXXXX-XXXX"

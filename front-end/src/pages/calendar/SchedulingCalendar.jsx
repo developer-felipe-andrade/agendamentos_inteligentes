@@ -2,7 +2,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormHelperText, Grid, Grid2, InputLabel, MenuItem, Select, Switch, TextareaAutosize, TextField } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid2, InputLabel, MenuItem, Select,TextField } from '@mui/material'
 import { useState } from 'react'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,7 +13,7 @@ export default function SchedulingCalendar() {
   const [formData, setFormData] = useState({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
   const [open, setOpen] = useState(false);
 
-  const handleOpen = async (date) => {
+  const handleOpen = async () => {
     setOpen(true);
   };
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TextField, Button, Container, Paper, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -31,19 +31,32 @@ const Login = () => {
       
       addAlert('Login efetuado com sucesso!', 'success');
 
-      navigate('/inicio');
+      navigate('/');
     } catch (error) {
       console.log(error);
       addAlert('Erro ao acessar!', 'error');
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      Cookies.remove('authToken', { path: '/' });
+    } catch(error) {
+      console.log(error);
+      addAlert('Erro ao limpar os cookies, entre em contato com o administrador', 'error');
+    }
+  }
+
+  useEffect(() => {
+    handleLogout();
+  }, []); 
+
   const handleForgotPassword = () => {
-    navigate('/esqueceu-senha');
+    navigate('/forgot-password');
   };
 
   const handleCreateUser = () => {
-    navigate('/cadastrar');
+    navigate('/register');
   };
 
   const validateEmail = (email) => {
@@ -70,7 +83,15 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center h-screen">
+      <div 
+        className="flex items-center justify-center h-screen"
+        onKeyDown={(e) => {
+          if(e.key === 'Enter') {
+            e.preventDefault();
+            handleLogin();
+          }
+        }}
+      >
       {renderAlerts()}
         <Container maxWidth="sm" className="mt-10">
           <Paper elevation={3} className="p-6">

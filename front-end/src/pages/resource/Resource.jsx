@@ -19,7 +19,7 @@ import resource from '../../api/requests/resource';
 import Alert from '../../components/UseAlert';
 import { useEffect, useState } from 'react';
 
-const Inventory = () => {
+const Resource = () => {
   const [dataValues, setDataValues] = useState([]);
   const { renderAlerts, addAlert } = Alert();
   const [open, setOpen] = useState(false);
@@ -173,4 +173,4 @@ const Inventory = () => {
   );
 };
 
-export default Inventory;
+export default Resource;
