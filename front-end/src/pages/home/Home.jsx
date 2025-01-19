@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Modal, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { CalendarMonth, Inventory2, Person, Class, Logout } from '@mui/icons-material';
+import { CalendarMonth, Inventory2, Person, Class, Logout, QrCode } from '@mui/icons-material';
 import auth from '../../api/requests/auth';
 import user from '../../api/requests/user';
 import Cookies from 'js-cookie';
@@ -13,6 +13,7 @@ const drawerWidth = 240;
 export default function Home() {
   const [open, setOpen] = React.useState(false);
   const { renderAlerts, addAlert } = Alert();
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -52,6 +53,18 @@ export default function Home() {
     
     setOpen(false);
   };
+
+  const handleModalOpen = () => {
+    // Função que será executada ao abrir o modal
+    console.log('Modal aberto, função chamada');
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+
 
   useEffect(() => {
     async function fetchData() {
@@ -132,8 +145,53 @@ export default function Home() {
             </ListItemIcon>
             <ListItemText primary="Salas" />
           </ListItem>
+          <ListItem onClick={() => handleMenuClick('classroom')}>
+            <ListItemIcon>
+              <QrCode />
+            </ListItemIcon>
+            <ListItemText primary="Confirmar Whats-app" />
+          </ListItem>
         </List>
       </Drawer>
+
+      <Modal
+        open={handleModalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-title" variant="h6" component="h2">
+            QR Code
+          </Typography>
+          <Typography id="modal-description" sx={{ mt: 2 }}>
+            Aqui vai o QR Code gerado.
+          </Typography>
+          <Box
+            sx={{
+              width: '100%',
+              height: 200,
+              backgroundColor: '#f0f0f0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mt: 2,
+            }}
+          >
+            <Typography variant="body1" color="text.secondary">
+              QR Code Placeholder
+            </Typography>
+          </Box>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleModalClose}
+            sx={{ mt: 2 }}
+          >
+            Fechar
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 }
