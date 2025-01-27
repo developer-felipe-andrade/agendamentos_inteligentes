@@ -8,6 +8,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import Scaffold from '../../components/Scaffold'
 
 export default function SchedulingCalendar() {
   const [formData, setFormData] = useState({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
@@ -57,47 +58,49 @@ export default function SchedulingCalendar() {
   
   return (
     <div className="h-screen w-screen">
-      <FormControl fullWidth sx={{ m: 2 }}>
-        <InputLabel>Salas de Aula</InputLabel>
-        <Select
-          id={`room`}
-          label="Salas de Aula"
-          onChange={handleChange}
-          sx={{ mr: 3 }}  // Adicionando um espaço à direita
-        >
-          <MenuItem value="EMAIL">Nome: Laboratório 01 - Capacidade: 40 - Bloco: A</MenuItem>
-          <MenuItem value="WHATSAPP">Nome: Laboratório 01 - Capacidade: 40 - Bloco: B</MenuItem>
-        </Select>
-      </FormControl>
+      <Scaffold>
+        <FormControl fullWidth sx={{ m: 2 }}>
+          <InputLabel>Salas de Aula</InputLabel>
+          <Select
+            id={`room`}
+            label="Salas de Aula"
+            onChange={handleChange}
+            sx={{ mr: 3 }}  // Adicionando um espaço à direita
+          >
+            <MenuItem value="EMAIL">Nome: Laboratório 01 - Capacidade: 40 - Bloco: A</MenuItem>
+            <MenuItem value="WHATSAPP">Nome: Laboratório 01 - Capacidade: 40 - Bloco: B</MenuItem>
+          </Select>
+        </FormControl>
 
-      <FullCalendar
-        plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{
-          end: 'dayGridMonth,timeGridWeek,timeGridDay',
-        }}
-        customButtons={{
-          dayGridMonth: {
-            text: 'Mês',
-          },
-          timeGridWeek: {
-            text: 'Semana',
-          },
-          timeGridDay: {
-            text: 'Dia',
-          },
-        }}
-        height="100%"
-        dateClick={(info) => handleOpen(info)}
-        dayCellClassNames={(info) => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
-        slotLaneClassNames={() => 'cursor-pointer hover:bg-gray-200'}
-        events={[
-          { title: 'Aula POO', start: '2024-12-12T10:30:00', end: '2024-12-12T11:30:00'},
-          { title: 'TCC', start: '2024-12-13T14:30:00', end: '2024-12-13T15:30:00'},
-          { title: 'Algoritmo', start: '2024-12-14T20:30:00', end: '2024-12-14T21:30:00'},
-        ]}
-        
-      />
+        <FullCalendar
+          plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          headerToolbar={{
+            end: 'dayGridMonth,timeGridWeek,timeGridDay',
+          }}
+          customButtons={{
+            dayGridMonth: {
+              text: 'Mês',
+            },
+            timeGridWeek: {
+              text: 'Semana',
+            },
+            timeGridDay: {
+              text: 'Dia',
+            },
+          }}
+          height="100%"
+          dateClick={(info) => handleOpen(info)}
+          dayCellClassNames={(info) => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
+          slotLaneClassNames={() => 'cursor-pointer hover:bg-gray-200'}
+          events={[
+            { title: 'Aula POO', start: '2024-12-12T10:30:00', end: '2024-12-12T11:30:00'},
+            { title: 'TCC', start: '2024-12-13T14:30:00', end: '2024-12-13T15:30:00'},
+            { title: 'Algoritmo', start: '2024-12-14T20:30:00', end: '2024-12-14T21:30:00'},
+          ]}
+          
+        />
+      </Scaffold>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Agendar</DialogTitle>

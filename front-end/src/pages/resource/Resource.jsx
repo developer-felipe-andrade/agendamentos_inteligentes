@@ -18,6 +18,7 @@ import AddIcon from '@mui/icons-material/Add';
 import resource from '../../api/requests/resource';
 import Alert from '../../components/UseAlert';
 import { useEffect, useState } from 'react';
+import Scaffold from '../../components/Scaffold';
 
 const Resource = () => {
   const [dataValues, setDataValues] = useState([]);
@@ -31,6 +32,7 @@ const Resource = () => {
       
       setDataValues(data.content);
     } catch (error) {
+      console.log(error);
       addAlert('Erro ao recuperar os dados!', 'error');
     }
   };
@@ -40,24 +42,13 @@ const Resource = () => {
     setFormData(data);
   }
 
-  const handleEdit = async (id) => {
-    try {
-      await resource.update(formData, id);
-      addAlert('Recurso atualizado com sucesso!', 'success');
-    } catch (error) {
-      addAlert('Erro ao atualizar o recurso', 'error');
-    } finally {
-      getData();
-      handleClose();
-    }
-  };
-
   const handleDelete = async (id) => {
     try {
       await resource.delete(id);
       getData();
       addAlert('Recurso excluído com sucesso!', 'success');
     } catch (error) {
+      console.log(error);
       addAlert('Erro ao excluir o recurso', 'error');
     }
   };
@@ -80,6 +71,7 @@ const Resource = () => {
       await resource.create(formData);
       addAlert('Recurso salvo com sucesso!', 'success');
     } catch (error) {
+      console.log(error);
       addAlert('Erro ao salvar o recurso', 'error');
     } finally {
       getData();
@@ -96,9 +88,11 @@ const Resource = () => {
     getData();
   }, []);
 
-  return (
-    <div className="h-screen w-screen overflow-hidden p-4">
-      {renderAlerts()}
+return (
+  <Scaffold>
+
+  <div className="h-screen w-screen overflow-hidden p-4">
+    {renderAlerts()}
 
       <div className="flex justify-end mb-4">
         <Button
@@ -170,7 +164,9 @@ const Resource = () => {
         </DialogActions>
       </Dialog>
     </div>
+  </Scaffold>
   );
 };
+
 
 export default Resource;

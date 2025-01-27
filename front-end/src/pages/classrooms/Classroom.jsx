@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import user from '../../api/requests/user';
+import Scaffold from '../../components/Scaffold';
 
 
 const Classroom = () => {
@@ -135,68 +136,69 @@ const Classroom = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden mt-2">
-      {renderAlerts()}
+        <ConfirmationModal
+          open={modalOpen}
+          onClose={handleCloseModal}
+          onConfirm={handleConfirm}
+          title="Excluir Sala"
+          message="Você tem certeza que deseja excluir essa sala?"
+        />
+      <Scaffold>
+        {renderAlerts()}
       
-      <ConfirmationModal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        onConfirm={handleConfirm}
-        title="Excluir Sala"
-        message="Você tem certeza que deseja excluir essa sala?"
-      />
+        <div className="flex justify-end mb-4">
+          <Button
+            variant="contained"
+            color="primary"
+            endIcon={<AddIcon />}
+            onClick={() => handleOpen(null)}
+          >
+            Cadastrar
+          </Button>
+        </div>
 
-      <div className="flex justify-end mb-4">
-        <Button
-          variant="contained"
-          color="primary"
-          endIcon={<AddIcon />}
-          onClick={() => handleOpen(null)}
-        >
-          Cadastrar
-        </Button>
-      </div>
-
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Nome da Sala</TableCell>
-            <TableCell>Bloco</TableCell>
-            <TableCell>Capacidade</TableCell>
-            <TableCell>É acessível para pessoas com modalidade reduzida?</TableCell>
-            <TableCell>Precisa de confirmação?</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Responsável</TableCell>
-            <TableCell>Ações</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dataValues.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.block}</TableCell>
-              <TableCell>{row.qtdPlace}</TableCell>
-              <TableCell>{row.acessible ? 'Sim' : 'Não'}</TableCell>
-              <TableCell>{row.confirmation ? 'Sim' : 'Não'}</TableCell>
-              <TableCell>{row.active ? 'Ativo' : 'Inativo'}</TableCell>
-              <TableCell>{row.responsible?.name ?? 'Não necessário'}</TableCell>
-              <TableCell>
-                <IconButton
-                  onClick={() => handleOpen(row.id)}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleDelete(row.id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Nome da Sala</TableCell>
+              <TableCell>Bloco</TableCell>
+              <TableCell>Capacidade</TableCell>
+              <TableCell>É acessível para pessoas com modalidade reduzida?</TableCell>
+              <TableCell>Precisa de confirmação?</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Responsável</TableCell>
+              <TableCell>Ações</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {dataValues.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.block}</TableCell>
+                <TableCell>{row.qtdPlace}</TableCell>
+                <TableCell>{row.acessible ? 'Sim' : 'Não'}</TableCell>
+                <TableCell>{row.confirmation ? 'Sim' : 'Não'}</TableCell>
+                <TableCell>{row.active ? 'Ativo' : 'Inativo'}</TableCell>
+                <TableCell>{row.responsible?.name ?? 'Não necessário'}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleOpen(row.id)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDelete(row.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Scaffold>
 
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>Cadastrar Sala</DialogTitle>

@@ -11,18 +11,18 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class WhatsappController {
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Value("${url.microservice}")
-    String urlMicroservice;
-
-    @GetMapping("/qr-code")
-    public ResponseEntity<String> getQRCode() {
-        String urlQRCode = urlMicroservice + "/qr-code";
-        ResponseEntity<String> response = restTemplate.getForEntity(urlQRCode, String.class);
-        return ResponseEntity.ok(response.getBody());
-    }
+//    @Autowired
+//    private RestTemplate restTemplate;
+//
+//    @Value("${url.microservice}")
+//    String urlMicroservice;
+//
+//    @GetMapping("/qr-code")
+//    public ResponseEntity<String> getQRCode() {
+//        String urlQRCode = urlMicroservice + "/qr-code";
+//        ResponseEntity<String> response = restTemplate.getForEntity(urlQRCode, String.class);
+//        return ResponseEntity.ok(response.getBody());
+//    }
 
 //    @PostMapping("/send-message")
 //    public ResponseEntity<String> sendMessage(@RequestBody MessageRequest request) {

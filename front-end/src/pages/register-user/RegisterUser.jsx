@@ -38,6 +38,7 @@ const RegisterUser = () => {
   };
 
   const isFormValid = useMemo(() => {
+    // eslint-disable-next-line no-unused-vars
     const { phoneNumber, ...fieldsToValidate } = formData;
   
     return (

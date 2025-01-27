@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
 import { Close, Done } from '@mui/icons-material';
 import { translateProfession, translateRole} from '../../helpers/translate';
+import Scaffold from '../../components/Scaffold';
 
 const Users = () => {
   const { renderAlerts, addAlert } = Alert();
@@ -84,65 +85,67 @@ const Users = () => {
   return (
     <div className="h-screen w-screen overflow-hidden mt-2">
       {renderAlerts()}
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Nome</TableCell>
-            <TableCell>E-mail</TableCell>
-            <TableCell>Telefone</TableCell>
-            <TableCell>Cargo</TableCell>
-            <TableCell>Papel dentro da faculdade</TableCell>
-            <TableCell>Ações</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {dataValues.map((row) => (
-            <TableRow key={row.id}> 
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.login}</TableCell>
-              <TableCell>{row.phoneNumber}</TableCell>
-              <TableCell>{translateRole(row.role)}</TableCell>
-              <TableCell>{translateProfession(row.profession)}</TableCell>
-              <TableCell>
-                <IconButton
-                  onClick={() => handleAprove(row.id)}
-                >
-                  <Done />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleOpenRejectModal(row.login)}
-                >
-                  <Close />
-                </IconButton>
-              </TableCell>
+      <Scaffold>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Nome</TableCell>
+              <TableCell>E-mail</TableCell>
+              <TableCell>Telefone</TableCell>
+              <TableCell>Cargo</TableCell>
+              <TableCell>Papel dentro da faculdade</TableCell>
+              <TableCell>Ações</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {dataValues.map((row) => (
+              <TableRow key={row.id}> 
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.login}</TableCell>
+                <TableCell>{row.phoneNumber}</TableCell>
+                <TableCell>{translateRole(row.role)}</TableCell>
+                <TableCell>{translateProfession(row.profession)}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleAprove(row.id)}
+                  >
+                    <Done />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleOpenRejectModal(row.login)}
+                  >
+                    <Close />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
-      <Dialog open={openModal} onClose={handleCloseModal} fullWidth>
-        <DialogTitle>Rejeitar Usuário</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Motivo da rejeição"
-            fullWidth
-            multiline
-            rows={4}
-            value={rejectionComment}
-            onChange={(e) => setRejectionComment(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="primary">
-            Cancelar
-          </Button>
-          <Button onClick={handleReject} color="primary" variant="contained" disabled={!rejectionComment}>
-            Enviar notificação
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Dialog open={openModal} onClose={handleCloseModal} fullWidth>
+          <DialogTitle>Rejeitar Usuário</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Motivo da rejeição"
+              fullWidth
+              multiline
+              rows={4}
+              value={rejectionComment}
+              onChange={(e) => setRejectionComment(e.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={handleReject} color="primary" variant="contained" disabled={!rejectionComment}>
+              Enviar notificação
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Scaffold>
     </div>
   );
 };
