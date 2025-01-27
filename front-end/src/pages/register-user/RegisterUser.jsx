@@ -15,6 +15,7 @@ const RegisterUser = () => {
     phoneNumber: ''
   });
   const [emailError, setEmailError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const { renderAlerts, addAlert } = Alert();
@@ -73,6 +74,15 @@ const RegisterUser = () => {
     }
   };
 
+  const handlePhoneValidate = () => {
+    const numbersOnly = formData.phoneNumber.replace(/\D/g, "");
+    if (numbersOnly.length !== 11 && numbersOnly.length > 0) {
+      setPhoneError('Whatsapp inválido');
+    } else {
+      setPhoneError('');
+    }
+  };
+
   const handleSubmit = async () => {
     if (!validateEmail(formData.email)) {
       addAlert('Por favor, insira um e-mail válido', 'error');
@@ -90,10 +100,11 @@ const RegisterUser = () => {
 
     try {
       await auth.register(request);
-      handleLogin();
       addAlert('Cadastro efetuado com sucesso!', 'success');
+      handleLogin();
     } catch (error) {
-      addAlert(error, 'error');
+      console.log(error);
+      addAlert('Ocorreu um erro ao realizar o cadastro. Tente novamente mais tarde.', 'error');
     }
   };
   
@@ -160,15 +171,18 @@ const RegisterUser = () => {
               </FormControl>
 
               <TextField
-                label="Telefone"
+                label="Whatsapp"
                 variant="outlined"
                 fullWidth
                 value={formData.phoneNumber}
                 onChange={handlePhoneChange}
+                onBlur={handlePhoneValidate}
                 placeholder="(XX) XXXXX-XXXX"
                 inputProps={{
                   maxLength: 15
                 }}
+                error={!!phoneError}
+                helperText={phoneError}
               />
             </div>
             
