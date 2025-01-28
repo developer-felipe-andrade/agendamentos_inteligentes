@@ -20,6 +20,7 @@ public class EmailService {
 
     public void sendEmail(EmailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
         message.setTo(request.to());
         message.setSubject("Aprovação de usuário.");
         message.setText(request.body());

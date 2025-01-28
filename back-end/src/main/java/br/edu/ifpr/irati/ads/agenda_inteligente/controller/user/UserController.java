@@ -3,6 +3,7 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.user;
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth.requests.ReleaseRequest;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,19 +20,12 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping("/release")
     public ResponseEntity release(@RequestBody @Valid ReleaseRequest data) {
         try {
-            for (String uuidUser : data.users()) {
-                Optional<User> loadedUser = userRepository.findById(uuidUser);
-                if (loadedUser.isPresent()) {
-                    User user = loadedUser.get();
-                    user.setEnabled(true);
-                    userRepository.save(user);
-                }
-            }
+            userService.releaseUsers(data.users());
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -41,7 +35,7 @@ public class UserController {
 
     @GetMapping("/pending-release")
     public ResponseEntity pendingRelease() {
-        List<User> usersPending = userRepository.findByEnabledFalse();
+        List<User> usersPending = userService.findByReleaseUsers();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.getPhoneNumber(), user.isEnabled());
@@ -53,9 +47,9 @@ public class UserController {
 
     @GetMapping("/responsibles")
     public ResponseEntity responsibles() {
-        List<User> usersPending = userRepository.findByResponsibles();
+        List<User> usersResponsibles = userService.findByResponsibles();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
-        for (User user: usersPending) {
+        for (User user: usersResponsibles) {
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(),user.getPhoneNumber(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
@@ -65,22 +59,16 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable String id) {
-        Optional<User> loadedUser = userRepository.findById(id);
-        if(loadedUser.isPresent()) {
-            User user = loadedUser.get();
-            userRepository.delete(user);
+        if (!userService.deleteUser(id)) return ResponseEntity.notFound().build();
 
-            return ResponseEntity.ok().build();
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String user = authentication.getName();
-        User loadedUser =(User) userRepository.findByLogin(user);
+        String login = authentication.getName();
+        User loadedUser = userService.findByLogin(login);
         UserResponse dto = new UserResponse(loadedUser.getId(), loadedUser.getLogin(), loadedUser.getRole(), loadedUser.getProfession(), loadedUser.getName());
 
         return ResponseEntity.ok(dto);

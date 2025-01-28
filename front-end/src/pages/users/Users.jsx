@@ -12,7 +12,7 @@ import {
   DialogContent,
   DialogActions
 } from '@mui/material';
-import user from '../../api/requests/user';
+import User from '../../api/requests/user';
 import Notifications from '../../api/requests/notifications';
 import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
@@ -26,10 +26,11 @@ const Users = () => {
   const [openModal, setOpenModal] = useState(false);
   const [rejectionComment, setRejectionComment] = useState('');
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
   const getData = async () => {
     try {
-      const { data } = await user.pendingUsers();
+      const { data } = await User.pendingUsers();
       setDataValues(data);
     } catch (error) {
       console.log('error', error);
@@ -40,7 +41,7 @@ const Users = () => {
   const handleAprove = async (id) => {
     try {
       const data = {users: [id]}
-      await user.release(data);
+      await User.release(data);
       addAlert('Usuário aprovado com sucesso');
     } catch (error){
       console.log('error', error);
@@ -50,8 +51,10 @@ const Users = () => {
     }
   }
 
-  const handleOpenRejectModal = (email) => {
-    setSelectedUserEmail(email);
+  const handleOpenRejectModal = (user) => {
+    console.log(user);
+    setSelectedUserEmail(user.login);
+    setSelectedUserId(user.id);
     setOpenModal(true);
   };
 
@@ -69,10 +72,13 @@ const Users = () => {
 
     try {
       await Notifications.sendEmail(data);
+      await User.delete(selectedUserId);
       addAlert('Notificação enviada com sucesso');
     } catch (error) {
       console.log('error', error);
       addAlert('Erro ao rejeitar o cadastro do usuário', 'error');
+    } finally {
+      getData();
     }
 
     handleCloseModal();
@@ -112,7 +118,7 @@ const Users = () => {
                     <Done />
                   </IconButton>
                   <IconButton
-                    onClick={() => handleOpenRejectModal(row.login)}
+                    onClick={() => handleOpenRejectModal(row)}
                   >
                     <Close />
                   </IconButton>

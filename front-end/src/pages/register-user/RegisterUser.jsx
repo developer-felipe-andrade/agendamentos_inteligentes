@@ -45,9 +45,9 @@ const RegisterUser = () => {
     return (
       Object.values(fieldsToValidate).every(value => value.trim() !== '') &&
       validateEmail(formData.email) &&
-      !emailError
+      !emailError && !phoneError
     );
-  }, [formData, emailError]);
+  }, [formData, emailError, phoneError]);
   
 
   const formatPhone = (value) => {

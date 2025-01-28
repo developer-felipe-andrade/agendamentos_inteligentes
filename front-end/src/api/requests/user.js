@@ -15,7 +15,11 @@ const user = {
 
   async release(users) {
     return api.post('/user/release', users);
-  } 
+  }, 
+
+  async delete(id) {
+    return api.delete(`/user/${id}`);
+  }
 };
 
 export default user;

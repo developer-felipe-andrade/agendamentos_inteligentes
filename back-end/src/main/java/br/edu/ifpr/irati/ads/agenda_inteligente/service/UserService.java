@@ -5,6 +5,9 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
     @Autowired
@@ -14,5 +17,31 @@ public class UserService {
         User loadedUser =(User) userRepository.findByLogin(login);
 
         return loadedUser != null;
+    }
+
+    public Boolean deleteUser(String id) {
+        Optional<User> loadedUser = userRepository.findById(id);
+
+        if (loadedUser.isEmpty()) return false;
+
+        userRepository.delete(loadedUser.get());
+
+        return true;
+    }
+
+    public List<User> findByReleaseUsers() {
+        return userRepository.findByEnabledFalse();
+    }
+
+    public List<User> findByResponsibles() {
+        return userRepository.findByResponsibles();
+    }
+
+    public User findByLogin(String login) {
+        return (User) userRepository.findByLogin(login);
+    }
+
+    public void releaseUsers(List<String> uuidUsers) {
+
     }
 }
