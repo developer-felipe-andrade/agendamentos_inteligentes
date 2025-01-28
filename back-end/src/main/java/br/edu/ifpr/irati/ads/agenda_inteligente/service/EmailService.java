@@ -30,6 +30,7 @@ public class EmailService {
 
     public void sendEmail(String email, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
         message.setTo(email);
         message.setSubject(subject);
         message.setText(body);

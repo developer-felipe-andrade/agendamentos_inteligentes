@@ -45,17 +45,20 @@ public class ClassroomController {
     @PutMapping("/{id}")
     public ResponseEntity<Classroom> update(
         @PathVariable String id,
-        @RequestBody Classroom data
+        @RequestBody ClassroomRequest data
     ) {
-        Classroom updated = classroomService.updateClassroom(id, data);
-        return ResponseEntity.ok(updated);
+        classroomService.updateClassroom(id, data);
+
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> delete(
             @PathVariable String id
     ) {
-        classroomService.deleteClassroom(id);
+        if (classroomService.deleteClassroom(id)) {
+            return ResponseEntity.notFound().build();
+        }
 
         return ResponseEntity.noContent().build();
     }

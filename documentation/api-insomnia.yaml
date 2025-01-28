@@ -1,11 +1,197 @@
 _type: export
 __export_format: 4
-__export_date: 2024-11-11T22:54:01.857Z
-__export_source: insomnia.desktop.app:v10.1.1
+__export_date: 2025-01-28T23:16:45.420Z
+__export_source: insomnia.desktop.app:v10.3.0
 resources:
-  - _id: req_619802e7b0704c42a6decd12aeacd4b4
-    parentId: fld_a2b162962929459087daf4c8d3242ab3
-    modified: 1731365329780
+  - _id: req_36cf2a8f66b64e88b6f393a544a95162
+    parentId: fld_965737e0e1b24f97a2f248186355517d
+    modified: 1738105640758
+    created: 1738105626471
+    url: "{{ _.baseUrl }}/resource"
+    name: FindAll
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1736420369907.5
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_965737e0e1b24f97a2f248186355517d
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
+    modified: 1738105444965
+    created: 1738105444965
+    name: Resource
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1738105444965
+    environmentType: kv
+    _type: request_group
+  - _id: wrk_5026a96e201a42ceae32572d6ddf4421
+    parentId: null
+    modified: 1738104174850
+    created: 1738104174850
+    name: TCC
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_6d7b5e41bac14683a1e50d6199ad19e5
+    parentId: fld_965737e0e1b24f97a2f248186355517d
+    modified: 1738105684448
+    created: 1738105666001
+    url: "{{ _.baseUrl }}/resource/94851309-b20f-4d2c-80bd-5b6eb2cb51c4"
+    name: FindById
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1733892729413.75
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_5a4ede6eadfd466ca5e66e36864eac6a
+    parentId: fld_965737e0e1b24f97a2f248186355517d
+    modified: 1738105829957
+    created: 1738105714595
+    url: "{{ _.baseUrl }}/resource"
+    name: Register
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "name": "Novo recurso",
+          "type": "teste"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1732628909166.875
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1b38addab5bf480e81e0f463d4b292b5
+    parentId: fld_965737e0e1b24f97a2f248186355517d
+    modified: 1738105876092
+    created: 1738105839418
+    url: "{{ _.baseUrl }}/resource/122e8508-77fa-4b2f-a2b9-adacacd82ebf"
+    name: Update
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "id": "122e8508-77fa-4b2f-a2b9-adacacd82ebf",
+            "name": "Projetor ate",
+            "type": "Visual"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1731996999043.4375
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_0e76af4f47734ac0b2673f57e79ef8c1
+    parentId: fld_965737e0e1b24f97a2f248186355517d
+    modified: 1738105902239
+    created: 1738105894521
+    url: "{{ _.baseUrl }}/resource/122e8508-77fa-4b2f-a2b9-adacacd82ebf"
+    name: Delete
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1731681043981.7188
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1fb2e597dc9a4bffb8fefe1d6abd044f
+    parentId: fld_2bc597513fee4bd9838c9c4f6e17713b
+    modified: 1738105349674
     created: 1731365088920
     url: "{{ _.baseUrl }}/user/me"
     name: Me
@@ -33,8 +219,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_a2b162962929459087daf4c8d3242ab3
-    parentId: wrk_5d90f3ab5d0248b7820b63967f0abc05
+  - _id: fld_2bc597513fee4bd9838c9c4f6e17713b
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
     modified: 1731365085739
     created: 1731365085739
     name: User
@@ -43,16 +229,8 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1731365085739
     _type: request_group
-  - _id: wrk_5d90f3ab5d0248b7820b63967f0abc05
-    parentId: null
-    modified: 1731337503769
-    created: 1728342512181
-    name: TCC
-    description: ""
-    scope: collection
-    _type: workspace
-  - _id: req_542629528f894629aef51994b24d5a6b
-    parentId: fld_a2b162962929459087daf4c8d3242ab3
+  - _id: req_42c198a5701a440eae9d60a1c83e708c
+    parentId: fld_2bc597513fee4bd9838c9c4f6e17713b
     modified: 1731365335185
     created: 1731365146489
     url: "{{ _.baseUrl }}/user/pending-release"
@@ -81,17 +259,26 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_c2e2936b6aa742dda453247c305aece3
-    parentId: fld_a2b162962929459087daf4c8d3242ab3
-    modified: 1731365337145
+  - _id: req_31924b1dff864276b002c9e084fbbc81
+    parentId: fld_2bc597513fee4bd9838c9c4f6e17713b
+    modified: 1738105426453
     created: 1731365179233
     url: "{{ _.baseUrl }}/user/release"
     name: Release
     description: ""
     method: POST
-    body: {}
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"users": [
+        		//lista de usuários
+        	]
+        }
     parameters: []
     headers:
+      - name: Content-Type
+        value: application/json
       - name: User-Agent
         value: insomnia/10.1.1
         id: pair_56f8de29cc30467f84aa45d1c9517779
@@ -111,8 +298,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_890c54263b6e48ed9e2b1ca1cc50ae03
-    parentId: fld_a2b162962929459087daf4c8d3242ab3
+  - _id: req_8d34b0ca9b5344539ea5527939cf375a
+    parentId: fld_2bc597513fee4bd9838c9c4f6e17713b
     modified: 1731365339142
     created: 1731365199115
     url: "{{ _.baseUrl }}/user/delete/{id}"
@@ -141,8 +328,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_34a1916c552c45809303b0ffad0f5720
-    parentId: fld_353f0f7086c54aa8949e9e11b1affa4b
+  - _id: req_baeb8ed9f77a4e119b2aa52a8a6b64ba
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
     modified: 1731364946325
     created: 1731364901338
     url: "{{ _.baseUrl }}/classroom"
@@ -171,8 +358,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_353f0f7086c54aa8949e9e11b1affa4b
-    parentId: wrk_5d90f3ab5d0248b7820b63967f0abc05
+  - _id: fld_c1119141c8ab4f269a40252c880127cd
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
     modified: 1731364896531
     created: 1731364894131
     name: Classroom
@@ -181,8 +368,8 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1731364894131
     _type: request_group
-  - _id: req_720e47421a9044e58455376c1e8cd9db
-    parentId: fld_353f0f7086c54aa8949e9e11b1affa4b
+  - _id: req_305e7401834a4a02be5dfa674546d09f
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
     modified: 1731364950924
     created: 1731364939251
     url: "{{ _.baseUrl }}/classroom/{id}"
@@ -211,9 +398,9 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_07f56b4a6a414ecdb776ba3dc9338998
-    parentId: fld_353f0f7086c54aa8949e9e11b1affa4b
-    modified: 1731365030786
+  - _id: req_7a8092477626414d92b5d308aac57735
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
+    modified: 1738106103942
     created: 1731364960179
     url: "{{ _.baseUrl }}/classroom"
     name: Register
@@ -223,12 +410,18 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"name": "",
-        	"qtdPlace": "",
-        	"block": "",
-        	"isAcessibled": true,
-        	"status": "",
-        	"confirmation": true
+        	"name": "Sala A",
+        	"qtdPlace": "40",
+        	"block": "A",
+        	"acessible": true,
+        	"active": true,
+        	"confirmation": false,
+        	"idsResources": [
+        		{
+        			"id": "459d958a-2662-46bd-ba96-979e73a23154",
+        			"quantity": 10
+        		}
+        	]
         }
     parameters: []
     headers:
@@ -253,8 +446,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_bb14dde701264076b3f866d09a7e07ad
-    parentId: fld_353f0f7086c54aa8949e9e11b1affa4b
+  - _id: req_fa2d8ad389f74ee4943d7f9aed992483
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
     modified: 1731365054531
     created: 1731365038316
     url: "{{ _.baseUrl }}/classroom/{id}"
@@ -295,8 +488,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_9407b93ed98049a1be9ea988308710c0
-    parentId: fld_5434330d6d8141c689cedeb206312d9a
+  - _id: req_9f7b3516ec8342588c5a44013bd749ab
+    parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
     modified: 1731364234313
     created: 1731363986099
     url: "{{ _.baseUrl }}/auth/login"
@@ -327,9 +520,9 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_5434330d6d8141c689cedeb206312d9a
-    parentId: wrk_5d90f3ab5d0248b7820b63967f0abc05
-    modified: 1731363956799
+  - _id: fld_af464cc9bce748a6b2a6227fc57bb3da
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
+    modified: 1738105063052
     created: 1731363956799
     name: Auth
     description: ""
@@ -337,9 +530,72 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1731363956799
     _type: request_group
-  - _id: req_8d2f0e287c5c4be5899895cbcea7385d
-    parentId: fld_5434330d6d8141c689cedeb206312d9a
-    modified: 1731364450352
+  - _id: req_45e78d03deb74a239932b1612427bb34
+    parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
+    modified: 1738105074669
+    created: 1738105072315
+    url: "{{ _.baseUrl }}/auth/login"
+    name: Request-recover
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "login": "andradefelipedev@gmail.com"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+    authentication: {}
+    metaSortKey: -1731363990118
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_179d67664f4141c29b8144ef36dbbc6b
+    parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
+    modified: 1738105126224
+    created: 1738105124003
+    url: "{{ _.baseUrl }}/auth/login"
+    name: Recover password
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+            "login": "andradefelipedev@gmail.com",
+            "password": "1234"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+    authentication: {}
+    metaSortKey: -1731363990105.5
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_56a252c260da4333be4179709e8ba94c
+    parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
+    modified: 1738104466494
     created: 1731364293015
     url: "{{ _.baseUrl }}/auth/register"
     name: Register
@@ -349,9 +605,12 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"login": "user@admin.com",
-        	"password": "123",
-        	"role": "USER"
+            "name": "andradefelipedev@gmail.com",
+            "login": "andradefelipedev@gmail.com",
+            "password": "123",
+            "role": "ADMIN",
+            "profession": "STUDENT",
+            "phoneNumber": "(42) 99950-0305"
         }
     parameters: []
     headers:
@@ -370,8 +629,8 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_2deb807ef2174f6096e6ef7279c4ed1c
-    parentId: fld_5434330d6d8141c689cedeb206312d9a
+  - _id: req_61037781c4564f068389e44f7b4d356e
+    parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
     modified: 1731364860076
     created: 1731364359515
     url: "{{ _.baseUrl }}/auth/logout"
@@ -400,14 +659,14 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: env_6be11b24ad58506d1b39414bda8c71bde4042a31
-    parentId: wrk_5d90f3ab5d0248b7820b63967f0abc05
-    modified: 1731364844302
+  - _id: env_00dd885c8ccf42a9bb1896b90bb6d33b
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
+    modified: 1738105362502
     created: 1728342512184
     name: Base Environment
     data:
       baseUrl: http://localhost:8080
-      authToken: Bearer {% response 'body', 'req_9407b93ed98049a1be9ea988308710c0',
+      authToken: Bearer {% response 'body', 'req_9f7b3516ec8342588c5a44013bd749ab',
         'b64::JC50b2tlbg==::46b', 'never', 60 %}
     dataPropertyOrder:
       "&":
@@ -417,8 +676,8 @@ resources:
     isPrivate: false
     metaSortKey: 1728342512184
     _type: environment
-  - _id: jar_6be11b24ad58506d1b39414bda8c71bde4042a31
-    parentId: wrk_5d90f3ab5d0248b7820b63967f0abc05
+  - _id: jar_601cc5623d574055b663295360fb6524
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
     modified: 1731337503915
     created: 1731337503915
     name: Default Jar

@@ -89,7 +89,7 @@ const Users = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen overflow-hidden mt-2">
+    <div className="h-screen w-screen overflow-hidden">
       {renderAlerts()}
       <Scaffold>
         <Table>

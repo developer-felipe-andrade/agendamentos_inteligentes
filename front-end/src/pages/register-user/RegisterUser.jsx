@@ -49,7 +49,6 @@ const RegisterUser = () => {
     );
   }, [formData, emailError, phoneError]);
   
-
   const formatPhone = (value) => {
     const numbers = value.replace(/\D/g, '');
     let formatted = numbers;

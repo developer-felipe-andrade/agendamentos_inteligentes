@@ -60,7 +60,7 @@ export default function Scaffold({ children }) {
       reserve: '/reserve',
       users: '/users',
       resources: '/resources',
-      classroom: '/classroom',
+      classroom: '/classrooms',
     };
     navigate(routes[componentName] || '/');
     setOpen(false);

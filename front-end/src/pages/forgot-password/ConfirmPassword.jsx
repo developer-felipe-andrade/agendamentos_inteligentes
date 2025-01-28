@@ -84,6 +84,7 @@ const ConfirmPassword = () => {
                     variant="contained"
                     color="primary"
                     className="w-full bg-blue-500 text-white"
+                    disabled={formData.password === '' || formData.confirmPassword === ''}
                   >
                     Redefinir Senha
                   </Button>

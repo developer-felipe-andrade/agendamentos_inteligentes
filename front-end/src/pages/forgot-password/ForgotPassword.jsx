@@ -6,8 +6,25 @@ import auth from '../../api/requests/auth';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
   const { renderAlerts, addAlert } = Alert();
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  };
+
+  const handleEmailChange = (e) => {
+    const email = e.target.value;
+    setEmail(email);
+    
+    if (email && !validateEmail(email)) {
+      setEmailError('E-mail inválido');
+    } else {
+      setEmailError('');
+    }
+  };
 
   const handleSubmit = async () => {
     const data = {
@@ -19,7 +36,8 @@ const ForgotPassword = () => {
       addAlert('Solicitação de senha para recuperar requisitada com sucesso!', 'success');
       handleBack();
     } catch (error) {
-      addAlert(error, 'error');
+      console.log(error);
+      addAlert('Erro ao solicitar a recuperação de senha', 'error');
     }
   };
   
@@ -35,12 +53,15 @@ const ForgotPassword = () => {
           <h2 className="text-2xl font-bold mb-4 text-center">Esqueceu a senha?</h2>
           <div className="space-y-4">
             <div>
-              <TextField
-                label="Email"
+            <TextField
+                label="E-mail"
                 variant="outlined"
                 fullWidth
+                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
+                error={!!emailError}
+                helperText={emailError}
               />
             </div>
             
@@ -50,6 +71,7 @@ const ForgotPassword = () => {
                 variant="contained"
                 color="primary"
                 className="w-full bg-blue-500 text-white"
+                disabled={emailError || email === ''}
               >
                 Solicitar redefinição
               </Button>

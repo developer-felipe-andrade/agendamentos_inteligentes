@@ -57,9 +57,9 @@ export default function SchedulingCalendar() {
   };
   
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen overflow-hidden">
       <Scaffold>
-        <FormControl fullWidth sx={{ m: 2 }}>
+        <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel>Salas de Aula</InputLabel>
           <Select
             id={`room`}
@@ -89,9 +89,9 @@ export default function SchedulingCalendar() {
               text: 'Dia',
             },
           }}
-          height="100%"
+          height="90%"
           dateClick={(info) => handleOpen(info)}
-          dayCellClassNames={(info) => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
+          dayCellClassNames={() => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
           slotLaneClassNames={() => 'cursor-pointer hover:bg-gray-200'}
           events={[
             { title: 'Aula POO', start: '2024-12-12T10:30:00', end: '2024-12-12T11:30:00'},

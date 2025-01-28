@@ -9,6 +9,7 @@ import Users from './pages/users/Users';
 import Resource from './pages/resource/Resource';
 import Classroom from './pages/classrooms/Classroom';
 import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
+import FormClassroom from './pages/classrooms/FormClassroom';
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
         <Route path="/reserve" element={<SchedulingCalendar />} />
         <Route path="/users" element={<Users />} />
         <Route path="/resources" element={<Resource/>} />
-        <Route path="/classroom" element={<Classroom />} />
+        <Route path="/classrooms" element={<Classroom />} />
+        <Route path="/classroom/:id" element={<FormClassroom />} />
         <Route path="/" element={<Home/>} />                                                                               
       </Routes>
     </Router>

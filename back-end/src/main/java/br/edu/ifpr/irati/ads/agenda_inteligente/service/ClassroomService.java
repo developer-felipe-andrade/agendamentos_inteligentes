@@ -3,10 +3,9 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
-import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
-import br.edu.ifpr.irati.ads.agenda_inteligente.service.exception.UserNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,40 +18,51 @@ public class ClassroomService {
 
     @Autowired
     private ClassroomRepository classroomRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    public Classroom updateClassroom(String id, Classroom updatedClassroom) {
+    @Autowired
+    private ResourceClassroomService resourceClassroomService;
+
+    @Autowired
+    private UserService userService;
+
+
+    @Transactional
+    public void updateClassroom(String id, ClassroomRequest data) {
         Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
 
         if (optionalClassroom.isPresent()) {
             Classroom classroom = optionalClassroom.get();
-            classroom.setName(updatedClassroom.getName());
-            classroom.setQtdPlace(updatedClassroom.getQtdPlace());
-            classroom.setBlock(updatedClassroom.getBlock());
-            classroom.setActive(updatedClassroom.isActive());
-            classroom.setAcessible(updatedClassroom.isAcessible());
-            classroom.setConfirmation(updatedClassroom.isConfirmation());
+            classroom.setName(data.name());
+            classroom.setQtdPlace(data.qtdPlace());
+            classroom.setBlock(data.block());
+            classroom.setActive(data.active());
+            classroom.setAcessible(data.acessible());
+            classroom.setConfirmation(data.confirmation());
 
-            if (updatedClassroom.isConfirmation()) {
-                if (updatedClassroom.getResponsible() != null) {
-                    User user = userRepository.findById(updatedClassroom.getResponsible().getId())
-                            .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-                    classroom.setResponsible(user);
-                }
+            if (data.confirmation()) {
+                User user = userService.findById(data.idUser());
+                classroom.setResponsible(user);
             } else {
                 classroom.setResponsible(null);
             }
 
-            return classroomRepository.save(classroom);
+            Classroom classroomSaved = classroomRepository.save(classroom);
+
+            for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
+                resourceClassroomService.deleteResourcesForClassroom(resourceQuantity.id());
+            }
+            for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
+                resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved.getId(), data.qtdPlace());
+            }
         } else {
             throw new RuntimeException("Classroom not found with id: " + id);
         }
     }
 
+    @Transactional
     public boolean deleteClassroom(String id) {
         Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
+
         if (optionalClassroom.isPresent()) {
             classroomRepository.delete(optionalClassroom.get());
 
@@ -72,14 +82,19 @@ public class ClassroomService {
         return classroomRepository.findAll(pageable).map(ClassroomResponse::fromEntity);
     }
 
+    @Transactional
     public void register(ClassroomRequest data) {
         Classroom classroom = new Classroom(data);
 
         if (data.confirmation()) {
-            Optional<User> optionalUser = userRepository.findById(data.idUser());
-            optionalUser.ifPresent(classroom::setResponsible);
+            User user = userService.findById(data.idUser());
+            classroom.setResponsible(user);
         }
 
-        classroomRepository.save(classroom);
+        Classroom classroomSaved = classroomRepository.save(classroom);
+
+        for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
+            resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved.getId(), data.qtdPlace());
+        }
     }
 }

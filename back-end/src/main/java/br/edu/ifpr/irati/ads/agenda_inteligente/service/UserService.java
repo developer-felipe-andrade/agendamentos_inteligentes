@@ -41,7 +41,11 @@ public class UserService {
         return (User) userRepository.findByLogin(login);
     }
 
-    public void releaseUsers(List<String> uuidUsers) {
+    public void releaseUsers(List<String> uuidUsers) {}
 
+    public User findById(String id) {
+        Optional<User> user = userRepository.findById(id);
+
+        return user.orElse(null);
     }
 }

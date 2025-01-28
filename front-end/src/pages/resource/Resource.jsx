@@ -19,12 +19,16 @@ import resource from '../../api/requests/resource';
 import Alert from '../../components/UseAlert';
 import { useEffect, useState } from 'react';
 import Scaffold from '../../components/Scaffold';
+import ConfirmationModal from '../../components/ConfirmationModal';
 
 const Resource = () => {
   const [dataValues, setDataValues] = useState([]);
   const { renderAlerts, addAlert } = Alert();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', type: '' });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(0);
+
 
   const getData = async () => {
     try {
@@ -42,15 +46,26 @@ const Resource = () => {
     setFormData(data);
   }
 
-  const handleDelete = async (id) => {
+  const handleConfirm = async () => {
     try {
-      await resource.delete(id);
+      await resource.delete(selectedId);
       getData();
       addAlert('Recurso excluído com sucesso!', 'success');
     } catch (error) {
       console.log(error);
       addAlert('Erro ao excluir o recurso', 'error');
+    } finally {
+      handleCloseModal();
     }
+  };
+
+  const handleDelete = async (id) => {
+    setModalOpen(true);
+    setSelectedId(id);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false)
   };
 
   const handleOpen = async (id) => {
@@ -89,9 +104,17 @@ const Resource = () => {
   }, []);
 
 return (
-  <Scaffold>
+  <div className="h-screen w-screen overflow-hidden">
 
-  <div className="h-screen w-screen overflow-hidden p-4">
+  <ConfirmationModal
+    open={modalOpen}
+    onClose={handleCloseModal}
+    onConfirm={handleConfirm}
+    title="Excluir Recurso"
+    message="Você tem certeza que deseja excluir esse recurso?"
+  />
+
+  <Scaffold>
     {renderAlerts()}
 
       <div className="flex justify-end mb-4">
@@ -109,7 +132,6 @@ return (
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
             <TableCell>Nome do Recurso</TableCell>
             <TableCell>Tipo</TableCell>
             <TableCell>Ações</TableCell>
@@ -118,7 +140,6 @@ return (
         <TableBody>
           {dataValues.map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.type}</TableCell>
               <TableCell>
@@ -163,8 +184,8 @@ return (
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
-  </Scaffold>
+     </Scaffold>
+  </div>
   );
 };
 
