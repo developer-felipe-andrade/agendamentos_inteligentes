@@ -43,6 +43,9 @@ public class Classroom {
     @OneToMany(mappedBy = "classroom",  fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "classroom", fetch = FetchType.LAZY)
+    private List<ResourceClassroom> resources;
+
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();

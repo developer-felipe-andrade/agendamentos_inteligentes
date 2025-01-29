@@ -163,6 +163,7 @@ return (
             label="Nome do Recurso"
             name="name"
             fullWidth
+            required
             value={formData.name}
             onChange={handleChange}
           />
@@ -171,6 +172,7 @@ return (
             label="Tipo"
             name="type"
             fullWidth
+            required
             value={formData.type}
             onChange={handleChange}
           />
@@ -179,7 +181,12 @@ return (
           <Button onClick={handleClose} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleSave} variant="contained" color="primary">
+          <Button 
+            onClick={handleSave} 
+            variant="contained" 
+            color="primary"
+            disabled={formData.name === '' || formData.type === ''}
+          >
             Salvar
           </Button>
         </DialogActions>

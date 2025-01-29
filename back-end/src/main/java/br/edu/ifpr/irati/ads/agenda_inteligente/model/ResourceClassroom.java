@@ -19,8 +19,9 @@ public class ResourceClassroom {
     @Column(name = "resource_id", nullable = false)
     private String resourceId;
 
-    @Column(name = "classroom_id", nullable = false)
-    private String classroomId;
+    @ManyToOne
+    @JoinColumn(name = "classroom_id", nullable = false)
+    private Classroom classroom;
 
     @Column(nullable = false)
     private Integer qtd;

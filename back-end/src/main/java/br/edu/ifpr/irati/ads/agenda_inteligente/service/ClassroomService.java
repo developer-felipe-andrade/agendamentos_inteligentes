@@ -4,8 +4,10 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRe
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.ResourceClassroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ public class ClassroomService {
     @Autowired
     private UserService userService;
 
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @Transactional
     public void updateClassroom(String id, ClassroomRequest data) {
@@ -52,7 +55,7 @@ public class ClassroomService {
                 resourceClassroomService.deleteResourcesForClassroom(resourceQuantity.id());
             }
             for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
-                resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved.getId(), data.qtdPlace());
+                resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, data.qtdPlace());
             }
         } else {
             throw new RuntimeException("Classroom not found with id: " + id);
@@ -94,7 +97,8 @@ public class ClassroomService {
         Classroom classroomSaved = classroomRepository.save(classroom);
 
         for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
-            resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved.getId(), data.qtdPlace());
+
+            resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, data.qtdPlace());
         }
     }
 }
