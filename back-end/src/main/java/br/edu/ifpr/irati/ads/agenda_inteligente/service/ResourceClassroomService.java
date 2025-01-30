@@ -30,6 +30,6 @@ public class ResourceClassroomService {
 
     @Transactional
     public void deleteResourcesForClassroom(String classroomId) {
-        resourceClassroomRepository.deleteByClassroomId(classroomId);
+        resourceClassroomRepository.deleteByResourceId(classroomId);
     }
 }

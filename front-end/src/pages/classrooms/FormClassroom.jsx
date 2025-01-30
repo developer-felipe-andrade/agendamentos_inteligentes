@@ -27,17 +27,17 @@ import Resource from '../../api/requests/resource';
 
 const FormClassroom = () => {
   const navigate = useNavigate();
-	const [formData, setFormData] = useState({id: '', name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true, idUser: "", idsResources: [] });
-  const [users, setUsers] = useState([]);
-  const { renderAlerts, addAlert } = Alert();
-	const { id } = useParams();
-	const [dataResource, setDataResources] = useState([{
+	const [formData, setFormData] = useState({id: '', name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true, idUser: "", idsResources: [{
 		name: '',
 		type: '',
 		quantity: 0
-	}]);
+	}]});
+  const [users, setUsers] = useState([]);
+  const { renderAlerts, addAlert } = Alert();
+	const { id } = useParams();
+	const [dataResource, setDataResources] = useState([]);
 	const [errorQuantities, setErrorQuantities] = useState({});
-
+	
 	const validateForm = () => {
 		if (!formData.name || !formData.qtdPlace || !formData.block) {
 			return true; 
@@ -73,14 +73,31 @@ const FormClassroom = () => {
 	};
 	
 	const handleQuantityChange = (index, value) => {
-		const updatedResources = [...formData.idsResources];
-		updatedResources[index].quantity = value || 0; 
-		setFormData({ ...formData, idsResources: updatedResources });
+		const updatedResources = [...dataResource];
+		updatedResources[index].quantity = value;
+		setDataResources(updatedResources);
+	
+		setFormData((prevFormData) => {
+			const updatedIdsResources = prevFormData.idsResources.map((resource, i) => {
+				if (i === index) {
+					return { ...resource, quantity: value };
+				}
+				return resource;
+			});
+	
+			return { ...prevFormData, idsResources: updatedIdsResources };
+		});
 	};
 
 	const handleSave = async () => {
     try {
-      await Classroom.create(formData);
+			const data = {...formData, idsResources: formData.idsResources.filter(idResource => idResource.quantity > 0)}
+	
+			if (data.id) {
+				await Classroom.update(data, data.id);
+			} else {
+				await Classroom.create(data);
+			}
       addAlert('Sala salva com sucesso!', 'success');
     } catch (error) {
       console.log(error);
@@ -92,22 +109,39 @@ const FormClassroom = () => {
 
 	const getDataResources = async () => {
     try {
-      const { data } = await Resource.getAll();
-      const formatDataResource = data.content.map(resource => {
-				const matchResource = formData.idsResources.find(item => item.id === resource.id);
-				if (matchResource) {
-					return { ...resource, quantity: matchResource.quantity};
-				}
+        const { data } = await Resource.getAll();				
+				setDataResources(data.content);
+    } catch (error) {
+        console.log(error);
+        addAlert('Erro ao recuperar os dados!', 'error');
+    }
+	};
+	
+	const getClassroomById = async (id) => {
+		const { data } = await Classroom.findById(id);
+			
+		setFormData({
+			id: data.id,
+			name: data.name,
+			qtdPlace: data.qtdPlace,
+			block: data.block,
+			acessible: data.acessible,
+			active: data.active,
+			confirmation: data.confirmation,
+			idUser: data.responsible?.id,
+			idsResources: data.idsResources
+		});
 
+		setDataResources(prevDataResource => 
+			prevDataResource.map(resource => {
+				const matchedResource = data.idsResources.find(r => r.id === resource.id);
+				if (matchedResource) {
+					return { ...resource, quantity: matchedResource.quantity };
+				}
 				return resource;
 			})
-
-			setDataResources(formatDataResource);
-    } catch (error) {
-      console.log(error);
-      addAlert('Erro ao recuperar os dados!', 'error');
-    }
-  };
+		);
+	};
 
 	const getUserResponsibles = async () => {
 		try {
@@ -118,26 +152,18 @@ const FormClassroom = () => {
 		}
 	};
 
-	const getClassroomById = async (id) => {
-    const { data } = await Classroom.findById(id);
-    
-    setFormData({
-			id: data.id,
-      name: data.name,
-      qtdPlace: data.qtdPlace,
-      block: data.block,
-      acessible: data.acessible,
-      active: data.active,
-      confirmation: data.confirmation,
-      idUser: data.responsible?.id,
-			idsResources: data.idsResources
-    });
-  }
+	useEffect(() => {
+		const fetchDataResources = async () => {
+			await getDataResources();
+		};
+		fetchDataResources();
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
-		const fetchClassroom = async () => {
+    const fetchClassroom = async () => {
 			if (id) {
-				await getClassroomById(id);
+					await getClassroomById(id);
 			}
 		};
 		fetchClassroom();
@@ -151,14 +177,6 @@ const FormClassroom = () => {
 		};
 		fetchUserResponsibles();
 	}, [formData.confirmation]);
-
-	useEffect(() => {
-		const fetchDataResources = async () => {
-			await getDataResources(); 
-		};
-		fetchDataResources();
-	}, [formData.idsResources]);
-
 	const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -169,7 +187,7 @@ const FormClassroom = () => {
 		<Scaffold>
 			{renderAlerts()}
 			<h2 className="text-2xl font-bold">Cadastrar Sala</h2>
-			<form onSubmit={handleSave}>
+			
 			<div style={{ display: 'flex', gap: '16px' }}>
 				<TextField
 					margin="normal"
@@ -283,18 +301,17 @@ const FormClassroom = () => {
 						</TableRow>
 						</TableHead>
 						<TableBody>
-							{dataResource.map((row, index) => (
-								<TableRow key={index}>
-									<TableCell className="w-1/3">{row.name}</TableCell>
-									<TableCell className="w-1/3">{row.type}</TableCell>
-									<TableCell className="w-1/3">
+							{dataResource.map((row) => (
+								<TableRow key={row.id}>
+									<TableCell>{row.name}</TableCell>
+									<TableCell>{row.type}</TableCell>
+									<TableCell>
 										<TextField
-											className="xs:w-[50px] sm:w-[300px]"
-											value={row.quantity || 0} // Garantir que o valor não seja undefined
-											onChange={(e) => handleQuantityChange(index, e.target.value)}
-											onBlur={(e) => validateQuantity(index, e.target.value)}
-											error={!!errorQuantities[index]}
-											helperText={errorQuantities[index]}
+											value={row.quantity || ''}
+											onChange={(e) => handleQuantityChange(row.id, e.target.value)}
+											onBlur={(e) => validateQuantity(row.id, e.target.value)}
+											error={!!errorQuantities[row.id]}
+											helperText={errorQuantities[row.id]}
 											variant="outlined"
 											size="small"
 										/>
@@ -309,11 +326,10 @@ const FormClassroom = () => {
 					<Button onClick={() => navigate(-1)} color="secondary" variant="outlined">
 						Cancelar
 					</Button>
-					<Button type="submit" variant="contained" color="primary" disabled={validateForm()}>
+					<Button type="submit" variant="contained" color="primary" disabled={validateForm()} onClick={handleSave}>
 						Salvar
 					</Button>
 				</div>
-			</form>
 		</Scaffold>
 	</div>
   );

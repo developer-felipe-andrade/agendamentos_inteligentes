@@ -56,9 +56,7 @@ public class ClassroomController {
     public ResponseEntity<Boolean> delete(
             @PathVariable String id
     ) {
-        if (classroomService.deleteClassroom(id)) {
-            return ResponseEntity.notFound().build();
-        }
+        classroomService.deleteClassroom(id);
 
         return ResponseEntity.noContent().build();
     }

@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, String> {
     UserDetails findByLogin(String email);
     List<User> findByEnabledFalse();
 
-    @Query(value = "SELECT u.* FROM users u WHERE u.role = 'ADMIN' or u.role = 'COORDINATOR' and u.enabled = true", nativeQuery = true)
+    @Query(value = "SELECT u.* FROM users u WHERE (u.role = 'ADMIN' or u.role = 'COORDINATOR') and u.enabled = true", nativeQuery = true)
     List<User> findByResponsibles();
 }

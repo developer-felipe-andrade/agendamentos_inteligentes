@@ -55,7 +55,7 @@ public class ClassroomService {
                 resourceClassroomService.deleteResourcesForClassroom(resourceQuantity.id());
             }
             for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
-                resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, data.qtdPlace());
+                resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, resourceQuantity.quantity());
             }
         } else {
             throw new RuntimeException("Classroom not found with id: " + id);
@@ -97,8 +97,7 @@ public class ClassroomService {
         Classroom classroomSaved = classroomRepository.save(classroom);
 
         for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
-
-            resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, data.qtdPlace());
+            resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, resourceQuantity.quantity());
         }
     }
 }
