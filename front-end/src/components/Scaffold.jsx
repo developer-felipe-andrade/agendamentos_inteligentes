@@ -19,28 +19,31 @@ import {
   Person,
   Class,
   Logout,
-  QrCode,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Alert from './UseAlert';
+import WhatsAppQrModal from '../pages/whatsapp/WhatsAppQrModal';
+import whatsapp from "../api/requests/whatsapp";
 
 const drawerWidth = 240;
-
 export default function Scaffold({ children }) {
 	Scaffold.propTypes = {
-		children: PropTypes.node.isRequired, // Valida que 'children' é obrigatório e pode ser qualquer nó renderizável
+		children: PropTypes.node.isRequired, 
 	};
       
-
   const [open, setOpen] = React.useState(false);
   const { renderAlerts, addAlert } = Alert();
   const navigate = useNavigate();
+  const [isConnected, setIsConnected] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
+    if (open) {
+      checkWhatsAppStatus();
+    }
   };
 
   const handleLogout = async () => {
@@ -76,6 +79,16 @@ export default function Scaffold({ children }) {
     }
     fetchData();
   }, []);
+
+  const checkWhatsAppStatus = async () => {
+    try {
+      const { data } = await whatsapp.status();
+      setIsConnected(data.connected);
+      console.log(isConnected);
+    } catch (error) {
+      console.error("Erro ao verificar status do WhatsApp:", error);
+    }
+  };
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -132,12 +145,8 @@ export default function Scaffold({ children }) {
             </ListItemIcon>
             <ListItemText primary="Salas" />
           </ListItem>
-          <ListItem onClick={() => handleMenuClick('classroom')}>
-            <ListItemIcon>
-              <QrCode />
-            </ListItemIcon>
-            <ListItemText primary="Confirmar Whats-app" />
-          </ListItem>
+
+          { !isConnected && <WhatsAppQrModal />}
         </List>
       </Drawer>
 
