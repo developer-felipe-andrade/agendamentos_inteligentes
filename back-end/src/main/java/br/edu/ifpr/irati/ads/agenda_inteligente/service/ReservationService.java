@@ -22,9 +22,8 @@ public class ReservationService {
 
     @Transactional
     public Reservation create(Reservation reservation) {
-        if (reservation.getId() == null) {
-            reservation.setId(UUID.randomUUID().toString());
-        }
+        reservation.setId(UUID.randomUUID().toString());
+
         return repository.save(reservation);
     }
 
@@ -32,16 +31,12 @@ public class ReservationService {
         return repository.findAll(pageable);
     }
 
-    public List<Reservation> findByUserId(String userId, Pageable pageable) {
-        return repository.findByUserId(userId, pageable);
-    }
-
     public Page<Reservation> findByClassroomId(String classroomId, Pageable pageable) {
-        return repository.findByClassroomId(classroomId, pageable);
+        return repository.findByClassroom_Id(classroomId, pageable);
     }
 
     public Page<Reservation> findByStatus(String status, Pageable pageable) {
-        return repository.findByStatus(status, pageable);
+        return repository.findByStatusIgnoreCase(status, pageable);
     }
 
     public Optional<Reservation> findById(String id) {

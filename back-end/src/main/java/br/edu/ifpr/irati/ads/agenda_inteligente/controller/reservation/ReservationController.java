@@ -5,6 +5,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReservationService;
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ public class ReservationController {
     @Autowired
     private ReservationService service;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<ReservationResponse> create(
@@ -33,12 +34,12 @@ public class ReservationController {
             @RequestBody @Valid ReservationRequest request
     ) {
         String username = userDetails.getUsername();
-        User user = (User) userRepository.findByLogin(username);
+        User user = userService.findByLogin(username);
 
         Reservation reservation = service.create(request.toEntity(user.getId()));
         ReservationResponse response = ReservationResponse.fromEntity(reservation);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping
@@ -57,28 +58,19 @@ public class ReservationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<ReservationResponse>> findByUserId(
-            @PathVariable String userId,
-            @PageableDefault(size = 10, sort = "dtStart") Pageable pageable) {
-        List<ReservationResponse> responses = service.findByUserId(userId, pageable)
-                .stream().map(ReservationResponse::fromEntity).toList();
-        return ResponseEntity.ok(responses);
-    }
-
     @GetMapping("/classroom/{classroomId}")
     public ResponseEntity<Page<ReservationResponse>> findByClassroomId(
             @PathVariable String classroomId,
-            @PageableDefault(size = 10, sort = "dtStart") Pageable pageable) {
+            @PageableDefault(sort = "dtStart") Pageable pageable) {
         Page<ReservationResponse> responses = service.findByClassroomId(classroomId, pageable)
                 .map(ReservationResponse::fromEntity);
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/active/{active}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<Page<ReservationResponse>> findByStatus(
             @PathVariable String status,
-            @PageableDefault(size = 10, sort = "dtStart") Pageable pageable) {
+            @PageableDefault(sort = "dtStart") Pageable pageable) {
         Page<ReservationResponse> responses = service.findByStatus(status, pageable)
                 .map(ReservationResponse::fromEntity);
         return ResponseEntity.ok(responses);
@@ -90,7 +82,7 @@ public class ReservationController {
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid ReservationRequest request) {
         String username = userDetails.getUsername();
-        User user = (User) userRepository.findByLogin(username);
+        User user = userService.findByLogin(username);
 
         return service.findById(id)
                 .map(existingReservation -> {
@@ -102,9 +94,8 @@ public class ReservationController {
 
     @PatchMapping("/{id}/active")
     public ResponseEntity<ReservationResponse> updateStatus(
-            @PathVariable String id,
-            @RequestParam String status) {
-        return service.updateStatus(id, status)
+            @PathVariable String id) {
+        return service.updateStatus(id, "ACTIVE")
                 .map(ReservationResponse::fromEntity)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

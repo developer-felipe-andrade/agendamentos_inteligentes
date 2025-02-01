@@ -13,8 +13,8 @@ public record NotificationRequest(
         LocalDateTime anticipationTime,
 
         @NotNull(message = "Forma de notificação é obrigatória")
-        @Pattern(regexp = "^(EMAIL|SMS|WHATSAPP|PUSH)$",
-                message = "Forma de notificação deve ser: EMAIL, SMS, WHATSAPP ou PUSH")
+        @Pattern(regexp = "^(EMAIL|SMS|PUSH)$",
+                message = "Forma de notificação deve ser: EMAIL, SMS ou PUSH")
         String form
 ) {
     public Notification toEntity(Reservation reservation) {

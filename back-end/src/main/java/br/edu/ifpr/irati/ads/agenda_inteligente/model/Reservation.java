@@ -29,7 +29,7 @@ public class Reservation {
 
     private String status;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String obs;
 
     @CreationTimestamp

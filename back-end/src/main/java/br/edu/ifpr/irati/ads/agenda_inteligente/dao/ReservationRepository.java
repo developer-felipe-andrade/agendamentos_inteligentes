@@ -14,14 +14,8 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
-    Page<Reservation> findByClassroomId(String classroomId, Pageable pageable);
-    Page<Reservation> findByStatus(String status, Pageable pageable);
-    @Query(value = "SELECT r.* FROM reservations r " +
-            "WHERE r.user_id = :userId " +
-            "ORDER BY r.dt_start ASC",
-            countQuery = "SELECT count(*) FROM reservations r WHERE r.user_id = :userId",
-            nativeQuery = true)
-    List<Reservation> findByUserId(@Param("userId") String userId, Pageable pageable);
+    Page<Reservation> findByClassroom_Id(String classroomId, Pageable pageable);
+    Page<Reservation> findByStatusIgnoreCase(String status, Pageable pageable);
 
     @Query("SELECT r FROM reservations r WHERE r.classroom.id = :classroomId " +
             "AND ((r.dtStart BETWEEN :start AND :end) OR " +

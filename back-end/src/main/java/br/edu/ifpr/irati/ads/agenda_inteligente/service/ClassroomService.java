@@ -66,6 +66,10 @@ public class ClassroomService {
     public boolean deleteClassroom(String id) {
         Optional<Classroom> optionalClassroom = classroomRepository.findById(id);
 
+        if (classroomRepository.existsByIdAndReservationsIsNotEmpty(id)) {
+            return false;
+        };
+
         if (optionalClassroom.isPresent()) {
             classroomRepository.delete(optionalClassroom.get());
 
