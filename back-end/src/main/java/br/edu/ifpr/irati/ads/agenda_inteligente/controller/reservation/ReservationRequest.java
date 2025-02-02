@@ -43,17 +43,24 @@ public record ReservationRequest(
                 message = "Tipo de recorrência deve ser: ALLDAY, MONDAYTOFRIDAY ou ONLYDAY")
         String typeRecurrence,
 
-        @Pattern(regexp = "^(WEEK|MONTH)$",
-                message = "Tipo de repetição deve ser: WEEK ou MONTH")
-        String typeTime,
-
         @Min(value = 1, message = "A recorrência deve ser pelo menos 1")
         Integer timeRecurrence
 ) {
+    @AssertTrue(message = "Se a recorrência for MONDAYTOFRIDAY, a data não pode ser sábado ou domingo")
+    public boolean isValidRecurrence() {
+        if ("MONDAYTOFRIDAY".equals(typeRecurrence)) {
+            DayOfWeek dayOfWeek = dtStart.getDayOfWeek();
+            return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
+        }
+        return true;
+    }
+
     public ReservationRequest {
         if (recurrence == null) {
             recurrence = false;
         }
+
+        isValidRecurrence();
     }
 
     public List<Reservation> toEntities(String userId) {
@@ -89,20 +96,18 @@ public record ReservationRequest(
                         start = start.plusDays(1);  // Agora sempre incrementa de 1 em 1 dia
                         end = end.plusDays(1);      // Ajustando também a data de término
                         break;
-
                     case "MONDAYTOFRIDAY":
+                        start = start.plusDays(1);
+                        end = end.plusDays(1);
                         while (start.getDayOfWeek() == DayOfWeek.SATURDAY || start.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                            start = start.plusDays(1); // Pula o fim de semana
+                            start = start.plusDays(1);
                             end = end.plusDays(1);
                         }
-                        break;
 
+                        break;
                     case "ONLYDAY":
-                        if (start.getDayOfWeek() != this.dtStart.getDayOfWeek()) {
-                            int daysToAdd = (this.dtStart.getDayOfWeek().getValue() - start.getDayOfWeek().getValue() + 7) % 7;
-                            start = start.plusDays(daysToAdd);
-                            end = end.plusDays(daysToAdd);
-                        }
+                        start = start.plusDays(7);
+                        end = end.plusDays(7);
                         break;
                 }
             }
