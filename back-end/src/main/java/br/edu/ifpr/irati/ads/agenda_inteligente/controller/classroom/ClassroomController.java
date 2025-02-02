@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +57,11 @@ public class ClassroomController {
     public ResponseEntity<Boolean> delete(
             @PathVariable String id
     ) {
-        classroomService.deleteClassroom(id);
+        boolean deleted = classroomService.deleteClassroom(id);
+
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
         return ResponseEntity.noContent().build();
     }

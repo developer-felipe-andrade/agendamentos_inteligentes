@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,15 +30,16 @@ public class ReservationController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(
+    public ResponseEntity create(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestBody @Valid ReservationRequest request
     ) {
         String username = userDetails.getUsername();
         User user = userService.findByLogin(username);
-
-        Reservation reservation = service.create(request.toEntity(user.getId()));
-        ReservationResponse response = ReservationResponse.fromEntity(reservation);
+        List<Reservation> reservations = request.toEntities(user.getId());
+        for (Reservation reservation : reservations) {
+            service.create(reservation);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -77,17 +79,29 @@ public class ReservationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ReservationResponse> update(
+    public ResponseEntity<List<ReservationResponse>> update(
             @PathVariable String id,
             @AuthenticationPrincipal UserDetails userDetails,
-            @RequestBody @Valid ReservationRequest request) {
+            @RequestBody @Valid ReservationRequest request
+    ) {
         String username = userDetails.getUsername();
         User user = userService.findByLogin(username);
 
         return service.findById(id)
                 .map(existingReservation -> {
-                    Reservation updated = service.update(id, request.toEntity(user.getId()));
-                    return ResponseEntity.ok(ReservationResponse.fromEntity(updated));
+                    List<Reservation> updatedReservations = new ArrayList<>();
+                    List<Reservation> newReservations = request.toEntities(user.getId());
+
+                    for (Reservation newReservation : newReservations) {
+                        Reservation updated = service.update(id, newReservation);
+                        updatedReservations.add(updated);
+                    }
+
+                    List<ReservationResponse> responses = updatedReservations.stream()
+                            .map(ReservationResponse::fromEntity)
+                            .toList();
+
+                    return ResponseEntity.ok(responses);
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -107,6 +121,16 @@ public class ReservationController {
             return ResponseEntity.notFound().build();
         }
         service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/recurring/{id}")
+    public ResponseEntity<Void> deleteRecurring(@PathVariable String id) {
+        if (service.findById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        service.deleteRecurring(id);
         return ResponseEntity.noContent().build();
     }
 }

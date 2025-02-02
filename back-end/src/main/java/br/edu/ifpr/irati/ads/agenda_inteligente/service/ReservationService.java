@@ -64,6 +64,7 @@ public class ReservationService {
         return repository.save(reservation);
     }
 
+
     @Transactional
     public Optional<Reservation> updateStatus(String id, String status) {
         return repository.findById(id)
@@ -76,6 +77,17 @@ public class ReservationService {
     @Transactional
     public void delete(String id) {
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteRecurring(String id) {
+        Reservation existingReservation = getById(id);
+
+        repository.deleteByRecurrence(
+                existingReservation.getUser().getId(),
+                existingReservation.getClassroom().getId(),
+                existingReservation.getDtStart()
+        );
     }
 
     private void validateReservationTimes(Reservation reservation) {
