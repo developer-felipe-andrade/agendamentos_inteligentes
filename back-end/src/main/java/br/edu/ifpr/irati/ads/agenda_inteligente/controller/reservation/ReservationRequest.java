@@ -22,11 +22,6 @@ public record ReservationRequest(
         @FutureOrPresent(message = "A data final deve ser no presente ou futuro")
         LocalDateTime dtEnd,
 
-        @NotNull(message = "Status é obrigatório")
-        @Pattern(regexp = "^(PENDING|APPROVED|REJECTED|CANCELED)$",
-                message = "Status deve ser: PENDING, APPROVED, REJECTED ou CANCELED")
-        String status,
-
         @Size(max = 1000, message = "Observação deve ter no máximo 1000 caracteres")
         String obs,
 
@@ -73,7 +68,6 @@ public record ReservationRequest(
             reservation.setId(UUID.randomUUID().toString());
             reservation.setDtStart(start);
             reservation.setDtEnd(end);
-            reservation.setStatus(this.status);
             reservation.setObs(this.obs);
 
             User user = new User();
@@ -92,9 +86,8 @@ public record ReservationRequest(
             if (Boolean.TRUE.equals(this.recurrence)) {
                 switch (this.typeRecurrence) {
                     case "ALLDAY":
-                        // Incrementa 1 dia por iteração
-                        start = start.plusDays(1);  // Agora sempre incrementa de 1 em 1 dia
-                        end = end.plusDays(1);      // Ajustando também a data de término
+                        start = start.plusDays(1);
+                        end = end.plusDays(1);
                         break;
                     case "MONDAYTOFRIDAY":
                         start = start.plusDays(1);

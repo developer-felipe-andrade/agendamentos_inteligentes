@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   AppBar,
@@ -11,6 +11,10 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
+  Avatar,
+  Menu,
+  MenuItem,
+  ListItemAvatar,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -28,11 +32,13 @@ import Alert from './UseAlert';
 
 const drawerWidth = 240;
 export default function Scaffold({ children }) {
-	Scaffold.propTypes = {
-		children: PropTypes.node.isRequired, 
-	};
-      
+  Scaffold.propTypes = {
+    children: PropTypes.node.isRequired, 
+  };
+  
   const [open, setOpen] = React.useState(false);
+  const [userContent, setUserContent] = useState({});
+  const [anchorEl, setAnchorEl] = useState(null); // Controla o Menu do Avatar
   const { renderAlerts, addAlert } = Alert();
   const navigate = useNavigate();
 
@@ -55,7 +61,7 @@ export default function Scaffold({ children }) {
   const handleMenuClick = (componentName) => {
     const routes = {
       reserve: '/reserve',
-      users: '/users',
+      aproveUsers: '/aprove-users',
       resources: '/resources',
       classroom: '/classrooms',
     };
@@ -63,10 +69,19 @@ export default function Scaffold({ children }) {
     setOpen(false);
   };
 
+  const handleAvatarClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
-        await user.me();
+        const { data } = await user.me();
+        setUserContent(data);
       } catch {
         navigate('/login');
       }
@@ -77,7 +92,7 @@ export default function Scaffold({ children }) {
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       { renderAlerts() }
-			<AppBar position="fixed">
+      <AppBar position="fixed">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
             <MenuIcon />
@@ -85,9 +100,24 @@ export default function Scaffold({ children }) {
           <Typography variant="h6" noWrap>
             Agenda Inteligente
           </Typography>
-          <IconButton edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
-            <Logout />
-          </IconButton>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton edge="end" color="inherit" onClick={handleAvatarClick}>
+              <Avatar alt={userContent.name} src={userContent.avatarUrl} />
+            </IconButton>
+            <IconButton edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
+              <Logout />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+            >
+              <MenuItem>{userContent.name}</MenuItem>
+              <MenuItem>{userContent.login}</MenuItem>
+              <MenuItem>{userContent.role}</MenuItem>
+              <MenuItem>{userContent.profession}</MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -111,24 +141,18 @@ export default function Scaffold({ children }) {
             </ListItemIcon>
             <ListItemText primary="Reservar" />
           </ListItem>
-          <ListItem onClick={() => handleMenuClick('users')}>
-            <ListItemIcon>
-              <Person />
-            </ListItemIcon>
-            <ListItemText primary="Usuários" />
-          </ListItem>
-          <ListItem onClick={() => handleMenuClick('resources')}>
-            <ListItemIcon>
-              <Inventory2 />
-            </ListItemIcon>
-            <ListItemText primary="Recursos" />
-          </ListItem>
-          <ListItem onClick={() => handleMenuClick('classroom')}>
-            <ListItemIcon>
-              <Class />
-            </ListItemIcon>
-            <ListItemText primary="Salas" />
-          </ListItem>
+
+          {userContent.role === 'ADMIN' &&
+            [
+              { key: 'aproveUsers', icon: <Person />, text: 'Aprovar Usuários' },
+              { key: 'resources', icon: <Inventory2 />, text: 'Recursos' },
+              { key: 'classroom', icon: <Class />, text: 'Salas' },
+            ].map(({ key, icon, text }) => (
+              <ListItem key={key} onClick={() => handleMenuClick(key)}>
+                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItem>
+            ))}
         </List>
       </Drawer>
 

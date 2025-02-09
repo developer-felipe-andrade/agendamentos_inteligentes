@@ -1,6 +1,8 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ReservationRepository;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
@@ -20,9 +22,19 @@ public class ReservationService {
     @Autowired
     private ReservationRepository repository;
 
+    @Autowired
+    private ClassroomService classroomService;
+
     @Transactional
     public Reservation create(Reservation reservation) {
         reservation.setId(UUID.randomUUID().toString());
+
+        ClassroomResponse classroom = classroomService.getClassroomById(reservation.getClassroom().getId());
+        if (classroom != null) {
+            reservation.setStatus("PENDING");
+        } else {
+            reservation.setStatus("APPROVED");
+        }
 
         return repository.save(reservation);
     }

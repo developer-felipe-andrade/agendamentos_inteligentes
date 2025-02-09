@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem, Grid2 } from "@mui/material";
+import React, { useState } from "react";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -23,15 +23,24 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     status: "PENDING",
     obs: "", 
     classroomId: selectedRoom,
-    notifications: [],
+    notifications: []
   });
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
+  const [typeRecurrence, setTypeRecurrence] = useState('none');
+  const [timeRecurrence, setTimeRecurrence] = useState(0);
+
   
   const handleSave = async () => {
     try {
       const payload = {
         ...formData,
         notifications: [...fields]
+      }
+
+      if (typeRecurrence !== 'none') {
+        payload.recurrence = true;
+        payload.typeRecurrence = typeRecurrence;
+        payload.timeRecurrence = timeRecurrence;
       }
 
       await reservation.register(payload);
@@ -51,14 +60,14 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     onClose();
     setFormData({
       dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).toISOString(),
-      dtEnd: dayjs(selectedDate).add(50, "minute").toISOString(),
+      dtEnd: dayjs().add(50, "minute").toISOString(),
       status: "PENDING",
       obs: "", 
       classroomId: selectedRoom,
-      notifications: [],
+      notifications: []
     });
 
-    setFields([]);
+    setFields([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   }
 
   return (
@@ -106,6 +115,30 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
           />
         </div>
 
+        <div className="flex gap-4 pt-3">
+          <FormControl fullWidth>
+            <InputLabel>Recorrência</InputLabel>
+            <Select
+              label="Recorrência"
+              value={typeRecurrence}
+              onChange={(e) => setTypeRecurrence(e.target.value)}
+            >
+              <MenuItem value="none">Sem recorrência</MenuItem>
+              <MenuItem value="ONLYDAY">Toda {dayjs(formData.dtStart).locale('pt-br').format('dddd')}</MenuItem>
+              <MenuItem value="MONDAYTOFRIDAY">Segunda a Sexta</MenuItem>
+              <MenuItem value="ALLDAY">Todos os dias</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Quantidade de repetições"
+            type="number"
+            value={timeRecurrence}
+            onChange={(e) => setTimeRecurrence(e.target.value)}
+            disabled={typeRecurrence === 'none'}
+            fullWidth
+          />
+        </div>
+
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="py-2">
             <Button
@@ -116,43 +149,42 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
               Adicionar Notificação
             </Button>
             
-            <Grid2 container className='py-3'>
+            <div className="grid grid-cols-2 gap-4 pt-3">
               {fields.map((field, index) => (
-                <Grid2 xs={12} key={index} container spacing={2}>
-                  <Grid2 xs={6}>
-                    <FormControl sx={{ minWidth: 120 }}>
-                      <InputLabel>Forma</InputLabel>
-                      <Select
-                        id={`notification-type-${index}`}
-                        label="Forma"
-                        value={field.form}
-                        onChange={(e) => {
-                          const updatedFields = [...fields];
-                          updatedFields[index].form = e.target.value;
-                          setFields(updatedFields);
-                        }}
-                      >
-                        <MenuItem value="EMAIL">E-mail</MenuItem>
-                        <MenuItem value="SMS">SMS</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid2>
-                  <Grid2 xs={6}>
-                    <TimePicker
-                      label="Tempo de antecipação."
-                      ampm={false}
-                      format="HH:mm"
-                      value={field.anticipationTime}
-                      onChange={(newValue) => {
+                <React.Fragment key={index}>
+                  <FormControl fullWidth>
+                    <InputLabel>Forma</InputLabel>
+                    <Select
+                      id={`notification-type-${index}`}
+                      label="Forma"
+                      value={field.form}
+                      onChange={(e) => {
                         const updatedFields = [...fields];
-                        updatedFields[index].anticipationTime = newValue;
+                        updatedFields[index].form = e.target.value;
                         setFields(updatedFields);
                       }}
-                    />
-                  </Grid2>
-                </Grid2>
+                    >
+                      <MenuItem value="EMAIL">E-mail</MenuItem>
+                      <MenuItem value="SMS">SMS</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TimePicker
+                    label="Tempo de antecipação."
+                    ampm={false}
+                    format="HH:mm"
+                    value={field.anticipationTime}
+                    onChange={(newValue) => {
+                      const updatedFields = [...fields];
+                      updatedFields[index].anticipationTime = newValue;
+                      setFields(updatedFields);
+                    }}
+                    slotProps={{ textField: { fullWidth: true } }} // Garante o mesmo tamanho do Select
+                  />
+                </React.Fragment>
               ))}
-            </Grid2>
+            </div>
+
           </div>
         </LocalizationProvider>
       </DialogContent>

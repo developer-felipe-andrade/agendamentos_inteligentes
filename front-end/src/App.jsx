@@ -5,7 +5,7 @@ import ForgotPassword from './pages/forgot-password/ForgotPassword';
 import Home from './pages/home/Home';
 import RegisterUser from './pages/register-user/RegisterUser';
 import SchedulingCalendar from './pages/calendar/SchedulingCalendar';
-import Users from './pages/users/Users';
+import AproveUsers from './pages/users/AproveUsers';
 import Resource from './pages/resource/Resource';
 import Classroom from './pages/classrooms/Classroom';
 import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
@@ -20,7 +20,7 @@ function App() {
         <Route path="/recover" element={<ConfirmPassword />} />
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/reserve" element={<SchedulingCalendar />} />
-        <Route path="/users" element={<Users />} />
+        <Route path="/aprove-users" element={<AproveUsers />} />
         <Route path="/resources" element={<Resource/>} />
         <Route path="/classrooms" element={<Classroom />} />
         <Route path="/classroom/:id" element={<FormClassroom />} />

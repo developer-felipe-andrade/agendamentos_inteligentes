@@ -170,7 +170,7 @@ const RegisterUser = () => {
               </FormControl>
 
               <TextField
-                label="Whatsapp"
+                label="Celular"
                 variant="outlined"
                 fullWidth
                 value={formData.phoneNumber}

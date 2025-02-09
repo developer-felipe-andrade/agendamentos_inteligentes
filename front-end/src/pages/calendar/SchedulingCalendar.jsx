@@ -35,8 +35,6 @@ export default function SchedulingCalendar() {
       const { data } = await reservation.findByClassroom(id);
 
       setSchedulings(data.content.map(item => ({
-        title: 'teste',
-        description: 'descrição',
         start: item.dtStart,
         end: item.dtEnd,
         extendedProps: {
@@ -60,6 +58,11 @@ export default function SchedulingCalendar() {
   const handleOpenModal = (info) => {
     setSelectedDate(info.dateStr);
     setOpenModal(true);
+  }
+
+  const handleCloseModal = () => {
+    getSchedulings(selectedRoom);
+    setOpenModal(false);
   }
 
   useEffect(() => {
@@ -106,7 +109,7 @@ export default function SchedulingCalendar() {
             open={openModal}
             selectedRoom={selectedRoom}
             selectedDate={selectedDate}
-            onClose={() => setOpenModal(false)}
+            onClose={handleCloseModal}
           />
         )
       }
