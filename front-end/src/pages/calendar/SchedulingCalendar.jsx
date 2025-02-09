@@ -2,177 +2,114 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from "@fullcalendar/interaction"
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid2, InputLabel, MenuItem, Select,TextField } from '@mui/material'
-import { useState } from 'react'
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import ptBrLocale from "@fullcalendar/core/locales/pt-br";
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { useEffect, useState } from 'react'
 import Scaffold from '../../components/Scaffold'
+import classroom from '../../api/requests/classrooms'
+import Alert from '../../components/UseAlert';
+import reservation from '../../api/requests/reservation';
+import ScheduleDialog from './ScheduleDialog';
+import dayjs from "dayjs";
 
 export default function SchedulingCalendar() {
-  const [formData, setFormData] = useState({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
-  const [open, setOpen] = useState(false);
+  const { renderAlerts, addAlert } = Alert();
+  const [classrooms, setClassrooms] = useState([]);  
+  const [selectedRoom, setSelectedRoom] = useState('');
+  const [selectedDate, setSelectedDate] = useState(dayjs().toISOString());
+  const [schedulings, setSchedulings] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
-  const handleOpen = async () => {
-    setOpen(true);
+  const getClassrooms = async () => {
+    try {
+      const { data } = await classroom.getAll();     
+      setClassrooms(data.content);
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao recuperar os dados!', 'error');
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setFields([])
-    setFormData({ dtStart: new Date(), dtEnd: new Date(), obs: "", notifications: [] });
-  };
+  const getSchedulings = async (id) => {
+    try {
+      const { data } = await reservation.findByClassroom(id);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+      setSchedulings(data.content.map(item => ({
+        title: 'teste',
+        description: 'descrição',
+        start: item.dtStart,
+        end: item.dtEnd,
+        extendedProps: {
+          status: item.status,
+          user: item.user.name
+        },
+        backgroundColor: item.status === 'PENDING' ? '#FF6347' : '#d1fae5',
+        borderColor: item.status === 'PENDING' ? '#FF6347' : '#d1fae5'
+      })));
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao recuperar os dados!', 'error');
+    }
+  }
 
-  const handleSave = () => {};
+  const handleChangeClassroom = (event) => {
+    setSelectedRoom(event.target.value);
+    getSchedulings(event.target.value);
+  }
 
-  const [fields, setFields] = useState([]);
+  const handleOpenModal = (info) => {
+    setSelectedDate(info.dateStr);
+    setOpenModal(true);
+  }
 
-  const addField = () => {
-    setFields((prevFields) => [
-      ...prevFields,
-      { type: "WhatsApp", date: null },
-    ]);
-  };
-
-  const handleTypeChange = (index, value) => {
-    setFields((prevFields) =>
-      prevFields.map((field, i) =>
-        i === index ? { ...field, type: value } : field
-      )
-    );
-  };
-
-  const handleDateChange = (index, newValue) => {
-    setFields((prevFields) =>
-      prevFields.map((field, i) =>
-        i === index ? { ...field, date: newValue } : field
-      )
-    );
-  };
+  useEffect(() => {
+    getClassrooms();
+  }, []);
   
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Scaffold>
+        {renderAlerts()}
         <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel>Salas de Aula</InputLabel>
-          <Select
-            id={`room`}
-            label="Salas de Aula"
-            onChange={handleChange}
-            sx={{ mr: 3 }}  // Adicionando um espaço à direita
-          >
-            <MenuItem value="EMAIL">Nome: Laboratório 01 - Capacidade: 40 - Bloco: A</MenuItem>
-            <MenuItem value="WHATSAPP">Nome: Laboratório 01 - Capacidade: 40 - Bloco: B</MenuItem>
+          <Select id="room" label="Salas de Aula" value={selectedRoom} onChange={handleChangeClassroom} sx={{ mr: 3 }}>
+            {classrooms.map((room, index) => (
+              <MenuItem key={index} value={room.id}>
+                Nome: {room.name} - Capacidade: {room.qtdPlace} - Bloco: {room.block} - Responsável: {room.responsible?.name ?? 'Não há responsável'}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
         <FullCalendar
+          validRange={{
+            start: dayjs().format('YYYY-MM-DD')
+          }}
+          locale={ptBrLocale}
           plugins={[timeGridPlugin, dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           headerToolbar={{
-            end: 'dayGridMonth,timeGridWeek,timeGridDay',
+            left: 'prev,next today',
+            center: 'title',
+            end: 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
-          customButtons={{
-            dayGridMonth: {
-              text: 'Mês',
-            },
-            timeGridWeek: {
-              text: 'Semana',
-            },
-            timeGridDay: {
-              text: 'Dia',
-            },
-          }}
-          height="90%"
-          dateClick={(info) => handleOpen(info)}
-          dayCellClassNames={() => 'cursor-pointer hover:bg-gray-200'} // Adiciona a classe 'group' às células dos dias
+          height="87%"
+          dateClick={(info) => handleOpenModal(info)}
+          dayCellClassNames={() => 'cursor-pointer hover:bg-gray-200'}
           slotLaneClassNames={() => 'cursor-pointer hover:bg-gray-200'}
-          events={[
-            { title: 'Aula POO', start: '2024-12-12T10:30:00', end: '2024-12-12T11:30:00'},
-            { title: 'TCC', start: '2024-12-13T14:30:00', end: '2024-12-13T15:30:00'},
-            { title: 'Algoritmo', start: '2024-12-14T20:30:00', end: '2024-12-14T21:30:00'},
-          ]}
-          
+          events={schedulings}
         />
       </Scaffold>
-
-      <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>Agendar</DialogTitle>
-        <DialogContent>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={['DateTimePicker']}>
-              <DateTimePicker label="Data inicial" />
-            </DemoContainer>
-          </LocalizationProvider>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs} cl>
-            <DemoContainer components={['DateTimePicker']}>
-              <DateTimePicker label="Data final" />
-            </DemoContainer>
-          </LocalizationProvider>
-
-          <div className='pt-2'>
-            <TextField
-              label="Observação"
-              name="obs"
-              fullWidth
-              value={formData.obs}
-              onChange={handleChange}
-              multiline
-              rows={4}
-            />
-          </div>
-
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <div className='py-2'>
-              <Button disabled={fields.length > 1} variant="contained" onClick={addField}>
-                Adicionar Notificação
-              </Button>
-              
-              <Grid2 container>
-                {fields.map((field, index) => (
-                  <Grid2 item xs={12} key={index} container spacing={2}>
-                    <Grid2 item xs={6}>
-                      <FormControl sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel>Tipo</InputLabel>
-                        <Select
-                          id={`notification-typ e-${index}`}
-                          label="Tipo"
-                          onChange={handleChange}
-                        >
-                          <MenuItem value="EMAIL">E-mail</MenuItem>
-                          <MenuItem value="WHATSAPP">WhatsApp</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid2>
-                    <Grid2 item xs={6}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['DateTimePicker']}>
-                          <DateTimePicker label="Data final" />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </Grid2>
-                  </Grid2>
-                ))}
-              </Grid2>
-            </div>
-          </LocalizationProvider>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} variant="contained" color="primary">
-            Salvar
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {
+        openModal && (
+          <ScheduleDialog 
+            open={openModal}
+            selectedRoom={selectedRoom}
+            selectedDate={selectedDate}
+            onClose={() => setOpenModal(false)}
+          />
+        )
+      }
     </div>
   )
 }

@@ -76,14 +76,12 @@ const FormClassroom = () => {
   };
 
   const handleQuantityChange = (id, value) => {
-		// Encontre o índice do recurso com o ID correspondente em formData.idsResources
 		const updatedResources = [...formData.idsResources];
 		const resourceIndex = updatedResources.findIndex((resource) => resource.id === id);
-	
+  
 		if (resourceIndex >= 0) {
 			updatedResources[resourceIndex].quantity = value;
 	
-			// Atualize o formData com a nova quantidade
 			setFormData((prevFormData) => ({
 				...prevFormData,
 				idsResources: updatedResources,
@@ -102,7 +100,6 @@ const FormClassroom = () => {
 			console.error("Recurso não encontrado para o ID no dataResource:", id);
 		}
 	
-		// Validar a quantidade
 		setErrorQuantities((prevErrors) => {
 			const updatedErrors = { ...prevErrors };
 			if (value <= 0) {
@@ -137,7 +134,6 @@ const FormClassroom = () => {
 	
 		const { data } = await Classroom.findById(id);
 	
-		// Atualizando formData com os dados da sala
 		setFormData({
 			id: data.id,
 			name: data.name,
@@ -147,10 +143,9 @@ const FormClassroom = () => {
 			active: data.active,
 			confirmation: data.confirmation,
 			idUser: data.responsible?.id,
-			idsResources: data.idsResources || [] // Adicionando um fallback vazio, caso `idsResources` não exista
+			idsResources: data.idsResources || [] 
 		});
 	
-		// Agora que os recursos foram carregados, atualizar os recursos com os valores de quantity da sala
 		setDataResources(prevDataResource => 
 			prevDataResource.map(resource => {
 				const matchedResource = data.idsResources.find(r => r.id === resource.id);
@@ -166,6 +161,7 @@ const FormClassroom = () => {
 		try {
 			const { data } = await Resource.getAll();
 			setDataResources(data.content);
+      setFormData({...formData, idsResources: data.content})
 		} catch (error) {
 			console.log(error);
 			addAlert('Erro ao recuperar os dados!', 'error');
