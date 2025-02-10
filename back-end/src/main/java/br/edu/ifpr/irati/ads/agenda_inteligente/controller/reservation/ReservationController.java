@@ -38,6 +38,7 @@ public class ReservationController {
         User user = userService.findByLogin(username);
         List<Reservation> reservations = request.toEntities(user.getId());
         for (Reservation reservation : reservations) {
+            reservation.setCreatedByEmail(user.getLogin());
             service.create(reservation);
         }
 

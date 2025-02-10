@@ -5,8 +5,10 @@ CREATE TABLE reservations (
     status VARCHAR(255) NOT NULL,
     obs TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_by_email VARCHAR(255) NOT NULL
 );
+
 
 CREATE TABLE notifications (
     id TEXT PRIMARY KEY,
@@ -15,6 +17,7 @@ CREATE TABLE notifications (
     anticipation_time TIMESTAMP,
     form VARCHAR(255),
     reservation_id TEXT,
+    notified BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_reservation
         FOREIGN KEY (reservation_id)
         REFERENCES reservations(id)

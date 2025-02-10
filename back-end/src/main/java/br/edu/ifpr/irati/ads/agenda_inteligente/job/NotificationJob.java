@@ -1,0 +1,22 @@
+package br.edu.ifpr.irati.ads.agenda_inteligente.job;
+
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+@Component
+public class NotificationJob {
+    @Autowired
+    private NotificationService notificationService;
+
+    public NotificationJob() {
+
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    public void checkNotifications() {
+        System.out.println("Executado o job");
+        notificationService.processNotifications();
+    }
+}

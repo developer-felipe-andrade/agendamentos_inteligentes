@@ -18,11 +18,11 @@ public class Notification {
 
     @Id
     private String id;
+    private String form;
+    private boolean notified;
 
     @Column(name = "anticipation_time")
     private LocalDateTime anticipationTime;
-
-    private String form;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
