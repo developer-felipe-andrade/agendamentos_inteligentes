@@ -20,6 +20,7 @@ import {
   Class,
   Logout,
   Schedule,
+  Mail,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
@@ -27,8 +28,10 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Alert from './UseAlert';
 import ReservePerHour from '../pages/reservePerHour/ReservePerHour';
+import ConnectionDialog from '../pages/config-email/ConnectionDialog';
 
 const drawerWidth = 240;
+
 export default function Scaffold({ children }) {
   Scaffold.propTypes = {
     children: PropTypes.node.isRequired, 
@@ -41,6 +44,9 @@ export default function Scaffold({ children }) {
 
   // Estado para controlar se o modal de reserva está aberto
   const [isReserveModalOpen, setReserveModalOpen] = useState(false);
+
+  // Estado para controlar se o modal de configurações de e-mail está aberto
+  const [isEmailConfigModalOpen, setIsEmailConfigModalOpen] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -65,8 +71,13 @@ export default function Scaffold({ children }) {
       resources: '/resources',
       classroom: '/classrooms',
     };
-    navigate(routes[componentName] || '/');
-    setOpen(false);
+    if (componentName === 'config-email') {
+      setIsEmailConfigModalOpen(true)
+    } else {
+      navigate(routes[componentName] || '/');
+      setOpen(false);
+    }
+
   };
 
   useEffect(() => {
@@ -133,6 +144,7 @@ export default function Scaffold({ children }) {
               { key: 'aproveUsers', icon: <Person />, text: 'Aprovar Usuários' },
               { key: 'resources', icon: <Inventory2 />, text: 'Recursos' },
               { key: 'classroom', icon: <Class />, text: 'Salas' },
+              { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'}
             ].map(({ key, icon, text }) => (
               <ListItem key={key} onClick={() => handleMenuClick(key)}>
                 <ListItemIcon>{icon}</ListItemIcon>
@@ -154,7 +166,14 @@ export default function Scaffold({ children }) {
         {children}
       </Box>
 
-      <ReservePerHour isOpen={isReserveModalOpen} setIsOpen={setReserveModalOpen} />
+      <ReservePerHour 
+        isOpen={isReserveModalOpen} 
+        setIsOpen={setReserveModalOpen} 
+      />
+      <ConnectionDialog 
+        open={isEmailConfigModalOpen} 
+        onClose={() => setIsEmailConfigModalOpen(false)} 
+      />
     </Box>
   );
 }
