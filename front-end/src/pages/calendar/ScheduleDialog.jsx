@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,24 +12,25 @@ ScheduleDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   selectedRoom: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
-  selectedDate: PropTypes.string.isRequired
+  selectedDate: PropTypes.string,
+  selectedSchedule: PropTypes.string
 };
 
-export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate }) {
+export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule }) {
   const { renderAlerts, addAlert } = Alert();
+
   const [formData, setFormData] = useState({
-    dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).toISOString(),
-    dtEnd: dayjs().add(50, "minute").toISOString(),
-    status: "PENDING",
+    dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
+    dtEnd: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
     obs: "", 
     classroomId: selectedRoom,
     notifications: []
   });
+  
   const [fields, setFields] = useState([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   const [typeRecurrence, setTypeRecurrence] = useState('none');
   const [timeRecurrence, setTimeRecurrence] = useState(0);
 
-  
   const handleSave = async () => {
     try {
       const payload = {
@@ -42,9 +43,14 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         payload.typeRecurrence = typeRecurrence;
         payload.timeRecurrence = timeRecurrence;
       }
-
-      await reservation.register(payload);
-      addAlert("Agendamento criado com sucesso!", "success");
+      if (!selectedSchedule) {
+        await reservation.register(payload);
+        addAlert("Agendamento criado com sucesso!", "success");
+      } else {
+        payload.id = selectedSchedule;
+        await reservation.update(selectedSchedule, payload);
+        addAlert("Agendamento criado com sucesso!", "success");
+      }
       handleClose();
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
@@ -59,9 +65,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   const handleClose = () => {
     onClose();
     setFormData({
-      dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).toISOString(),
-      dtEnd: dayjs().add(50, "minute").toISOString(),
-      status: "PENDING",
+      dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
+      dtEnd: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
       obs: "", 
       classroomId: selectedRoom,
       notifications: []
@@ -70,6 +75,28 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     setFields([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   }
 
+  const getSchedule = async () => {
+    try {
+      const { data } = await reservation.findById(selectedSchedule);
+      setFormData({
+        dtStart: dayjs(data.dtStart).format("YYYY-MM-DDTHH:mm"),
+        dtEnd: dayjs(data.dtEnd).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+        obs: data.obs, 
+        classroomId: data.classroom.id,
+        notifications: data.notifications
+      });
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao buscar os dados do agendamento', 'error');
+    }
+  }; 
+  
+  useEffect(() => {
+    if (open && selectedSchedule) {
+      getSchedule();
+    }
+  }, [])
+
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
       {renderAlerts()}
@@ -77,29 +104,36 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       <DialogContent>
         <div className="flex gap-4 pt-3">
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-            <DateTimePicker
-              value={dayjs(formData.dtStart)} // Atualiza a data de início
-              label="Data"
-              onChange={(newValue) => setFormData((prev) => ({ ...prev, dtStart: newValue.toISOString() }))}
-            />
+          <DateTimePicker
+            value={dayjs(formData.dtStart)} 
+            label="Data"
+            onChange={(newValue) => setFormData((prev) => ({ 
+              ...prev, 
+              dtStart: newValue.format("YYYY-MM-DDTHH:mm") 
+            }))}
+          />
           </LocalizationProvider>
 
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-            <TimePicker
-              label="Tempo de duração"
-              value={dayjs().startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes || 50, 'minute')} // Define valor inicial considerando horas e minutos
-              onChange={(newValue) => {
-                const newHours = newValue.hour(); // Pega as horas selecionadas
-                const newMinutes = newValue.minute(); // Pega os minutos selecionados
-                const updatedDtEnd = dayjs(formData.dtStart).add(newHours, 'hour').add(newMinutes, 'minute'); // Soma ao dtStart
-                setFormData((prev) => ({
-                  ...prev,
-                  durationHours: newHours, // Armazena as horas selecionadas
-                  durationMinutes: newMinutes, // Armazena os minutos selecionados
-                  dtEnd: updatedDtEnd.toISOString(),
-                }));
-              }}
-            />
+          <TimePicker
+            label="Tempo de duração"
+            value={dayjs().startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes || 50, 'minute')} 
+            onChange={(newValue) => {
+              const newHours = newValue.hour();
+              const newMinutes = newValue.minute();
+
+              const updatedDtEnd = dayjs(formData.dtStart)
+                .add(newHours, 'hour')
+                .add(newMinutes, 'minute');
+
+              setFormData((prev) => ({
+                ...prev,
+                durationHours: newHours,
+                durationMinutes: newMinutes,
+                dtEnd: updatedDtEnd.format("YYYY-MM-DDTHH:mm"),
+              }));
+            }}
+          />
           </LocalizationProvider>
         </div>
 
@@ -108,37 +142,41 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
             label="Observação"
             name="obs"
             fullWidth
-            value={formData.obs} // Vinculado ao campo de observação
+            value={formData.obs}
             onChange={(e) => setFormData((prev) => ({ ...prev, obs: e.target.value }))}
             multiline
             rows={4}
           />
         </div>
 
-        <div className="flex gap-4 pt-3">
-          <FormControl fullWidth>
-            <InputLabel>Recorrência</InputLabel>
-            <Select
-              label="Recorrência"
-              value={typeRecurrence}
-              onChange={(e) => setTypeRecurrence(e.target.value)}
-            >
-              <MenuItem value="none">Sem recorrência</MenuItem>
-              <MenuItem value="ONLYDAY">Toda {dayjs(formData.dtStart).locale('pt-br').format('dddd')}</MenuItem>
-              <MenuItem value="MONDAYTOFRIDAY">Segunda a Sexta</MenuItem>
-              <MenuItem value="ALLDAY">Todos os dias</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            label="Quantidade de repetições"
-            type="number"
-            value={timeRecurrence}
-            onChange={(e) => setTimeRecurrence(e.target.value)}
-            disabled={typeRecurrence === 'none'}
-            fullWidth
-          />
-        </div>
-
+        {
+          !selectedSchedule && (
+            <div className="flex gap-4 pt-3">
+              <FormControl fullWidth>
+                <InputLabel>Recorrência</InputLabel>
+                <Select
+                  label="Recorrência"
+                  value={typeRecurrence}
+                  onChange={(e) => setTypeRecurrence(e.target.value)}
+                >
+                  <MenuItem value="none">Sem recorrência</MenuItem>
+                  <MenuItem value="ONLYDAY">Toda {dayjs(formData.dtStart).locale('pt-br').format('dddd')}</MenuItem>
+                  <MenuItem value="MONDAYTOFRIDAY">Segunda a Sexta</MenuItem>
+                  <MenuItem value="ALLDAY">Todos os dias</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Quantidade de repetições"
+                type="number"
+                value={timeRecurrence}
+                onChange={(e) => setTimeRecurrence(e.target.value)}
+                disabled={typeRecurrence === 'none'}
+                fullWidth
+              />
+            </div>
+          )
+        }
+      
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="py-2">
             <Button

@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.controller.resource;
 
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.Resource;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ResourceService;
 import jakarta.validation.Valid;
 
@@ -33,7 +34,7 @@ public class ResourceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResourceResponse> findById(@PathVariable String id) {
+    public ResponseEntity<Resource> findById(@PathVariable String id) {
         return ResponseEntity.ok(service.findById(id));
     }
 

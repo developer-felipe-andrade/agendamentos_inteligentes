@@ -29,8 +29,9 @@ public class ReservationService {
     public Reservation create(Reservation reservation) {
         reservation.setId(UUID.randomUUID().toString());
 
+        checkForConflicts(reservation);
         ClassroomResponse classroom = classroomService.getClassroomById(reservation.getClassroom().getId());
-        if (classroom != null) {
+        if (classroom.confirmation()) {
             reservation.setStatus("PENDING");
         } else {
             reservation.setStatus("APPROVED");
@@ -66,9 +67,9 @@ public class ReservationService {
     @Transactional
     public Reservation update(String id, Reservation reservation) {
         Reservation existingReservation = getById(id);
-
         reservation.setId(id);
-        reservation.setCreatedAt(existingReservation.getCreatedAt());
+        reservation.setStatus(existingReservation.getStatus());
+        reservation.setCreatedByEmail(existingReservation.getCreatedByEmail());
 
         validateReservationTimes(reservation);
         checkForConflicts(reservation);

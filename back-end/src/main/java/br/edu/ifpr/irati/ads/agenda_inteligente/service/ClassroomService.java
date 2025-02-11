@@ -2,6 +2,8 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ResumeClassroomResponse;
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.user.UserResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.ResourceClassroom;
@@ -13,7 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ClassroomService {
@@ -103,5 +109,10 @@ public class ClassroomService {
         for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
             resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, resourceQuantity.quantity());
         }
+    }
+
+    public List<ResumeClassroomResponse> findAvailableClassrooms(LocalDateTime dtStart, LocalDateTime dtEnd, int qtdPlace, String block, List<String> idsResources) {
+        List<Classroom> classrooms = classroomRepository.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, block, idsResources);
+        return classrooms.stream().map(ResumeClassroomResponse::fromEntity).toList();
     }
 }

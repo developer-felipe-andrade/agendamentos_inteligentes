@@ -11,10 +11,6 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
-  Avatar,
-  Menu,
-  MenuItem,
-  ListItemAvatar,
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -23,12 +19,14 @@ import {
   Person,
   Class,
   Logout,
+  Schedule,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import Alert from './UseAlert';
+import ReservePerHour from '../pages/reservePerHour/ReservePerHour';
 
 const drawerWidth = 240;
 export default function Scaffold({ children }) {
@@ -38,9 +36,11 @@ export default function Scaffold({ children }) {
   
   const [open, setOpen] = React.useState(false);
   const [userContent, setUserContent] = useState({});
-  const [anchorEl, setAnchorEl] = useState(null); // Controla o Menu do Avatar
   const { renderAlerts, addAlert } = Alert();
   const navigate = useNavigate();
+
+  // Estado para controlar se o modal de reserva está aberto
+  const [isReserveModalOpen, setReserveModalOpen] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -69,14 +69,6 @@ export default function Scaffold({ children }) {
     setOpen(false);
   };
 
-  const handleAvatarClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -101,22 +93,9 @@ export default function Scaffold({ children }) {
             Agenda Inteligente
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton edge="end" color="inherit" onClick={handleAvatarClick}>
-              <Avatar alt={userContent.name} src={userContent.avatarUrl} />
-            </IconButton>
             <IconButton edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
               <Logout />
             </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleCloseMenu}
-            >
-              <MenuItem>{userContent.name}</MenuItem>
-              <MenuItem>{userContent.login}</MenuItem>
-              <MenuItem>{userContent.role}</MenuItem>
-              <MenuItem>{userContent.profession}</MenuItem>
-            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
@@ -135,6 +114,13 @@ export default function Scaffold({ children }) {
         }}
       >
         <List className="cursor-pointer">
+          <ListItem onClick={() => setReserveModalOpen(true)}>
+            <ListItemIcon>
+              <Schedule />
+            </ListItemIcon>
+            <ListItemText primary="Reservar por horário" />
+          </ListItem>
+
           <ListItem onClick={() => handleMenuClick('reserve')}>
             <ListItemIcon>
               <CalendarMonth />
@@ -167,6 +153,8 @@ export default function Scaffold({ children }) {
       >
         {children}
       </Box>
+
+      <ReservePerHour isOpen={isReserveModalOpen} setIsOpen={setReserveModalOpen} />
     </Box>
   );
 }

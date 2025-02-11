@@ -209,7 +209,7 @@ const FormClassroom = () => {
         {renderAlerts()}
         <h2 className="text-2xl font-bold">Cadastrar Sala</h2>
 
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '16px', width: '100%' }}>
           <TextField
             margin="normal"
             label="Nome"
@@ -232,17 +232,22 @@ const FormClassroom = () => {
             onChange={handleChange}
             sx={{ flex: 1 }}
           />
-          <TextField
-            margin="normal"
-            label="Bloco"
-            name="block"
-            fullWidth
-            required
-            value={formData.block}
-            onChange={handleChange}
-            sx={{ flex: 1 }}
-          />
+          <FormControl margin="normal" sx={{ flex: 1 }}>
+            <InputLabel>Bloco</InputLabel>
+            <Select
+              label="Bloco"
+              name="block"
+              fullWidth
+              value={formData.block}
+              onChange={handleChange}
+            >
+              <MenuItem value="A">Bloco A</MenuItem>
+              <MenuItem value="B">Bloco B</MenuItem>
+              <MenuItem value="C">Bloco C</MenuItem>
+            </Select>
+          </FormControl>
         </div>
+
         <FormControlLabel
           control={
             <Checkbox

@@ -20,6 +20,7 @@ public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(name = "name")
     private String name;
     @Column(name = "qtd_place")
     private int qtdPlace;

@@ -16,8 +16,9 @@ public class ResourceClassroom {
     @Column(nullable = false, unique = true)
     private String id;
 
-    @Column(name = "resource_id", nullable = false)
-    private String resourceId;
+    @ManyToOne
+    @JoinColumn(name = "resource_id", nullable = false)
+    private Resource resource;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id", nullable = false)

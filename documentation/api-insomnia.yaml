@@ -1,8 +1,401 @@
 _type: export
 __export_format: 4
-__export_date: 2025-01-28T23:16:45.420Z
+__export_date: 2025-02-11T01:50:34.055Z
 __export_source: insomnia.desktop.app:v10.3.0
 resources:
+  - _id: req_6e15522151bb4362a2e71386da0fad30
+    parentId: fld_0e1fd38be2064e1f951b34dd040764fe
+    modified: 1739143685769
+    created: 1739143324275
+    url: "{{ _.baseUrl }}/sms/send"
+    name: Enviar sms
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "number": "+5542999500305",
+        	"message": "Teste de envio de sms"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1739143337109
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_0e1fd38be2064e1f951b34dd040764fe
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
+    modified: 1739143313055
+    created: 1739143313055
+    name: Notifications
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1739143313055
+    environmentType: kv
+    _type: request_group
+  - _id: wrk_5026a96e201a42ceae32572d6ddf4421
+    parentId: null
+    modified: 1738104174850
+    created: 1738104174850
+    name: TCC
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_b288b0612e9043dd99ff151e8a500111
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1739152012171
+    created: 1738419910586
+    url: "{{ _.baseUrl }}/reservations"
+    name: Register
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "dtStart": "2025-02-09T22:47:00",
+          "dtEnd": "2025-02-10T12:00:00",
+          "status": "PENDING",
+          "obs": "Reunião sobre o projeto final.",
+          "classroomId": "59654d19-3cb4-45d5-a28c-35aa3a071937",
+          "notifications": [
+            {
+              "anticipationTime": "2025-02-09T22:47:00",
+              "form": "EMAIL"
+            }
+          ]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1738419922181
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_fab7496847e24b3992febc48b32d6d35
+    parentId: wrk_5026a96e201a42ceae32572d6ddf4421
+    modified: 1738419892902
+    created: 1738419892902
+    name: Reservation
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1738419892902
+    environmentType: kv
+    _type: request_group
+  - _id: req_7ea51057e8b04590826a880b711e9e03
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1739039799220
+    created: 1738435089350
+    url: "{{ _.baseUrl }}/reservations"
+    name: Register to recurrence
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "dtStart": "2025-02-03T09:00:00",
+          "dtEnd": "2025-02-03T11:00:00",
+          "status": "PENDING",
+          "obs": "Reserva para teste com recorrência",
+        	"classroomId": "8fab15aa-0bb1-4a96-8a54-380aee555b76",
+          "notifications": [
+            {
+              "form": "EMAIL",
+        			"anticipationTime": "2025-02-10T09:00:00"
+            }
+          ],
+          "recurrence": true,
+          "typeRecurrence": "ONLYDAY",
+          "timeRecurrence": 2
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1738169978146.8125
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_f794cbfe0ff24e9d9ed71792f0e67c71
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1738427788627
+    created: 1738427459157
+    url: "{{ _.baseUrl }}/reservations/1a0b8e04-064c-491e-a752-069dd0b21342"
+    name: Update
+    description: ""
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "dtStart": "2025-02-10T10:00:00",
+          "dtEnd": "2025-02-10T12:00:00",
+          "status": "PENDING",
+          "obs": "Reunião sobre o projeto final.",
+          "classroomId": "8fab15aa-0bb1-4a96-8a54-380aee555b76",
+          "notifications": [
+            {
+              "anticipationTime": "2025-02-10T08:00:00",
+              "form": "EMAIL"
+            }
+          ]
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1737920034112.625
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_d4690f7f45c44623bcef6f28713afb46
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1738427633024
+    created: 1738427555781
+    url: "{{ _.baseUrl }}/reservations/1a0b8e04-064c-491e-a752-069dd0b21342/active"
+    name: SetActiveStatus
+    description: ""
+    method: PATCH
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1737670090078.4375
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_5cb4805977e947ac8ffe7e022709835f
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1738431691789
+    created: 1738427857434
+    url: "{{ _.baseUrl }}/reservations/1a0b8e04-064c-491e-a752-069dd0b21342"
+    name: Delete
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1737545118061.3438
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6e9f174d750f4e50aefd6c5de8114a77
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1738420686203
+    created: 1738420679088
+    url: "{{ _.baseUrl }}/reservations"
+    name: GetAll
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1737420146044.25
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_3d21f825cfd74f84ac591954df08d8ab
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1739227336800
+    created: 1738420700377
+    url: "{{ _.baseUrl }}/reservations/4c66d08e-0ac1-45de-9ecc-f5d21b7db336"
+    name: FindById
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1736920257975.875
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8c01e00165054f8ca47f83098d6361f2
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1739226866684
+    created: 1738420832124
+    url: "{{ _.baseUrl
+      }}/reservations/classroom/59654d19-3cb4-45d5-a28c-35aa3a071937"
+    name: FindByClassroom
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1736670313941.6875
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_4065256dd9eb4dddbe1723da782247be
+    parentId: fld_fab7496847e24b3992febc48b32d6d35
+    modified: 1738427064122
+    created: 1738426997865
+    url: "{{ _.baseUrl }}/reservations/status/pending"
+    name: FindByStatus
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1736545341924.5938
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_36cf2a8f66b64e88b6f393a544a95162
     parentId: fld_965737e0e1b24f97a2f248186355517d
     modified: 1738105640758
@@ -44,14 +437,6 @@ resources:
     metaSortKey: -1738105444965
     environmentType: kv
     _type: request_group
-  - _id: wrk_5026a96e201a42ceae32572d6ddf4421
-    parentId: null
-    modified: 1738104174850
-    created: 1738104174850
-    name: TCC
-    description: ""
-    scope: collection
-    _type: workspace
   - _id: req_6d7b5e41bac14683a1e50d6199ad19e5
     parentId: fld_965737e0e1b24f97a2f248186355517d
     modified: 1738105684448
@@ -84,7 +469,7 @@ resources:
     _type: request
   - _id: req_5a4ede6eadfd466ca5e66e36864eac6a
     parentId: fld_965737e0e1b24f97a2f248186355517d
-    modified: 1738105829957
+    modified: 1738195547945
     created: 1738105714595
     url: "{{ _.baseUrl }}/resource"
     name: Register
@@ -94,7 +479,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-          "name": "Novo recurso",
+          "name": "Novo recurso 3",
           "type": "teste"
         }
     parameters: []
@@ -328,12 +713,15 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_baeb8ed9f77a4e119b2aa52a8a6b64ba
+  - _id: req_8ddf75b7a5174fdea8584f4bc5de861f
     parentId: fld_c1119141c8ab4f269a40252c880127cd
-    modified: 1731364946325
-    created: 1731364901338
-    url: "{{ _.baseUrl }}/classroom"
-    name: Find all
+    modified: 1739238614868
+    created: 1739235582372
+    url: "{{ _.baseUrl
+      }}/classroom/findAvailableClassrooms?block=A&qtdPlace=40&dtStart=2025-02-\
+      13T21:00:00&dtEnd=2025-02-13T21:00:00&idsResources=d74ebf22-81ba-4e83-bdd\
+      2-b6db50daefed"
+    name: FindByAvaliableClassrooms
     description: ""
     method: GET
     body: {}
@@ -341,14 +729,14 @@ resources:
     headers:
       - name: User-Agent
         value: insomnia/10.1.1
-        id: pair_049714e7c0c641fcb4e00a3856db7466
-      - id: pair_0206ea435bac4e6892c01448e00d347b
+        id: pair_56f8de29cc30467f84aa45d1c9517779
+      - id: pair_609bb5c8175d4ca290998d9c2729d44f
         name: Authorization
         value: "{{ _.authToken }}"
         description: ""
         disabled: false
     authentication: {}
-    metaSortKey: -1731364901338
+    metaSortKey: -1731364673639.25
     isPrivate: false
     pathParameters: []
     settingStoreCookies: true
@@ -368,11 +756,41 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1731364894131
     _type: request_group
+  - _id: req_bc0da11ee23b470989c1b3caf655cd2b
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
+    modified: 1738420479696
+    created: 1738279328494
+    url: "{{ _.baseUrl }}/classroom"
+    name: Find all
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_049714e7c0c641fcb4e00a3856db7466
+      - id: pair_0206ea435bac4e6892c01448e00d347b
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1731364673539.25
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_305e7401834a4a02be5dfa674546d09f
     parentId: fld_c1119141c8ab4f269a40252c880127cd
-    modified: 1731364950924
+    modified: 1739128444650
     created: 1731364939251
-    url: "{{ _.baseUrl }}/classroom/{id}"
+    url: "{{ _.baseUrl }}/classroom/1c75bd60-b520-44b2-87c6-e8e62addd5c2"
     name: Find by id
     description: ""
     method: GET
@@ -400,7 +818,7 @@ resources:
     _type: request
   - _id: req_7a8092477626414d92b5d308aac57735
     parentId: fld_c1119141c8ab4f269a40252c880127cd
-    modified: 1738106103942
+    modified: 1739151975844
     created: 1731364960179
     url: "{{ _.baseUrl }}/classroom"
     name: Register
@@ -418,7 +836,7 @@ resources:
         	"confirmation": false,
         	"idsResources": [
         		{
-        			"id": "459d958a-2662-46bd-ba96-979e73a23154",
+        			"id": "d74ebf22-81ba-4e83-bdd2-b6db50daefed",
         			"quantity": 10
         		}
         	]
@@ -448,9 +866,9 @@ resources:
     _type: request
   - _id: req_fa2d8ad389f74ee4943d7f9aed992483
     parentId: fld_c1119141c8ab4f269a40252c880127cd
-    modified: 1731365054531
+    modified: 1738196342371
     created: 1731365038316
-    url: "{{ _.baseUrl }}/classroom/{id}"
+    url: "{{ _.baseUrl }}/classroom/8fab15aa-0bb1-4a96-8a54-380aee555b76"
     name: Update
     description: ""
     method: PUT
@@ -458,12 +876,23 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"name": "",
-        	"qtdPlace": "",
-        	"block": "",
-        	"isAcessibled": true,
-        	"status": "",
-        	"confirmation": true
+        	"id": "8fab15aa-0bb1-4a96-8a54-380aee555b76",
+        	"name": "Sala A",
+        	"qtdPlace": "40",
+        	"block": "A",
+        	"acessible": true,
+        	"active": true,
+        	"confirmation": false,
+        	"idsResources": [
+        		{
+        			"id": "eaffaf29-b78e-4aba-a32b-cced15f80c06",
+        			"quantity": 10
+        		},
+        		{
+        			"id": "a3630f5c-81bc-45a6-8213-b5c5335910ac",
+        			"quantity": 2
+        		}
+        	]
         }
     parameters: []
     headers:
@@ -488,9 +917,39 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_fa45d7fb32b64e80a4e32edbed098619
+    parentId: fld_c1119141c8ab4f269a40252c880127cd
+    modified: 1738431845609
+    created: 1738431821728
+    url: "{{ _.baseUrl }}/classroom/8fab15aa-0bb1-4a96-8a54-380aee555b76"
+    name: Delete
+    description: ""
+    method: DELETE
+    body: {}
+    parameters: []
+    headers:
+      - name: User-Agent
+        value: insomnia/10.1.1
+        id: pair_049714e7c0c641fcb4e00a3856db7466
+      - id: pair_0206ea435bac4e6892c01448e00d347b
+        name: Authorization
+        value: "{{ _.authToken }}"
+        description: ""
+        disabled: false
+    authentication: {}
+    metaSortKey: -1731364047092.6875
+    isPrivate: false
+    pathParameters: []
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_9f7b3516ec8342588c5a44013bd749ab
     parentId: fld_af464cc9bce748a6b2a6227fc57bb3da
-    modified: 1731364234313
+    modified: 1739150052889
     created: 1731363986099
     url: "{{ _.baseUrl }}/auth/login"
     name: Login
@@ -500,7 +959,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"login": "admin@admin.com",
+        	"login": "andradefelipedev@gmail.com",
         	"password": "123"
         }
     parameters: []

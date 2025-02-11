@@ -28,10 +28,8 @@ public class ResourceService {
         return new ResourceResponse(resource);
     }
 
-    public ResourceResponse findById(String id) {
-        var resource = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
-        return new ResourceResponse(resource);
+    public Resource findById(String id) {
+        return repository.findById(id).orElse(null);
     }
 
     public Page<ResourceResponse> findAll(Pageable pageable) {

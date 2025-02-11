@@ -10,6 +10,7 @@ import Resource from './pages/resource/Resource';
 import Classroom from './pages/classrooms/Classroom';
 import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
 import FormClassroom from './pages/classrooms/FormClassroom';
+import ClassroomsAvaliable from './pages/reservePerHour/ClassroomsAvaliable';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/classrooms" element={<Classroom />} />
         <Route path="/classroom/:id" element={<FormClassroom />} />
         <Route path="/classroom" element={<FormClassroom />} />
+        <Route path="/classrooms-avaliable" element={<ClassroomsAvaliable />} />
         <Route path="/" element={<Home/>} />                                                                               
       </Routes>
     </Router>
