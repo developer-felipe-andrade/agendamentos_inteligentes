@@ -43,14 +43,13 @@ public class ClassroomController {
             @RequestParam("dtStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dtStart,
             @RequestParam("dtEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dtEnd,
             @RequestParam("qtdPlace") int qtdPlace,
-            @RequestParam("block") String block,
+            @RequestParam("isAccessible") boolean isAccessible,
             @RequestParam("idsResources") List<String> idsResources) {
 
-        List<ResumeClassroomResponse> classrooms = classroomService.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, block, idsResources);
+        List<ResumeClassroomResponse> classrooms = classroomService.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, isAccessible, idsResources);
 
         return ResponseEntity.ok(classrooms);
     }
-
 
     @PostMapping
     public ResponseEntity<Classroom> register(@RequestBody ClassroomRequest data) {

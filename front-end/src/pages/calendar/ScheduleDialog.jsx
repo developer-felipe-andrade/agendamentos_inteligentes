@@ -10,18 +10,19 @@ import 'dayjs/locale/pt-br';
 
 ScheduleDialog.propTypes = {
   open: PropTypes.bool.isRequired,
-  selectedRoom: PropTypes.string.isRequired,
+  selectedRoom: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   selectedDate: PropTypes.string,
-  selectedSchedule: PropTypes.string
+  selectedSchedule: PropTypes.string,
+  passDataToSend: PropTypes.object
 };
 
-export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule }) {
+export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend }) {
   const { renderAlerts, addAlert } = Alert();
-
+  
   const [formData, setFormData] = useState({
-    dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
-    dtEnd: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+    dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
+    dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
     obs: "", 
     classroomId: selectedRoom,
     notifications: []
@@ -33,16 +34,19 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
   const handleSave = async () => {
     try {
-      const payload = {
+      let payload = {
         ...formData,
         notifications: [...fields]
       }
+
+      console.log(formData);
 
       if (typeRecurrence !== 'none') {
         payload.recurrence = true;
         payload.typeRecurrence = typeRecurrence;
         payload.timeRecurrence = timeRecurrence;
       }
+
       if (!selectedSchedule) {
         await reservation.register(payload);
         addAlert("Agendamento criado com sucesso!", "success");
@@ -65,13 +69,15 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   const handleClose = () => {
     onClose();
     setFormData({
-      dtStart: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
-      dtEnd: dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+      dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
+          dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
       obs: "", 
       classroomId: selectedRoom,
-      notifications: []
+      notifications: [],
+      durationHours: 0,
+      durationMinutes: 50
     });
-
+    
     setFields([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   }
 
@@ -79,8 +85,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     try {
       const { data } = await reservation.findById(selectedSchedule);
       setFormData({
-        dtStart: dayjs(data.dtStart).format("YYYY-MM-DDTHH:mm"),
-        dtEnd: dayjs(data.dtEnd).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+        dtStart: passDataToSend?.dtStart ?? dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
+        dtEnd: passDataToSend?.dtEnd ?? dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
         obs: data.obs, 
         classroomId: data.classroom.id,
         notifications: data.notifications
@@ -100,7 +106,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
       {renderAlerts()}
-      <DialogTitle>Agendar</DialogTitle>
+      <DialogTitle>{passDataToSend ? '' : 'Agendar'}</DialogTitle>
       <DialogContent>
         <div className="flex gap-4 pt-3">
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
@@ -117,7 +123,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
           <TimePicker
             label="Tempo de duração"
-            value={dayjs().startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes || 50, 'minute')} 
+            value={dayjs(formData.dtStart).startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes ?? 50, 'minute')}
             onChange={(newValue) => {
               const newHours = newValue.hour();
               const newMinutes = newValue.minute();

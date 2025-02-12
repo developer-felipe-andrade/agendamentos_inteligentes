@@ -21,6 +21,7 @@ import {
   Logout,
   Schedule,
   Mail,
+  EventAvailable,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
@@ -42,10 +43,7 @@ export default function Scaffold({ children }) {
   const { renderAlerts, addAlert } = Alert();
   const navigate = useNavigate();
 
-  // Estado para controlar se o modal de reserva está aberto
   const [isReserveModalOpen, setReserveModalOpen] = useState(false);
-
-  // Estado para controlar se o modal de configurações de e-mail está aberto
   const [isEmailConfigModalOpen, setIsEmailConfigModalOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -70,6 +68,7 @@ export default function Scaffold({ children }) {
       aproveUsers: '/aprove-users',
       resources: '/resources',
       classroom: '/classrooms',
+      approveSchedules: '/aprove-schedule'
     };
     if (componentName === 'config-email') {
       setIsEmailConfigModalOpen(true)
@@ -138,6 +137,15 @@ export default function Scaffold({ children }) {
             </ListItemIcon>
             <ListItemText primary="Reservar" />
           </ListItem>
+
+          {['ADMIN', 'WORKER'].includes(userContent.role) && 
+            <ListItem key="approveSchedules" onClick={() => handleMenuClick('approveSchedules')}>
+              <ListItemIcon>
+                <EventAvailable />
+              </ListItemIcon>
+              <ListItemText primary="Aprovar Reservas" />
+            </ListItem>
+          }
 
           {userContent.role === 'ADMIN' &&
             [

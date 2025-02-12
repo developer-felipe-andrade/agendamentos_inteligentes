@@ -35,8 +35,6 @@ public class User implements UserDetails {
     private UserProfession profession;
     private String phoneNumber;
     private boolean enabled;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Reservation> reservations;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -68,6 +66,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
 

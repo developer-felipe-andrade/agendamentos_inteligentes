@@ -111,8 +111,8 @@ public class ClassroomService {
         }
     }
 
-    public List<ResumeClassroomResponse> findAvailableClassrooms(LocalDateTime dtStart, LocalDateTime dtEnd, int qtdPlace, String block, List<String> idsResources) {
-        List<Classroom> classrooms = classroomRepository.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, block, idsResources);
+    public List<ResumeClassroomResponse> findAvailableClassrooms(LocalDateTime dtStart, LocalDateTime dtEnd, int qtdPlace,boolean isAccessible, List<String> idsResources) {
+        List<Classroom> classrooms = classroomRepository.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, isAccessible, idsResources);
         return classrooms.stream().map(ResumeClassroomResponse::fromEntity).toList();
     }
 }

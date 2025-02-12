@@ -7,10 +7,11 @@ import RegisterUser from './pages/register-user/RegisterUser';
 import SchedulingCalendar from './pages/calendar/SchedulingCalendar';
 import AproveUsers from './pages/users/AproveUsers';
 import Resource from './pages/resource/Resource';
-import Classroom from './pages/classrooms/Classroom';
+import Classroom from './pages/classroom/Classroom';
 import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
-import FormClassroom from './pages/classrooms/FormClassroom';
+import FormClassroom from './pages/classroom/FormClassroom';
 import ClassroomsAvaliable from './pages/reservePerHour/ClassroomsAvaliable';
+import AproveSchedule from './pages/aprove-schedule/AproveSchedule';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/classroom/:id" element={<FormClassroom />} />
         <Route path="/classroom" element={<FormClassroom />} />
         <Route path="/classrooms-avaliable" element={<ClassroomsAvaliable />} />
+        <Route path="/aprove-schedule" element={<AproveSchedule />} />
         <Route path="/" element={<Home/>} />                                                                               
       </Routes>
     </Router>

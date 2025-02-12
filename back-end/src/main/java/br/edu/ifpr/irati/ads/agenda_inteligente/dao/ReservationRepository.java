@@ -17,6 +17,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
     Page<Reservation> findByClassroom_Id(String classroomId, Pageable pageable);
     Page<Reservation> findByStatusIgnoreCase(String status, Pageable pageable);
+    Page<Reservation> findByUserIdAndStatus(String userId, String status, Pageable pageable);
 
     @Query("SELECT r FROM Reservation r WHERE r.classroom.id = :classroomId " +
             "AND ((r.dtStart BETWEEN :start AND :end) OR " +

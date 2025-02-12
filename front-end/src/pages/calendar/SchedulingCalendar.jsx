@@ -59,13 +59,15 @@ export default function SchedulingCalendar() {
   }
 
   const handleOpenModal = (info) => {
-    setSelectedSchedule(info.event.id);
+    setSelectedSchedule(info.event?.id);
     setSelectedDate(info.dateStr);
     setOpenModal(true);
   }
 
   const handleCloseModal = () => {
-    getSchedulings(selectedRoom);
+    if (selectedRoom) {
+      getSchedulings(selectedRoom);
+    }
     setOpenModal(false);
   }
 

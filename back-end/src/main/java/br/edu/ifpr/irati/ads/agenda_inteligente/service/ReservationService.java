@@ -1,6 +1,7 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.reservation.ReservationResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ReservationRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
@@ -50,6 +51,10 @@ public class ReservationService {
 
     public Page<Reservation> findByStatus(String status, Pageable pageable) {
         return repository.findByStatusIgnoreCase(status, pageable);
+    }
+
+    public Page<Reservation> getReservationsByUserId(String userId, Pageable pageable) {
+        return repository.findByUserIdAndStatus(userId, "PENDING", pageable);
     }
 
     public Optional<Reservation> findById(String id) {

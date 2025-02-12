@@ -14,6 +14,10 @@ public class EmailConfigService {
     private EmailConfigRepository repository;
 
     public EmailConfig saveConfig(EmailConfig config) {
+        EmailConfig existingConfig = getConfig();
+        if (existingConfig != null) {
+            config.setId(existingConfig.getId());
+        }
         return repository.save(config);
     }
 
@@ -35,5 +39,13 @@ public class EmailConfigService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public EmailConfig getConfig() {
+        return repository.findAll().stream().findFirst().orElse(null);
+    }
+
+    public void deleteConfig() {
+        repository.deleteAll();
     }
 }

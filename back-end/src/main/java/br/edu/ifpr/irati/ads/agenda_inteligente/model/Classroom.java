@@ -1,6 +1,7 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,9 +43,11 @@ public class Classroom {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "classroom",  fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "classroom", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<ResourceClassroom> resources;
 
     @PrePersist

@@ -1,6 +1,7 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,26 +11,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class EmailConfig {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Column(name = "sender_email", nullable = false)
-    private String senderEmail;
+    @Column(name = "email", nullable = false)
+    private String email;
 
-    @Column(name = "sender_name", nullable = false)
-    private String senderName;
+    @Column(name = "host", nullable = false)
+    private String host;
 
-    @Column(name = "smtp_host", nullable = false)
-    private String smtpHost;
-
-    @Column(name = "smtp_port", nullable = false)
-    private Integer smtpPort;
-
-    @Column(name = "username", nullable = false)
-    private String username;
+    @Column(name = "port", nullable = false)
+    private Integer port;
 
     @Column(name = "password", nullable = false)
     private String password;

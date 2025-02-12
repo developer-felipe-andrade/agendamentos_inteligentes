@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Grid, Chip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Chip, FormControlLabel, Grid } from '@mui/material';
 import { DateTimePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Alert from '../../components/UseAlert';
@@ -10,7 +10,7 @@ import classroom from '../../api/requests/classrooms';
 import { useNavigate } from 'react-router-dom';
 
 const ReservePerHour = ({ isOpen, setIsOpen }) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   
   const { renderAlerts, addAlert } = Alert();
   const [resources, setResources] = useState([]);
@@ -19,35 +19,34 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
     dtEnd: dayjs().hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
     durationHours: 0,
     durationMinutes: 50,
-    qtdPlace: '', 
-    block: 'A', 
-    idsResources: []
+    qtdPlace: '',
+    idsResources: [],
+    isAccessible: false
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleSubmit = async () => {
     const payload = {
-      block: formData.block,
       qtdPlace: formData.qtdPlace || 0,
       dtStart: formData.dtStart,
       dtEnd: formData.dtEnd,
-      idsResources: formData.idsResources || []
+      idsResources: formData.idsResources || [],
+      isAccessible: formData.isAccessible  
     }
-
-    console.log(payload);
     
     const { data } = await classroom.findAvailableClassrooms(payload);
     if (data.length > 0) {
       navigate('/classrooms-avaliable', {
         state: {
-          data: data
+          data: data,
+          formData: formData
         }
       });
       setFormData({
@@ -55,9 +54,9 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
         dtEnd: dayjs().hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
         durationHours: 0,
         durationMinutes: 50,
-        qtdPlace: '', 
-        block: 'A', 
-        idsResources: []
+        qtdPlace: '',
+        idsResources: [],
+        isAccessible: false
       });
       setIsOpen(false);  
     } else {
@@ -68,11 +67,25 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
   const getResources = async () => {
     try {
       const { data } = await resource.getAll();
-      setResources(data.content);  // Ajuste conforme necessário para o seu formato de resposta
+      setResources(data.content); 
     } catch (error) {
       console.log(error);
       addAlert('Erro ao recuperar os dados!', 'error');
     }
+  };
+
+  const handleClose = () => {
+    setFormData({
+      dtStart: dayjs().format("YYYY-MM-DDTHH:mm"),
+      dtEnd: dayjs().hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+      durationHours: 0,
+      durationMinutes: 50,
+      qtdPlace: '',
+      idsResources: [],
+      isAccessible: false
+    });
+    
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -105,11 +118,11 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
                 onChange={(newValue) => {
                   const newHours = newValue.hour();
                   const newMinutes = newValue.minute();
-    
+
                   const updatedDtEnd = dayjs(formData.dtStart)
                     .add(newHours, 'hour')
                     .add(newMinutes, 'minute');
-    
+
                   setFormData((prev) => ({
                     ...prev,
                     durationHours: newHours,
@@ -121,7 +134,7 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
             </LocalizationProvider>
           </div>
 
-          <Grid container spacing={3}>
+          <Grid container spacing={2} pt={3}>
             <Grid item xs={6}>
               <TextField
                 label="Quantidade de lugares"
@@ -136,20 +149,17 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
             </Grid>
 
             <Grid item xs={6}>
-              <FormControl fullWidth margin="normal">
-                <InputLabel>Bloco</InputLabel>
-                <Select
-                  label="Bloco"
-                  required
-                  name="block"
-                  value={formData.block}
-                  onChange={handleChange}
-                >
-                  <MenuItem value="A">Bloco A</MenuItem>
-                  <MenuItem value="B">Bloco B</MenuItem>
-                  <MenuItem value="C">Bloco C</MenuItem>
-                </Select>
-              </FormControl>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="isAccessible"
+                    checked={formData.isAccessible}
+                    onChange={handleChange}
+                    color="primary"
+                  />
+                }
+                label="É acessível para pessoas com modalidade reduzida?"
+              />
             </Grid>
           </Grid>
 
@@ -169,7 +179,7 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
                       <Chip
                         key={resource.id}
                         label={`Nome: ${resource.name} - Tipo: ${resource.type}`}
-                        color='primary'
+                        color="primary"
                       />
                     ))}
                   </div>
@@ -185,8 +195,9 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
             </Select>
           </FormControl>
         </DialogContent>
+
         <DialogActions>
-          <Button onClick={() => setIsOpen(false)} color="primary">
+          <Button onClick={handleClose} color="primary">
             Cancelar
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">

@@ -70,15 +70,6 @@ public class ReservationController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/status/{status}")
-    public ResponseEntity<Page<ReservationResponse>> findByStatus(
-            @PathVariable String status,
-            @PageableDefault(sort = "dtStart") Pageable pageable) {
-        Page<ReservationResponse> responses = service.findByStatus(status, pageable)
-                .map(ReservationResponse::fromEntity);
-        return ResponseEntity.ok(responses);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<List<ReservationResponse>> update(
             @PathVariable String id,
@@ -105,6 +96,16 @@ public class ReservationController {
                     return ResponseEntity.ok(responses);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/responsible/{userId}")
+    public ResponseEntity<Page<ReservationResponse>> findByResponsible(
+            @PathVariable String userId,
+            @PageableDefault(sort = "dtStart") Pageable pageable) {
+        
+        Page<ReservationResponse> responses = service.getReservationsByUserId(userId, pageable)
+                .map(ReservationResponse::fromEntity);
+        return ResponseEntity.ok(responses);
     }
 
     @PatchMapping("/{id}/active")
@@ -134,6 +135,4 @@ public class ReservationController {
         service.deleteRecurring(id);
         return ResponseEntity.noContent().build();
     }
-
-
 }

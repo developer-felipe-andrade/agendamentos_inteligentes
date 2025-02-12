@@ -25,8 +25,8 @@ const reservation = {
     return api.get(`reservations/classroom/${id}`);
   },
 
-  async findByPending() {
-    return api.get('reservations/status/pending');
+  async findByResponsible(id) {
+    return api.get(`/reservations/responsible/${id}`)
   }
 }
 

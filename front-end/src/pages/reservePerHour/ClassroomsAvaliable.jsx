@@ -3,12 +3,16 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { useLocation } from 'react-router-dom';
 import Scaffold from '../../components/Scaffold';
 import { Check, ViewList } from '@mui/icons-material';
+import ScheduleDialog from '../calendar/ScheduleDialog';
 
 const ClassroomsAvaliable = () => {
   const location = useLocation();
   const classrooms = location.state.data || [];
-
+  const formData = location.state.formData || [];
+  
+  const [payload, setPayload] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
+  const [openScheduleDialog, setOpenScheduleDialog] = useState(false);
   const [resources, setResources] = useState([]);
 
   const handleViewResources = (resourcesList) => {
@@ -20,8 +24,17 @@ const ClassroomsAvaliable = () => {
     setOpenDialog(false);
   };
 
-  const handleSchedule = () => {
-    window.alert('clicado');
+  
+  const handleOpenScheduleDialog = () => {
+    setPayload({
+      dtStart: formData.dtStart,
+      dtEnd: formData.dtEnd
+    })
+    
+    setOpenScheduleDialog(true);
+  }
+  const handleCloseScheduleDialog = () => {
+    setOpenScheduleDialog(false);
   }
 
   return (
@@ -59,7 +72,7 @@ const ClassroomsAvaliable = () => {
                 </TableCell>
                 <TableCell>
                   <Check 
-                    onClick={handleSchedule}
+                    onClick={handleOpenScheduleDialog}
                     sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }} />
                 </TableCell>
               </TableRow>
@@ -67,6 +80,14 @@ const ClassroomsAvaliable = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      
+      <ScheduleDialog 
+        open={openScheduleDialog}
+        onClose={handleCloseScheduleDialog}
+        passDataToSend={payload}
+      />
+
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Lista de Recursos</DialogTitle>

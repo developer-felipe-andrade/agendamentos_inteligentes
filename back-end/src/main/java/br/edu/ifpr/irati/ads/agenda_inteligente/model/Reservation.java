@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class Reservation {
-
     @Id
     @Column(length = 255)
     private String id;
