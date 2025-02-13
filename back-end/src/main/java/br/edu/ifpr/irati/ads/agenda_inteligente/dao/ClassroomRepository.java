@@ -38,6 +38,10 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
         WHERE rc.classroom_id = c.id
         AND (rc.resource_id IN (:idsResources) OR '' = '')
     )
+    AND c.id NOT IN (
+        SELECT DISTINCT r.classroom_id FROM reservations r
+        WHERE r.dt_end < NOW()
+    )
     """, nativeQuery = true)
     List<Classroom> findAvailableClassrooms(
             @Param("dtStart") LocalDateTime dtStart,

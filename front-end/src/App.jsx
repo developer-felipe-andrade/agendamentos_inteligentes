@@ -12,6 +12,7 @@ import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
 import FormClassroom from './pages/classroom/FormClassroom';
 import ClassroomsAvaliable from './pages/reservePerHour/ClassroomsAvaliable';
 import AproveSchedule from './pages/aprove-schedule/AproveSchedule';
+import ReportReserve from './pages/report/ReportReserve';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/classroom" element={<FormClassroom />} />
         <Route path="/classrooms-avaliable" element={<ClassroomsAvaliable />} />
         <Route path="/aprove-schedule" element={<AproveSchedule />} />
+        <Route path="/report-reserve" element={<ReportReserve />} />
         <Route path="/" element={<Home/>} />                                                                               
       </Routes>
     </Router>

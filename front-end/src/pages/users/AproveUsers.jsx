@@ -52,7 +52,6 @@ const Users = () => {
   }
 
   const handleOpenRejectModal = (user) => {
-    console.log(user);
     setSelectedUserEmail(user.login);
     setSelectedUserId(user.id);
     setOpenModal(true);

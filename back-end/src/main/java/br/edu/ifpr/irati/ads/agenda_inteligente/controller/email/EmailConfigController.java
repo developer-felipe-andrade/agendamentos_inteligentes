@@ -42,8 +42,15 @@ class EmailConfigController {
         return ResponseEntity.ok(service.getConfig());
     }
 
+    @GetMapping("exists")
+    public ResponseEntity<Boolean> existConfig() {
+        return ResponseEntity.ok(service.existConfig());
+    }
+
     @DeleteMapping
     public ResponseEntity deleteConfig() {
+        service.deleteConfig();
+
         return ResponseEntity.noContent().build();
     }
 }

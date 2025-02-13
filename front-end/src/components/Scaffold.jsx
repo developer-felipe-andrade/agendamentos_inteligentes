@@ -68,7 +68,8 @@ export default function Scaffold({ children }) {
       aproveUsers: '/aprove-users',
       resources: '/resources',
       classroom: '/classrooms',
-      approveSchedules: '/aprove-schedule'
+      approveSchedules: '/aprove-schedule',
+      reportReserves: '/report-reserve'
     };
     if (componentName === 'config-email') {
       setIsEmailConfigModalOpen(true)
@@ -152,7 +153,8 @@ export default function Scaffold({ children }) {
               { key: 'aproveUsers', icon: <Person />, text: 'Aprovar Usuários' },
               { key: 'resources', icon: <Inventory2 />, text: 'Recursos' },
               { key: 'classroom', icon: <Class />, text: 'Salas' },
-              { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'}
+              { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'},
+              { key: 'reportReserves', icon:<Mail/>, text: 'Relatório de reservas'}
             ].map(({ key, icon, text }) => (
               <ListItem key={key} onClick={() => handleMenuClick(key)}>
                 <ListItemIcon>{icon}</ListItemIcon>

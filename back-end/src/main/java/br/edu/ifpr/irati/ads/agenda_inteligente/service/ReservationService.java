@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +32,8 @@ public class ReservationService {
         reservation.setId(UUID.randomUUID().toString());
 
         checkForConflicts(reservation);
-        ClassroomResponse classroom = classroomService.getClassroomById(reservation.getClassroom().getId());
-        if (classroom.confirmation()) {
+        Classroom classroom = classroomService.findById(reservation.getClassroom().getId());
+        if (classroom.isConfirmation()) {
             reservation.setStatus("PENDING");
         } else {
             reservation.setStatus("APPROVED");
@@ -46,7 +47,8 @@ public class ReservationService {
     }
 
     public Page<Reservation> findByClassroomId(String classroomId, Pageable pageable) {
-        return repository.findByClassroom_Id(classroomId, pageable);
+        List<String> statuses = Arrays.asList("PENDING", "APPROVED");
+        return repository.findByClassroom_IdAndStatusIn(classroomId, statuses, pageable);
     }
 
     public Page<Reservation> findByStatus(String status, Pageable pageable) {
@@ -54,7 +56,7 @@ public class ReservationService {
     }
 
     public Page<Reservation> getReservationsByUserId(String userId, Pageable pageable) {
-        return repository.findByUserIdAndStatus(userId, "PENDING", pageable);
+        return repository.findByUserIdAndStatusAfterCurrentDate(userId, "PENDING", pageable);
     }
 
     public Optional<Reservation> findById(String id) {
@@ -82,14 +84,15 @@ public class ReservationService {
         return repository.save(reservation);
     }
 
-
     @Transactional
-    public Optional<Reservation> updateStatus(String id, String status) {
-        return repository.findById(id)
-                .map(reservation -> {
-                    reservation.setStatus(status);
-                    return repository.save(reservation);
-                });
+    public void approveReservations(List<String> uuidList) {
+        for (String uuid : uuidList) {
+            Reservation reservation = repository.findById(uuid)
+                    .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada para o UUID: " + uuid));
+
+            reservation.setStatus("APPROVED");
+            repository.save(reservation);
+        }
     }
 
     @Transactional
@@ -146,5 +149,13 @@ public class ReservationService {
         if (!conflicts.isEmpty()) {
             throw new IllegalStateException("Existe conflito de horário com outras reservas");
         }
+    }
+
+    public void rejectReservations(List<String> ids) {
+        List<Reservation> reservations = repository.findAllByIdIn(ids);
+        for (Reservation reservation : reservations) {
+            reservation.setStatus("REJECTED");
+        }
+        repository.saveAll(reservations);
     }
 }

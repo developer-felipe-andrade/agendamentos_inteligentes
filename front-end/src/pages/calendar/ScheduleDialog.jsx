@@ -19,7 +19,6 @@ ScheduleDialog.propTypes = {
 
 export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend }) {
   const { renderAlerts, addAlert } = Alert();
-  
   const [formData, setFormData] = useState({
     dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
     dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
@@ -38,8 +37,6 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         ...formData,
         notifications: [...fields]
       }
-
-      console.log(formData);
 
       if (typeRecurrence !== 'none') {
         payload.recurrence = true;
@@ -70,7 +67,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     onClose();
     setFormData({
       dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
-          dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+      dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
       obs: "", 
       classroomId: selectedRoom,
       notifications: [],
@@ -85,8 +82,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     try {
       const { data } = await reservation.findById(selectedSchedule);
       setFormData({
-        dtStart: passDataToSend?.dtStart ?? dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
-        dtEnd: passDataToSend?.dtEnd ?? dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
+        dtStart: dayjs(data.dtStart).format("YYYY-MM-DDTHH:mm"),
+        dtEnd: dayjs(data.dtEnd).format("YYYY-MM-DDTHH:mm"),
         obs: data.obs, 
         classroomId: data.classroom.id,
         notifications: data.notifications
@@ -96,9 +93,22 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       addAlert('Erro ao buscar os dados do agendamento', 'error');
     }
   }; 
+
+  const handleDelete = async () => {
+    try {
+      await reservation.delete(selectedSchedule);
+      addAlert("Agendamento excluído com sucesso!", "success");
+    } catch (error) {
+      console.error("Erro ao excluir agendamento:", error);
+      addAlert("Erro ao excluir o agendamento!", "error");
+    } finally {
+      handleClose();
+    }
+  };
   
   useEffect(() => {
     if (open && selectedSchedule) {
+      console.log('cheguei');
       getSchedule();
     }
   }, [])
@@ -111,12 +121,21 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <div className="flex gap-4 pt-3">
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
           <DateTimePicker
-            value={dayjs(formData.dtStart)} 
+            value={dayjs(formData.dtStart)}
             label="Data"
-            onChange={(newValue) => setFormData((prev) => ({ 
-              ...prev, 
-              dtStart: newValue.format("YYYY-MM-DDTHH:mm") 
-            }))}
+            onChange={(newValue) => {
+              const dtStart = newValue.format("YYYY-MM-DDTHH:mm");
+              const dtEnd = dayjs(dtStart)
+                .add(formData.durationHours || 0, 'hour')
+                .add(formData.durationMinutes ?? 50, 'minute')
+                .format("YYYY-MM-DDTHH:mm");
+
+              setFormData((prev) => ({
+                ...prev,
+                dtStart,
+                dtEnd,
+              }));
+            }}
           />
           </LocalizationProvider>
 
@@ -234,8 +253,17 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">Cancelar</Button>
-        <Button onClick={handleSave} variant="contained" color="primary">Salvar</Button>
+        {selectedSchedule && (
+          <Button onClick={handleDelete} variant="contained" color="error" style={{ marginRight: "auto" }}>
+            Excluir
+          </Button>
+        )}
+        <Button onClick={handleClose} color="secondary">
+          Cancelar
+        </Button>
+        <Button onClick={handleSave} variant="contained" color="primary">
+          Salvar
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -18,9 +18,15 @@ public record NotificationRequest(
         String form
 ) {
     public Notification toEntity(Reservation reservation) {
+        LocalDateTime antecipation = this.anticipationTime;
+        antecipation = antecipation
+                .withYear(reservation.getDtStart().getYear())
+                .withMonth(reservation.getDtStart().getMonthValue())
+                .withDayOfMonth(reservation.getDtStart().getDayOfMonth());
+
         Notification notification = new Notification();
         notification.setId(UUID.randomUUID().toString());
-        notification.setAnticipationTime(this.anticipationTime);
+        notification.setAnticipationTime(antecipation);
         notification.setForm(this.form);
         notification.setReservation(reservation);
         return notification;

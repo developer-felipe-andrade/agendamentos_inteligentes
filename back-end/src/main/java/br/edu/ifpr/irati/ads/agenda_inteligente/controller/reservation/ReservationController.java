@@ -4,6 +4,7 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.EmailService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReservationService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/reservations")
@@ -28,6 +30,8 @@ public class ReservationController {
     private ReservationService service;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping
     public ResponseEntity create(
@@ -101,20 +105,11 @@ public class ReservationController {
     @GetMapping("/responsible/{userId}")
     public ResponseEntity<Page<ReservationResponse>> findByResponsible(
             @PathVariable String userId,
-            @PageableDefault(sort = "dtStart") Pageable pageable) {
+            @PageableDefault(sort = "dt_start") Pageable pageable) {
         
         Page<ReservationResponse> responses = service.getReservationsByUserId(userId, pageable)
                 .map(ReservationResponse::fromEntity);
         return ResponseEntity.ok(responses);
-    }
-
-    @PatchMapping("/{id}/active")
-    public ResponseEntity<ReservationResponse> updateStatus(
-            @PathVariable String id) {
-        return service.updateStatus(id, "ACTIVE")
-                .map(ReservationResponse::fromEntity)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
@@ -126,13 +121,23 @@ public class ReservationController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/recurring/{id}")
-    public ResponseEntity<Void> deleteRecurring(@PathVariable String id) {
-        if (service.findById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/reject")
+    public ResponseEntity<String> rejectReservations(@Valid @RequestBody List<RejectReservationRequest> rejectionsRequest) {
+        for (RejectReservationRequest reject: rejectionsRequest) {
+            emailService.sendRejectionEmail(reject.userEmail(), reject.reservationIds(), reject.message());
+            service.rejectReservations(reject.reservationIds());
         }
 
-        service.deleteRecurring(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Reservations rejected successfully.");
+    }
+
+    @PutMapping("/approve")
+    public ResponseEntity<String> approveReservations(@RequestBody List<String> reservationIds) {
+        try {
+            service.approveReservations(reservationIds);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Erro ao aprovar reservas: " + e.getMessage());
+        }
     }
 }

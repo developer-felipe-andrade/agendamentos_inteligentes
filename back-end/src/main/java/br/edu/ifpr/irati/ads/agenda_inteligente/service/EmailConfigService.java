@@ -45,6 +45,10 @@ public class EmailConfigService {
         return repository.findAll().stream().findFirst().orElse(null);
     }
 
+    public boolean existConfig() {
+        return getConfig() != null;
+    }
+
     public void deleteConfig() {
         repository.deleteAll();
     }

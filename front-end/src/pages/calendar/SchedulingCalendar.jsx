@@ -12,6 +12,8 @@ import reservation from '../../api/requests/reservation';
 import ScheduleDialog from './ScheduleDialog';
 import ShareSchedule from './ShareSchedule';
 import dayjs from "dayjs";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
+import emailConfig from '../../api/requests/email-config';
 
 export default function SchedulingCalendar() {
   const { renderAlerts, addAlert } = Alert();
@@ -21,6 +23,17 @@ export default function SchedulingCalendar() {
   const [selectedSchedule, setSelectedSchedule] = useState('');
   const [schedulings, setSchedulings] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [openEmailDialog, setOpenEmailDialog] = useState(false);
+
+  const checkEmailConfig = async () => {
+    try {
+      const { data } = await emailConfig.exists();
+      setOpenEmailDialog(!data); 
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao verificar a configuração de e-mail!', 'error');
+    }
+  };
 
   const getClassrooms = async () => {
     try {
@@ -32,6 +45,7 @@ export default function SchedulingCalendar() {
     }
   };
 
+  // Função para obter as reservas de uma sala
   const getSchedulings = async (id) => {
     try {
       const { data } = await reservation.findByClassroom(id);
@@ -53,17 +67,20 @@ export default function SchedulingCalendar() {
     }
   }
 
+  // Função para lidar com a mudança da sala selecionada
   const handleChangeClassroom = (event) => {
     setSelectedRoom(event.target.value);
     getSchedulings(event.target.value);
   }
 
+  // Função para abrir o modal de agendamento
   const handleOpenModal = (info) => {
     setSelectedSchedule(info.event?.id);
     setSelectedDate(info.dateStr);
     setOpenModal(true);
   }
 
+  // Função para fechar o modal de agendamento
   const handleCloseModal = () => {
     if (selectedRoom) {
       getSchedulings(selectedRoom);
@@ -72,13 +89,15 @@ export default function SchedulingCalendar() {
   }
 
   useEffect(() => {
+    checkEmailConfig();
     getClassrooms();
   }, []);
-  
+
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Scaffold>
         {renderAlerts()}
+
         <FormControl fullWidth sx={{ m: 1 }}>
           <Box display="flex" alignItems="center">
             {/* Select de Salas de Aula */}
@@ -122,17 +141,31 @@ export default function SchedulingCalendar() {
           }}
         />
       </Scaffold>
-      {
-        openModal && (
-          <ScheduleDialog 
-            open={openModal}
-            selectedRoom={selectedRoom}
-            selectedDate={selectedDate}
-            selectedSchedule={selectedSchedule}
-            onClose={handleCloseModal}
-          />
-        )
-      }
+
+      {openModal && (
+        <ScheduleDialog 
+          open={openModal}
+          selectedRoom={selectedRoom}
+          selectedDate={selectedDate}
+          selectedSchedule={selectedSchedule}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {openEmailDialog && (
+        <Dialog open={openEmailDialog}>
+          <DialogTitle>Configuração de E-mail</DialogTitle>
+          <DialogContent>
+            <p>O e-mail para envio de notificações não está configurado.</p>
+            <p>Por favor, clique no menu para configurar o e-mail para envio.</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenEmailDialog(false)} color="primary">
+              Fechar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
-  )
+  );
 }

@@ -15,9 +15,16 @@ import java.util.List;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
-    Page<Reservation> findByClassroom_Id(String classroomId, Pageable pageable);
+    List<Reservation> findAllByIdIn(List<String> ids);
+
+    Page<Reservation> findByClassroom_IdAndStatusIn(String classroomId, List<String> statuses, Pageable pageable);
     Page<Reservation> findByStatusIgnoreCase(String status, Pageable pageable);
-    Page<Reservation> findByUserIdAndStatus(String userId, String status, Pageable pageable);
+    @Query(value = "SELECT r.* FROM reservations r WHERE r.user_id = :user AND r.status = :status AND r.dt_start >= CURRENT_TIMESTAMP",
+            nativeQuery = true)
+    Page<Reservation> findByUserIdAndStatusAfterCurrentDate(@Param("user") String user,
+                                                            @Param("status") String status,
+                                                            Pageable pageable);
+
 
     @Query("SELECT r FROM Reservation r WHERE r.classroom.id = :classroomId " +
             "AND ((r.dtStart BETWEEN :start AND :end) OR " +
@@ -33,4 +40,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     void deleteByRecurrence(@Param("userId") String userId,
                             @Param("classroomId") String classroomId,
                             @Param("dtStart") LocalDateTime dtStart);
+
+
 }

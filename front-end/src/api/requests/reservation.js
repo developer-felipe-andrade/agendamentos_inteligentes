@@ -5,12 +5,16 @@ const reservation = {
     return api.post('/reservations', data);
   },
 
+  async reject(data) {
+    return api.post('/reservations/reject', data);
+  },
+
   async update(id, data) {
     return api.put(`/reservations/${id}`, data);
   },
 
-  async setActiveStatus(id) {
-    return api.patch(`reservations/${id}`);
+  async approve(data) {
+    return api.put('/reservations/approve', data);
   },
 
   async delete(id) {
@@ -25,8 +29,13 @@ const reservation = {
     return api.get(`reservations/classroom/${id}`);
   },
 
-  async findByResponsible(id) {
-    return api.get(`/reservations/responsible/${id}`)
+  async findByResponsible(id, page = 0, size = 99999999) {
+    return api.get(`/reservations/responsible/${id}`, {
+      params: {
+        page,
+        size
+      }
+    });
   }
 }
 

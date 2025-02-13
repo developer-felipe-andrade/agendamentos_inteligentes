@@ -16,6 +16,10 @@ const emailConfig = {
 
   async findConfig() {
     return api.get('/email-config');
+  },
+
+  async exists() {
+    return api.get('/email-config/exists');
   }
 }
 

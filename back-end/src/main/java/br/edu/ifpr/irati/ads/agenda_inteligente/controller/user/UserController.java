@@ -67,7 +67,15 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
         User loadedUser = userService.findByLogin(login);
-        UserResponse dto = new UserResponse(loadedUser.getId(), loadedUser.getLogin(), loadedUser.getRole(), loadedUser.getProfession(), loadedUser.getName());
+
+
+        UserResponse dto = new UserResponse(
+                loadedUser.getId(),
+                loadedUser.getLogin(),
+                loadedUser.getRole(),
+                loadedUser.getProfession(),
+                loadedUser.getName()
+        );
 
         return ResponseEntity.ok(dto);
     }

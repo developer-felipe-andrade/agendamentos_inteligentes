@@ -91,6 +91,10 @@ public class ClassroomService {
         return classroom.map(ClassroomResponse::fromEntity).orElse(null);
     }
 
+    public Classroom findById(String id) {
+        return classroomRepository.findById(id).orElse(null);
+    }
+
     public Page<ClassroomResponse> findAll(Pageable pageable) {
         return classroomRepository.findAll(pageable).map(ClassroomResponse::fromEntity);
     }
