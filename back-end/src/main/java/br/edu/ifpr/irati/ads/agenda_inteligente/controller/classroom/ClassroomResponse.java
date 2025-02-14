@@ -33,6 +33,7 @@ public record ClassroomResponse(
         List<ResourceInfo> resourceInfos = classroom.getResources().stream()
                 .map(resourceClassroom -> new ResourceInfo(
                         resourceClassroom.getResource().getId(),
+                        resourceClassroom.getResource().getName(),
                         resourceClassroom.getQtd()
                 ))
                 .collect(Collectors.toList());

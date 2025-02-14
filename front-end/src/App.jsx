@@ -12,9 +12,11 @@ import ConfirmPassword from './pages/forgot-password/ConfirmPassword';
 import FormClassroom from './pages/classroom/FormClassroom';
 import ClassroomsAvaliable from './pages/reservePerHour/ClassroomsAvaliable';
 import AproveSchedule from './pages/aprove-schedule/AproveSchedule';
-import ReportReserve from './pages/report/ReportReserve';
+import ReportPageReserves from './pages/report/reserveApproves/ReportPage';
+import ReportPageClassrooms from './pages/report/quantityResourcesPerClassrooms/ReportPage';
 
 function App() {
+  
   return (
     <Router>
       <Routes>
@@ -30,7 +32,8 @@ function App() {
         <Route path="/classroom" element={<FormClassroom />} />
         <Route path="/classrooms-avaliable" element={<ClassroomsAvaliable />} />
         <Route path="/aprove-schedule" element={<AproveSchedule />} />
-        <Route path="/report-reserve" element={<ReportReserve />} />
+        <Route path="/report-reserve" element={<ReportPageReserves />} />
+        <Route path="/report-classroom" element={<ReportPageClassrooms />} />
         <Route path="/" element={<Home/>} />                                                                               
       </Routes>
     </Router>

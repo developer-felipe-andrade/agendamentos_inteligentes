@@ -12,12 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +54,13 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<Page<ReservationResponse>> findAll(
+            @RequestParam(value = "dtStart", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dtStart,
+            @RequestParam(value = "dtEnd", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dtEnd,
             @PageableDefault(size = 10, sort = "dtStart") Pageable pageable) {
-        Page<ReservationResponse> responses = service.findAll(pageable)
+
+        Page<ReservationResponse> responses = service.findReservationsByDateRange(dtStart, dtEnd, pageable)
                 .map(ReservationResponse::fromEntity);
+
         return ResponseEntity.ok(responses);
     }
 

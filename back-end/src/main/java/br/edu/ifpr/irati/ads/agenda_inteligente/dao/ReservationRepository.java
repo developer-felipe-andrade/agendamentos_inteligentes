@@ -41,5 +41,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
                             @Param("classroomId") String classroomId,
                             @Param("dtStart") LocalDateTime dtStart);
 
-
+    public Page<Reservation> findByDtStartBetween(LocalDateTime dtStart, LocalDateTime dtEnd, Pageable pageable);
 }

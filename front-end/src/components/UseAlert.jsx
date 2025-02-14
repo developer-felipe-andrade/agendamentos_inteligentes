@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Snackbar, Alert as MuiAlert } from '@mui/material';
 
 const useAlert = (duration = 6000) => {
   const [alerts, setAlerts] = useState([]);
 
   const addAlert = (message, type = 'success') => {
-    const id = Math.random().toString(36).substr(2, 9); // Gerar um ID único
+    const id = Math.random().toString(36).substr(2, 9); 
     setAlerts((prevAlerts) => [...prevAlerts, { id, message, type }]);
   };
 
@@ -23,14 +23,14 @@ const useAlert = (duration = 6000) => {
           onClose={() => removeAlert(alert.id)}
           anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
           sx={{
-            zIndex: (theme) => theme.zIndex.snackbar + 1, // Garantir maior prioridade sobre outros Snackbars
+            zIndex: (theme) => theme.zIndex.snackbar + 1, 
           }}
         >
           <MuiAlert
             severity={alert.type}
             onClose={() => removeAlert(alert.id)}
             elevation={6}
-            variant="filled" // Melhorar a aparência padrão
+            variant="filled" 
             sx={{ minWidth: 300 }}
           >
             {alert.message}

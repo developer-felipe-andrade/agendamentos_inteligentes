@@ -23,7 +23,7 @@ public class ClassroomController {
     private ClassroomService classroomService;
 
     @GetMapping
-    public ResponseEntity<Page<ClassroomResponse>> getAll(@PageableDefault(size = 10, sort = "name") Pageable pageable) {
+    public ResponseEntity<Page<ClassroomResponse>> getAll(@PageableDefault(size = 9999999, sort = "name") Pageable pageable) {
         Page<ClassroomResponse> classrooms = classroomService.findAll(pageable);
 
         return ResponseEntity.ok(classrooms);

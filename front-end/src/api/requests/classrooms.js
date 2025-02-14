@@ -17,6 +17,10 @@ const classroom = {
     return await api.get(`/classroom/${id}`);
   },
 
+  async findAll() {
+    return await api.get('/classroom');
+  },
+
   async findAvailableClassrooms(params) {
     const queryParams = new URLSearchParams(params).toString();
     return await api.get(`/classroom/findAvailableClassrooms?${queryParams}`);

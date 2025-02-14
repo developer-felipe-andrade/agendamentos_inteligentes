@@ -22,6 +22,8 @@ import {
   Schedule,
   Mail,
   EventAvailable,
+  Description,
+  Home,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
@@ -33,11 +35,15 @@ import ConnectionDialog from '../pages/config-email/ConnectionDialog';
 
 const drawerWidth = 240;
 
-export default function Scaffold({ children }) {
+export default function Scaffold({ children, appBarActions }) {
   Scaffold.propTypes = {
     children: PropTypes.node.isRequired, 
+    appBarActions: PropTypes.arrayOf(PropTypes.shape({
+      icon: PropTypes.element.isRequired,
+      onClick: PropTypes.func.isRequired,
+    })),
   };
-  
+
   const [open, setOpen] = React.useState(false);
   const [userContent, setUserContent] = useState({});
   const { renderAlerts, addAlert } = Alert();
@@ -69,7 +75,8 @@ export default function Scaffold({ children }) {
       resources: '/resources',
       classroom: '/classrooms',
       approveSchedules: '/aprove-schedule',
-      reportReserves: '/report-reserve'
+      reportReserves: '/report-reserve',
+      reportClassroom: '/report-classroom'
     };
     if (componentName === 'config-email') {
       setIsEmailConfigModalOpen(true)
@@ -95,7 +102,7 @@ export default function Scaffold({ children }) {
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       { renderAlerts() }
-      <AppBar position="fixed">
+      <AppBar position="fixed" >
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
             <MenuIcon />
@@ -104,7 +111,13 @@ export default function Scaffold({ children }) {
             Agenda Inteligente
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
+            {/* Renderiza ícones da AppBar se forem passados via props */}
+            {appBarActions?.map(({ icon, onClick }, index) => (
+              <IconButton key={index} color="inherit" onClick={onClick}>
+                {icon}
+              </IconButton>
+            ))}
+            <IconButton disabled={!!appBarActions} edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
               <Logout />
             </IconButton>
           </Box>
@@ -125,6 +138,13 @@ export default function Scaffold({ children }) {
         }}
       >
         <List className="cursor-pointer">
+        <ListItem onClick={() => navigate('/')}>
+            <ListItemIcon>
+              <Home />
+            </ListItemIcon>
+            <ListItemText primary="Inicio" />
+          </ListItem>
+
           <ListItem onClick={() => setReserveModalOpen(true)}>
             <ListItemIcon>
               <Schedule />
@@ -154,7 +174,8 @@ export default function Scaffold({ children }) {
               { key: 'resources', icon: <Inventory2 />, text: 'Recursos' },
               { key: 'classroom', icon: <Class />, text: 'Salas' },
               { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'},
-              { key: 'reportReserves', icon:<Mail/>, text: 'Relatório de reservas'}
+              { key: 'reportReserves', icon:<Description/>, text: 'Relatório de reservas'},
+              { key: 'reportClassroom', icon:<Description/>, text: 'Relatório de recursos por sala'}
             ].map(({ key, icon, text }) => (
               <ListItem key={key} onClick={() => handleMenuClick(key)}>
                 <ListItemIcon>{icon}</ListItemIcon>

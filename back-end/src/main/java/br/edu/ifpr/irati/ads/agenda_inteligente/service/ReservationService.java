@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -157,5 +158,17 @@ public class ReservationService {
             reservation.setStatus("REJECTED");
         }
         repository.saveAll(reservations);
+    }
+
+    public Page<Reservation> findReservationsByDateRange(LocalDate dtStart, LocalDate dtEnd, Pageable pageable) {
+        LocalDateTime startDateTime = (dtStart != null)
+                ? dtStart.atStartOfDay()
+                : LocalDate.of(2000, 1, 1).atStartOfDay();
+
+        LocalDateTime endDateTime = (dtEnd != null)
+                ? dtEnd.atTime(23, 59, 59)
+                : LocalDate.of(3000, 1, 1).atStartOfDay();
+
+        return repository.findByDtStartBetween(startDateTime, endDateTime, pageable);
     }
 }

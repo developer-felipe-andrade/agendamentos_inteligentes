@@ -5,3 +5,9 @@
 .fc-toolbar-title::first-letter {
   @apply capitalize;
 }
+
+@media print {
+  .print-mode .MuiAppBar-root {
+    display: none !important;
+  }
+}

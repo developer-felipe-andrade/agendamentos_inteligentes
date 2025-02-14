@@ -46,7 +46,7 @@ public class EmailService {
 
             this.mailSender = mailSenderImpl;
         } else {
-            throw new RuntimeException("Configuração de e-mail não encontrada!");
+            System.out.println("Configuração de e-mail não encontrada!");
         }
     }
 

@@ -36,7 +36,19 @@ const reservation = {
         size
       }
     });
+  },
+
+  async findAll({ dtStart, dtEnd, page = 0, size = 99999999 }) {
+    const queryParams = new URLSearchParams();
+
+    if (dtStart) queryParams.append("dtStart", dtStart);
+    if (dtEnd) queryParams.append("dtEnd", dtEnd);
+    queryParams.append("page", page.toString());
+    queryParams.append("size", size.toString());
+
+    return api.get(`/reservations?${queryParams.toString()}`);
   }
+
 }
 
 export default reservation;
