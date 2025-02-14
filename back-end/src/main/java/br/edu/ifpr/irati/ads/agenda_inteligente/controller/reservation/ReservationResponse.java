@@ -10,6 +10,7 @@ import java.util.List;
 
 public record ReservationResponse(
         String id,
+        String title,
         LocalDateTime dtStart,
         LocalDateTime dtEnd,
         String status,
@@ -27,6 +28,7 @@ public record ReservationResponse(
 
         return new ReservationResponse(
                 reservation.getId(),
+                reservation.getTitle(),
                 reservation.getDtStart(),
                 reservation.getDtEnd(),
                 reservation.getStatus(),

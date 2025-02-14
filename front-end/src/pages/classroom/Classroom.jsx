@@ -98,7 +98,6 @@ const Classroom = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Nome da Sala</TableCell>
               <TableCell>Bloco</TableCell>
               <TableCell>Capacidade</TableCell>
@@ -112,7 +111,6 @@ const Classroom = () => {
           <TableBody>
             {dataValues.map((row) => (
               <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
                 <TableCell>{row.name}</TableCell>
                 <TableCell>{row.block}</TableCell>
                 <TableCell>{row.qtdPlace}</TableCell>

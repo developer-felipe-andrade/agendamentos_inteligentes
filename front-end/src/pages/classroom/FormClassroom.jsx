@@ -347,7 +347,7 @@ const FormClassroom = () => {
 										<TableCell>{row.type}</TableCell>
 										<TableCell>
 											<TextField
-												value={row.quantity !== undefined ? row.quantity : 0} // Garantir que quantity tenha valor
+												value={row.quantity !== undefined ? row.quantity : 0}
 												onChange={(e) => handleQuantityChange(row.id, e.target.value)}
 												onBlur={(e) => validateQuantity(row.id, e.target.value)}
 												error={!!errorQuantities[row.id]}

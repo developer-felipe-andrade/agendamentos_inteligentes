@@ -39,7 +39,7 @@ const AproveSchedule = () => {
   }, []);
 
   const groupedByEmailReservations = reservations.reduce((acc, reservation) => {
-    const userEmail = reservation.user.login; // Usando o email do usuário
+    const userEmail = reservation.user.login;
     if (!acc[userEmail]) {
       acc[userEmail] = [];
     }
@@ -195,6 +195,7 @@ const AproveSchedule = () => {
           <TableHead>
             <TableRow>
               <TableCell>Selecionar</TableCell>
+              <TableCell>Titulo</TableCell>
               <TableCell>Data/Hora Início</TableCell>
               <TableCell>Data/Hora Fim</TableCell>
               <TableCell>Bloco</TableCell>
@@ -210,7 +211,7 @@ const AproveSchedule = () => {
                 <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                   <TableCell>
                     <Checkbox 
-                      checked={isUserSelected(userEmail) || false} // Sempre um valor booleano
+                      checked={isUserSelected(userEmail) || false}
                       indeterminate={userReservations.some((res) => selectedReservations[userEmail]?.includes(res.id)) && 
                         !isUserSelected(userEmail)}
                       onChange={() => handleUserSelect(userEmail)}
@@ -223,10 +224,11 @@ const AproveSchedule = () => {
                   <TableRow key={reservation.id}>
                     <TableCell>
                       <Checkbox
-                        checked={selectedReservations[userEmail]?.includes(reservation.id) || false} // Sempre um valor booleano
+                        checked={selectedReservations[userEmail]?.includes(reservation.id) || false}
                         onChange={() => handleReservationSelect(reservation.id, userEmail)}
                       />
                     </TableCell>
+                    <TableCell>{reservation.title}</TableCell>
                     <TableCell>{dayjs(reservation.dtStart).format("DD/MM/YYYY HH:mm")}</TableCell>
                     <TableCell>{dayjs(reservation.dtEnd).format("DD/MM/YYYY HH:mm")}</TableCell>
                     <TableCell>{reservation.classroom.block}</TableCell>

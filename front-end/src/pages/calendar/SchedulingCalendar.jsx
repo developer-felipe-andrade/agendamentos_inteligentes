@@ -45,13 +45,13 @@ export default function SchedulingCalendar() {
     }
   };
 
-  // Função para obter as reservas de uma sala
   const getSchedulings = async (id) => {
     try {
       const { data } = await reservation.findByClassroom(id);
 
       setSchedulings(data.content.map(item => ({
         id: item.id,
+        title: item.title,
         start: dayjs(item.dtStart).format("YYYY-MM-DDTHH:mm"),
         end: dayjs(item.dtEnd).format("YYYY-MM-DDTHH:mm"),
         extendedProps: {
@@ -67,20 +67,17 @@ export default function SchedulingCalendar() {
     }
   }
 
-  // Função para lidar com a mudança da sala selecionada
   const handleChangeClassroom = (event) => {
     setSelectedRoom(event.target.value);
     getSchedulings(event.target.value);
   }
 
-  // Função para abrir o modal de agendamento
   const handleOpenModal = (info) => {
     setSelectedSchedule(info.event?.id);
     setSelectedDate(info.dateStr);
     setOpenModal(true);
   }
 
-  // Função para fechar o modal de agendamento
   const handleCloseModal = () => {
     if (selectedRoom) {
       getSchedulings(selectedRoom);

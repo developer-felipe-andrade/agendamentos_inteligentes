@@ -20,6 +20,8 @@ public class Reservation {
     @Column(length = 255)
     private String id;
 
+    private String title;
+
     @Column(name = "dt_start")
     private LocalDateTime dtStart;
 

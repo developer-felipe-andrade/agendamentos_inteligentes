@@ -19,7 +19,7 @@ const ConnectionDialog = ({ open, onClose }) => {
   const [useSSL, setUseSSL] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isNotTestConnection, setIsNotTestConnection] = useState(true);
-  const [loadingTest, setLoadingTest] = useState(false); // Estado para o loading
+  const [loadingTest, setLoadingTest] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -44,7 +44,7 @@ const ConnectionDialog = ({ open, onClose }) => {
   };
 
   const handleTestConnection = async () => {
-    setLoadingTest(true); // Ativa o loading
+    setLoadingTest(true);
     const payload = { username: email, password, host: server, port, useSSL };
     try {
       const { data } = await emailConfig.testConnection(payload);
@@ -58,7 +58,7 @@ const ConnectionDialog = ({ open, onClose }) => {
       console.log(error);
       addAlert('Erro ao testar conexão', 'error');
     } finally {
-      setLoadingTest(false); // Desativa o loading
+      setLoadingTest(false);
     }
   };
 

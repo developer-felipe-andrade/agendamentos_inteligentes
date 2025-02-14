@@ -78,7 +78,7 @@ const Resource = () => {
 
   const handleClose = () => {
     setOpen(false);
-    setFormData({ name: '', type: '' }); // Limpar o formulário
+    setFormData({ name: '', type: '' });
   };
 
   const handleSave = async () => {

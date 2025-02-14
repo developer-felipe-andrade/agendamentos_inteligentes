@@ -23,6 +23,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   
   const { renderAlerts, addAlert } = Alert();
   const [formData, setFormData] = useState({
+    title: "",
     dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
     dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
     obs: "", 
@@ -70,6 +71,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   const handleClose = () => {
     onClose();
     setFormData({
+      title: "",
       dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
       dtEnd: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtEnd).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
       obs: "", 
@@ -78,8 +80,6 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       durationHours: 0,
       durationMinutes: 50
     });
-
-    console.log(selectedRoom);
     
     setFields([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   }
@@ -88,6 +88,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     try {
       const { data } = await reservation.findById(selectedSchedule);
       setFormData({
+        title: data.title,
         dtStart: dayjs(data.dtStart).format("YYYY-MM-DDTHH:mm"),
         dtEnd: dayjs(data.dtEnd).format("YYYY-MM-DDTHH:mm"),
         obs: data.obs, 
@@ -111,7 +112,9 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       handleClose();
     }
   };
-  
+
+  const isFormValid = formData.title.trim() !== "" && formData.dtStart && formData.dtEnd && fields.every(field => field.anticipationTime);
+
   useEffect(() => {
     if (open && selectedSchedule) {
       console.log('cheguei');
@@ -126,46 +129,59 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       <DialogContent>
         <div className="flex gap-4 pt-3">
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-          <DateTimePicker
-            value={dayjs(formData.dtStart)}
-            label="Data"
-            onChange={(newValue) => {
-              const dtStart = newValue.format("YYYY-MM-DDTHH:mm");
-              const dtEnd = dayjs(dtStart)
-                .add(formData.durationHours || 0, 'hour')
-                .add(formData.durationMinutes ?? 50, 'minute')
-                .format("YYYY-MM-DDTHH:mm");
+            <DateTimePicker
+              required
+              value={dayjs(formData.dtStart)}
+              label="Data"
+              onChange={(newValue) => {
+                const dtStart = newValue.format("YYYY-MM-DDTHH:mm");
+                const dtEnd = dayjs(dtStart)
+                  .add(formData.durationHours || 0, 'hour')
+                  .add(formData.durationMinutes ?? 50, 'minute')
+                  .format("YYYY-MM-DDTHH:mm");
 
-              setFormData((prev) => ({
-                ...prev,
-                dtStart,
-                dtEnd,
-              }));
-            }}
-          />
+                setFormData((prev) => ({
+                  ...prev,
+                  dtStart,
+                  dtEnd,
+                }));
+              }}
+            />
           </LocalizationProvider>
 
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
-          <TimePicker
-            label="Tempo de duração"
-            value={dayjs(formData.dtStart).startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes ?? 50, 'minute')}
-            onChange={(newValue) => {
-              const newHours = newValue.hour();
-              const newMinutes = newValue.minute();
+            <TimePicker
+              required
+              label="Tempo de duração"
+              value={dayjs(formData.dtStart).startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes ?? 50, 'minute')}
+              onChange={(newValue) => {
+                const newHours = newValue.hour();
+                const newMinutes = newValue.minute();
 
-              const updatedDtEnd = dayjs(formData.dtStart)
-                .add(newHours, 'hour')
-                .add(newMinutes, 'minute');
+                const updatedDtEnd = dayjs(formData.dtStart)
+                  .add(newHours, 'hour')
+                  .add(newMinutes, 'minute');
 
-              setFormData((prev) => ({
-                ...prev,
-                durationHours: newHours,
-                durationMinutes: newMinutes,
-                dtEnd: updatedDtEnd.format("YYYY-MM-DDTHH:mm"),
-              }));
-            }}
-          />
+                setFormData((prev) => ({
+                  ...prev,
+                  durationHours: newHours,
+                  durationMinutes: newMinutes,
+                  dtEnd: updatedDtEnd.format("YYYY-MM-DDTHH:mm"),
+                }));
+              }}
+            />
           </LocalizationProvider>
+        </div>
+
+        <div className="pt-2">
+          <TextField
+            required
+            label="Título"
+            name="title"
+            fullWidth
+            value={formData.title || ""}
+            onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
+          />
         </div>
 
         <div className="pt-2">
@@ -211,7 +227,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="py-2">
             <Button
-              disabled={fields.length > 1}
+              disabled={fields.length > 0}
               variant="contained"
               onClick={addField}
             >
@@ -234,21 +250,21 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                       }}
                     >
                       <MenuItem value="EMAIL">E-mail</MenuItem>
-                      <MenuItem value="SMS">SMS</MenuItem>
                     </Select>
                   </FormControl>
 
                   <TimePicker
+                    required
                     label="Tempo de antecipação."
                     ampm={false}
                     format="HH:mm"
-                    value={field.anticipationTime}
+                    value={field.anticipationTime || dayjs().hour(0).minute(0)}
                     onChange={(newValue) => {
                       const updatedFields = [...fields];
                       updatedFields[index].anticipationTime = newValue;
                       setFields(updatedFields);
                     }}
-                    slotProps={{ textField: { fullWidth: true } }} // Garante o mesmo tamanho do Select
+                    slotProps={{ textField: { fullWidth: true } }}
                   />
                 </React.Fragment>
               ))}
@@ -267,7 +283,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <Button onClick={handleClose} color="secondary">
           Cancelar
         </Button>
-        <Button onClick={handleSave} variant="contained" color="primary">
+        <Button onClick={handleSave} variant="contained" color="primary" disabled={!isFormValid}>
           Salvar
         </Button>
       </DialogActions>

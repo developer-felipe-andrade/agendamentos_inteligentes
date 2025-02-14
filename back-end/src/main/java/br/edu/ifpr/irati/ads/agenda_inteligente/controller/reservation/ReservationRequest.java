@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.UUID;
 
 public record ReservationRequest(
+        @NotNull(message = "O titulo é obrgatório")
+        String title,
+
         @NotNull(message = "Data inicial é obrigatória")
         @FutureOrPresent(message = "A data inicial deve ser no presente ou futuro")
         LocalDateTime dtStart,
@@ -65,6 +68,7 @@ public record ReservationRequest(
 
         for (int i = 0; i < (Boolean.TRUE.equals(this.recurrence) ? this.timeRecurrence : 1); i++) {
             Reservation reservation = new Reservation();
+            reservation.setTitle(this.title);
             reservation.setId(UUID.randomUUID().toString());
             reservation.setDtStart(start);
             reservation.setDtEnd(end);

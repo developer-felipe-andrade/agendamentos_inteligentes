@@ -1,5 +1,6 @@
 CREATE TABLE reservations (
     id TEXT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
     dt_start TIMESTAMP NOT NULL,
     dt_end TIMESTAMP NOT NULL,
     status VARCHAR(255) NOT NULL,
