@@ -19,6 +19,8 @@ import Alert from '../../components/UseAlert';
 import { Close, Done } from '@mui/icons-material';
 import { translateProfession, translateRole} from '../../helpers/translate';
 import Scaffold from '../../components/Scaffold';
+import emailConfig from '../../api/requests/email-config';
+
 
 const Users = () => {
   const { renderAlerts, addAlert } = Alert();
@@ -27,6 +29,7 @@ const Users = () => {
   const [rejectionComment, setRejectionComment] = useState('');
   const [selectedUserEmail, setSelectedUserEmail] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [openEmailDialog, setOpenEmailDialog] = useState(false);
 
   const getData = async () => {
     try {
@@ -83,7 +86,18 @@ const Users = () => {
     handleCloseModal();
   };
 
+  const checkEmailConfig = async () => {
+    try {
+      const { data } = await emailConfig.exists();
+      setOpenEmailDialog(!data); 
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao verificar a configuração de e-mail!', 'error');
+    }
+  };
+
   useEffect(() => {
+    checkEmailConfig();
     getData();
   }, []);
 
@@ -150,6 +164,21 @@ const Users = () => {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {openEmailDialog && (
+        <Dialog open={openEmailDialog}>
+          <DialogTitle>Configuração de E-mail</DialogTitle>
+          <DialogContent>
+            <p>O e-mail para envio de notificações não está configurado.</p>
+            <p>Por favor, clique no menu para configurar o e-mail para envio.</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenEmailDialog(false)} color="primary">
+              Fechar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       </Scaffold>
     </div>
   );

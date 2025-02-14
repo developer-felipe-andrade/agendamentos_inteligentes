@@ -11,6 +11,7 @@ import Alert from '../../components/UseAlert';
 import reservation from "../../api/requests/reservation";
 import user from '../../api/requests/user';
 import Scaffold from "../../components/Scaffold";
+import emailConfig from '../../api/requests/email-config';
 
 const AproveSchedule = () => {
   const [reservations, setReservations] = useState([]);
@@ -19,6 +20,7 @@ const AproveSchedule = () => {
   const [rejectionMessage, setRejectionMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { renderAlerts, addAlert } = Alert();
+  const [openEmailDialog, setOpenEmailDialog] = useState(false);
 
   const getPendingSchedules = async () => {
     try {
@@ -32,6 +34,7 @@ const AproveSchedule = () => {
   };
 
   useEffect(() => {
+    checkEmailConfig();
     getPendingSchedules();
   }, []);
 
@@ -146,6 +149,16 @@ const AproveSchedule = () => {
     } finally {
       setSelectedReservations([]);
       getPendingSchedules();
+    }
+  };
+
+  const checkEmailConfig = async () => {
+    try {
+      const { data } = await emailConfig.exists();
+      setOpenEmailDialog(!data); 
+    } catch (error) {
+      console.log(error);
+      addAlert('Erro ao verificar a configuração de e-mail!', 'error');
     }
   };
   
@@ -263,6 +276,21 @@ const AproveSchedule = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {openEmailDialog && (
+        <Dialog open={openEmailDialog}>
+          <DialogTitle>Configuração de E-mail</DialogTitle>
+          <DialogContent>
+            <p>O e-mail para envio de notificações não está configurado.</p>
+            <p>Por favor, clique no menu para configurar o e-mail para envio.</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenEmailDialog(false)} color="primary">
+              Fechar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Scaffold>
   );
 };

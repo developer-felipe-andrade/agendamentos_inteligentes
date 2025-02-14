@@ -16,7 +16,6 @@ import ReportPageReserves from './pages/report/reserveApproves/ReportPage';
 import ReportPageClassrooms from './pages/report/quantityResourcesPerClassrooms/ReportPage';
 
 function App() {
-  
   return (
     <Router>
       <Routes>

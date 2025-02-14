@@ -24,8 +24,7 @@ api.interceptors.request.use(
 );
 
 function handleUnauthorized() {
-  const navigate = useNavigate();
-  navigate('/');
+  window.history.back();
 }
 
 api.interceptors.response.use(
@@ -39,7 +38,6 @@ api.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      Cookies.remove('authToken');
       handleUnauthorized();
     }
     return Promise.reject(error);

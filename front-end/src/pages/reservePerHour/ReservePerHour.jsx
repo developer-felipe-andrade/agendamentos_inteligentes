@@ -43,12 +43,6 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
     
     const { data } = await classroom.findAvailableClassrooms(payload);
     if (data.length > 0) {
-      navigate('/classrooms-avaliable', {
-        state: {
-          data: data,
-          formData: formData
-        }
-      });
       setFormData({
         dtStart: dayjs().format("YYYY-MM-DDTHH:mm"),
         dtEnd: dayjs().hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
@@ -57,6 +51,12 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
         qtdPlace: '',
         idsResources: [],
         isAccessible: false
+      });
+      navigate('/classrooms-avaliable', {
+        state: {
+          data: data,
+          formData: formData
+        }
       });
       setIsOpen(false);  
     } else {

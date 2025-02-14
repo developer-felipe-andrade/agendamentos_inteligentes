@@ -3,7 +3,6 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.NotificationRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Notification;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.FormNotification;
-import nl.martijndwars.webpush.Subscription;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;

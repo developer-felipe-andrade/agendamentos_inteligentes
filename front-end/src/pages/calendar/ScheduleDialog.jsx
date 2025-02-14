@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useNavigate } from 'react-router-dom';
 import dayjs from "dayjs";
 import Alert from '../../components/UseAlert';
 import reservation from '../../api/requests/reservation';
@@ -18,6 +19,8 @@ ScheduleDialog.propTypes = {
 };
 
 export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend }) {
+  const navigate = useNavigate();
+  
   const { renderAlerts, addAlert } = Alert();
   const [formData, setFormData] = useState({
     dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
@@ -53,6 +56,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         addAlert("Agendamento criado com sucesso!", "success");
       }
       handleClose();
+      navigate('/reserve');
     } catch (error) {
       console.error("Erro ao criar agendamento:", error);
       addAlert("Erro ao criar o agendamento!", "error");
@@ -74,6 +78,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
       durationHours: 0,
       durationMinutes: 50
     });
+
+    console.log(selectedRoom);
     
     setFields([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
   }

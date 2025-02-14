@@ -24,7 +24,6 @@ export default function Home() {
     <Scaffold>
       <div>
         {renderAlerts()}
-        Home
       </div>
     </Scaffold>
   );

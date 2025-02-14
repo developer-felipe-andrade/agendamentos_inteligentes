@@ -14,6 +14,7 @@ const ClassroomsAvaliable = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openScheduleDialog, setOpenScheduleDialog] = useState(false);
   const [resources, setResources] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
 
   const handleViewResources = (resourcesList) => {
     setResources(resourcesList); 
@@ -25,7 +26,8 @@ const ClassroomsAvaliable = () => {
   };
 
   
-  const handleOpenScheduleDialog = () => {
+  const handleOpenScheduleDialog = (roomId) => {
+    setSelectedRoom(roomId)
     setPayload({
       dtStart: formData.dtStart,
       dtEnd: formData.dtEnd
@@ -35,6 +37,7 @@ const ClassroomsAvaliable = () => {
   }
   const handleCloseScheduleDialog = () => {
     setOpenScheduleDialog(false);
+    setSelectedRoom("")
   }
 
   return (
@@ -72,7 +75,7 @@ const ClassroomsAvaliable = () => {
                 </TableCell>
                 <TableCell>
                   <Check 
-                    onClick={handleOpenScheduleDialog}
+                    onClick={() => handleOpenScheduleDialog(row.id)}
                     sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }} />
                 </TableCell>
               </TableRow>
@@ -81,13 +84,15 @@ const ClassroomsAvaliable = () => {
         </Table>
       </TableContainer>
 
+      {openScheduleDialog && (
+        <ScheduleDialog 
+          open={openScheduleDialog}
+          onClose={handleCloseScheduleDialog}
+          passDataToSend={payload}
+          selectedRoom={selectedRoom}
+        />
+      )}
       
-      <ScheduleDialog 
-        open={openScheduleDialog}
-        onClose={handleCloseScheduleDialog}
-        passDataToSend={payload}
-      />
-
 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Lista de Recursos</DialogTitle>

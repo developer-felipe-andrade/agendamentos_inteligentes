@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.infra.security;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -49,15 +50,17 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/recover").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/request-recover").permitAll()
-                        .requestMatchers("/actuator/mappings").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/classroom").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/user/release").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/user/pending-release").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/recover", "/auth/request-recover").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/exists", "/email-config/authenticate", "/email-config", "/user/pending-release", "/classroom").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/resource", "/classroom").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/reservations").hasAnyRole("WORKER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/reservations/reject").hasAnyRole("WORKER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/reservations/responsible").hasAnyRole("WORKER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
