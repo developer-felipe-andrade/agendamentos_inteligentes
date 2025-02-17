@@ -10,10 +10,10 @@ public record ClassroomResponse(
         String id,
         String name,
         String block,
-        boolean confirmation,
-        int qtdPlace,
-        boolean acessible,
-        boolean active,
+        Boolean confirmation,
+        Integer qtdPlace,
+        Boolean acessible,
+        Boolean active,
         UserResponse responsible,
         List<ResourceInfo> idsResources
 ) {
@@ -26,7 +26,8 @@ public record ClassroomResponse(
                     classroom.getResponsible().getLogin(),
                     classroom.getResponsible().getRole(),
                     classroom.getResponsible().getProfession(),
-                    classroom.getResponsible().getName()
+                    classroom.getResponsible().getName(),
+                    null
             );
         }
 

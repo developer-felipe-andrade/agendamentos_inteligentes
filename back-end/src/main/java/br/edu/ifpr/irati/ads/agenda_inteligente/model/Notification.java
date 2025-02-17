@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,5 +35,6 @@ public class Notification {
 
     @ManyToOne
     @JoinColumn(name = "reservation_id", nullable = false)
+    @JsonBackReference
     private Reservation reservation;
 }

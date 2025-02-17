@@ -26,13 +26,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     private String name;
     private String login;
     private String password;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
     @Enumerated(EnumType.STRING)
     private UserProfession profession;
+
     private String phoneNumber;
     private boolean enabled;
 
@@ -43,6 +47,10 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Review> reviews;
 
     @PrePersist
     public void onCreate() {
@@ -68,7 +76,8 @@ public class User implements UserDetails {
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (this.role == UserRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == UserRole.ADMIN)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
 
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }

@@ -1,4 +1,3 @@
--- Criação da tabela classrooms com relação à tabela users
 CREATE TABLE classrooms (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,

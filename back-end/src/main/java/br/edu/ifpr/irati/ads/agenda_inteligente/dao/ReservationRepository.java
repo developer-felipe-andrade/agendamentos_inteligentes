@@ -42,4 +42,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
                             @Param("dtStart") LocalDateTime dtStart);
 
     public Page<Reservation> findByDtStartBetween(LocalDateTime dtStart, LocalDateTime dtEnd, Pageable pageable);
+
+    public List<Reservation> findByDtStartBefore(LocalDateTime now);
 }

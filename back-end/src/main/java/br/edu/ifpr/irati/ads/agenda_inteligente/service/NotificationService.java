@@ -42,7 +42,6 @@ public class NotificationService {
         LocalDateTime startDate = notification.getReservation().getDtStart();
         LocalDateTime endDate = notification.getReservation().getDtEnd();
         String roomName = notification.getReservation().getClassroom().getName();
-
         String body = String.format(
                 "Prezado(a),\n\n" +
                         "Seu agendamento de sala foi confirmado. Aqui estão os detalhes:\n\n" +
@@ -51,11 +50,11 @@ public class NotificationService {
                         "Data de término: %s\n\n" +
                         "Lembre-se de verificar sua reserva com antecedência.\n\n" +
                         "Se precisar de qualquer ajuda, entre em contato com o suporte.\n\n" +
-                        roomName,
+                        "Atenciosamente",
+                roomName,
                 startDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")),
                 endDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
         );
-
         emailService.sendEmail(email, "Agendamento de sala", body);
     }
 }

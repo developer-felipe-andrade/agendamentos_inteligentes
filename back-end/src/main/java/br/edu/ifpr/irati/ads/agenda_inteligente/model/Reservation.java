@@ -1,5 +1,6 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -53,5 +54,6 @@ public class Reservation {
     private Classroom classroom;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Notification> notifications;
 }

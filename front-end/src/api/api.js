@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
@@ -24,8 +23,19 @@ api.interceptors.request.use(
 );
 
 function handleUnauthorized() {
-  window.history.back();
+  const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
+    const [name, value] = cookie.split("=");
+    acc[name] = value;
+    return acc;
+  }, {});
+
+  if (cookies.authToken) {
+    window.location.href = "/";
+  } else {
+    window.location.href = "/login";
+  }
 }
+
 
 api.interceptors.response.use(
   (config) => {

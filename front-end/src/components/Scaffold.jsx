@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from './UseAlert';
 import ReservePerHour from '../pages/reservePerHour/ReservePerHour';
 import ConnectionDialog from '../pages/config-email/ConnectionDialog';
+import ReviewDialog from '../pages/review/ReviewDialog';
 
 const drawerWidth = 240;
 
@@ -51,6 +52,7 @@ export default function Scaffold({ children, appBarActions }) {
 
   const [isReserveModalOpen, setReserveModalOpen] = useState(false);
   const [isEmailConfigModalOpen, setIsEmailConfigModalOpen] = useState(false);
+  const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -84,7 +86,6 @@ export default function Scaffold({ children, appBarActions }) {
       navigate(routes[componentName] || '/');
       setOpen(false);
     }
-
   };
 
   useEffect(() => {
@@ -92,12 +93,21 @@ export default function Scaffold({ children, appBarActions }) {
       try {
         const { data } = await user.me();
         setUserContent(data);
+
+        // Se existirem avaliações pendentes, abre o diálogo de avaliação
+        if (data.pendingReviews && data.pendingReviews.length > 0) {
+          setIsReviewDialogOpen(true);
+        }
       } catch {
         navigate('/login');
       }
     }
     fetchData();
   }, []);
+
+  const handleCloseReviewDialog = () => {
+    setIsReviewDialogOpen(false);
+  };
 
   return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
@@ -138,7 +148,7 @@ export default function Scaffold({ children, appBarActions }) {
         }}
       >
         <List className="cursor-pointer">
-        <ListItem onClick={() => navigate('/')}>
+          <ListItem onClick={() => navigate('/')}>
             <ListItemIcon>
               <Home />
             </ListItemIcon>
@@ -197,14 +207,30 @@ export default function Scaffold({ children, appBarActions }) {
         {children}
       </Box>
 
-      <ReservePerHour 
-        isOpen={isReserveModalOpen} 
-        setIsOpen={setReserveModalOpen} 
-      />
-      <ConnectionDialog 
-        open={isEmailConfigModalOpen} 
-        onClose={() => setIsEmailConfigModalOpen(false)} 
-      />
+      {isReserveModalOpen && (
+        <ReservePerHour 
+          isOpen={isReserveModalOpen} 
+          setIsOpen={setReserveModalOpen} 
+        />
+      )}
+
+      {isEmailConfigModalOpen && (
+        <ConnectionDialog 
+          open={isEmailConfigModalOpen} 
+          onClose={() => setIsEmailConfigModalOpen(false)} 
+        />
+      )}
+
+      
+        
+      {isReviewDialogOpen && (
+        <ReviewDialog
+          reservationsId={userContent.pendingReviews}
+          open={isReviewDialogOpen} 
+          onClose={handleCloseReviewDialog}
+        />
+      )}
+
     </Box>
   );
 }

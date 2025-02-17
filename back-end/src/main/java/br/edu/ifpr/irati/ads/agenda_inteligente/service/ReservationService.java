@@ -171,4 +171,9 @@ public class ReservationService {
 
         return repository.findByDtStartBetween(startDateTime, endDateTime, pageable);
     }
+
+    public List<Reservation> findByDtStartBefore(LocalDateTime now) {
+        return repository.findByDtStartBefore(now);
+
+    }
 }

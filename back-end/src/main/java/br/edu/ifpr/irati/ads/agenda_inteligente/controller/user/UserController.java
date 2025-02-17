@@ -1,7 +1,9 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.controller.user;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth.requests.ReleaseRequest;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.Review;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReviewService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     @PostMapping("/release")
     public ResponseEntity release(@RequestBody @Valid ReleaseRequest data) {
@@ -67,16 +72,8 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String login = authentication.getName();
         User loadedUser = userService.findByLogin(login);
+        UserResponse userResponse = UserResponse.fromEntity(loadedUser);
 
-
-        UserResponse dto = new UserResponse(
-                loadedUser.getId(),
-                loadedUser.getLogin(),
-                loadedUser.getRole(),
-                loadedUser.getProfession(),
-                loadedUser.getName()
-        );
-
-        return ResponseEntity.ok(dto);
+        return ResponseEntity.ok(userResponse);
     }
 }
