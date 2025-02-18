@@ -1,22 +1,23 @@
-FROM openjdk:21-jdk-slim
-
-# Instalar Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    apt-get clean
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
-# Copiar o pom.xml primeiro para aproveitar o cache das dependências
 COPY pom.xml .
-
-# Baixar dependências
 RUN mvn dependency:go-offline
 
-# Copiar o código fonte
 COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Executar com configurações para development
-CMD ["mvn", "spring-boot:run", \
-     "-Dspring-boot.run.jvmArguments=-XX:TieredStopAtLevel=1 -Dspring.devtools.restart.enabled=true", \
-     "-Dspring-boot.run.profiles=dev"]
+RUN ls -la target/
+
+FROM eclipse-temurin:21.0.2_13-jre
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75"
+
+EXPOSE 8080
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
