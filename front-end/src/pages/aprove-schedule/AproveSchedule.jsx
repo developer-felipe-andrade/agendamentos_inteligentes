@@ -189,67 +189,69 @@ const AproveSchedule = () => {
           </Button>
         </Box>
       </Box>
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Selecionar</TableCell>
-              <TableCell>Titulo</TableCell>
-              <TableCell>Data/Hora Início</TableCell>
-              <TableCell>Data/Hora Fim</TableCell>
-              <TableCell>Bloco</TableCell>
-              <TableCell>Nome do Solicitante</TableCell>
-              <TableCell>Email do Solicitante</TableCell>
-              <TableCell>Observação</TableCell>
-              <TableCell>Ações</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Object.entries(groupedByEmailReservations).map(([userEmail, userReservations]) => (
-              <Fragment key={userEmail}>
-                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
-                  <TableCell>
-                    <Checkbox 
-                      checked={isUserSelected(userEmail) || false}
-                      indeterminate={userReservations.some((res) => selectedReservations[userEmail]?.includes(res.id)) && 
-                        !isUserSelected(userEmail)}
-                      onChange={() => handleUserSelect(userEmail)}
-                    />
-                  </TableCell>
-                  <TableCell colSpan={7} sx={{ fontWeight: "bold" }}>{userEmail}</TableCell>
-                </TableRow>
-
-                {userReservations.map((reservation) => (
-                  <TableRow key={reservation.id}>
+    
+      <Box sx={{ height: 'calc(100vh - 200px)', overflow: 'auto' }}>
+        <TableContainer component={Paper} sx={{width: "100%", height:"100%"}}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Selecionar</TableCell>
+                <TableCell>Titulo</TableCell>
+                <TableCell>Data/Hora Início</TableCell>
+                <TableCell>Data/Hora Fim</TableCell>
+                <TableCell>Bloco</TableCell>
+                <TableCell>Nome do Solicitante</TableCell>
+                <TableCell>Email do Solicitante</TableCell>
+                <TableCell>Observação</TableCell>
+                <TableCell>Ações</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.entries(groupedByEmailReservations).map(([userEmail, userReservations]) => (
+                <Fragment key={userEmail}>
+                  <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
                     <TableCell>
-                      <Checkbox
-                        checked={selectedReservations[userEmail]?.includes(reservation.id) || false}
-                        onChange={() => handleReservationSelect(reservation.id, userEmail)}
+                      <Checkbox 
+                        checked={isUserSelected(userEmail) || false}
+                        indeterminate={userReservations.some((res) => selectedReservations[userEmail]?.includes(res.id)) && 
+                          !isUserSelected(userEmail)}
+                        onChange={() => handleUserSelect(userEmail)}
                       />
                     </TableCell>
-                    <TableCell>{reservation.title}</TableCell>
-                    <TableCell>{dayjs(reservation.dtStart).format("DD/MM/YYYY HH:mm")}</TableCell>
-                    <TableCell>{dayjs(reservation.dtEnd).format("DD/MM/YYYY HH:mm")}</TableCell>
-                    <TableCell>{reservation.classroom.block}</TableCell>
-                    <TableCell>{reservation.user.name}</TableCell>
-                    <TableCell>{reservation.user.login}</TableCell>
-                    <TableCell>{reservation.obs || "-"}</TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleOpenRejectDialogFromIcon(reservation)}>
-                        <CloseIcon />
-                      </IconButton>
-                      <IconButton onClick={() => handleApproveFromIcon(reservation)}>
-                        <Done />
-                      </IconButton>
-                    </TableCell>
+                    <TableCell colSpan={7} sx={{ fontWeight: "bold" }}>{userEmail}</TableCell>
                   </TableRow>
-                ))}
-              </Fragment>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+                  {userReservations.map((reservation) => (
+                    <TableRow key={reservation.id}>
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedReservations[userEmail]?.includes(reservation.id) || false}
+                          onChange={() => handleReservationSelect(reservation.id, userEmail)}
+                        />
+                      </TableCell>
+                      <TableCell>{reservation.title}</TableCell>
+                      <TableCell>{dayjs(reservation.dtStart).format("DD/MM/YYYY HH:mm")}</TableCell>
+                      <TableCell>{dayjs(reservation.dtEnd).format("DD/MM/YYYY HH:mm")}</TableCell>
+                      <TableCell>{reservation.classroom.block}</TableCell>
+                      <TableCell>{reservation.user.name}</TableCell>
+                      <TableCell>{reservation.user.login}</TableCell>
+                      <TableCell>{reservation.obs || "-"}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleOpenRejectDialogFromIcon(reservation)}>
+                          <CloseIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleApproveFromIcon(reservation)}>
+                          <Done />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </Fragment>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
 
       <Dialog open={openRejectDialog} onClose={handleCloseDialog} fullWidth>
         <DialogTitle>Rejeitar Reserva</DialogTitle>

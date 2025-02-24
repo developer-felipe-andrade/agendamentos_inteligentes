@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/UseAlert';
 import auth from '../../api/requests/auth';
 import Cookies from 'js-cookie';
+import logo from '../../assets/logo.png'
 
 const Login = () => {
   const [formData, setFormData] = useState({login: '', password: '' });
@@ -95,7 +96,15 @@ const Login = () => {
       {renderAlerts()}
         <Container maxWidth="sm" className="mt-10">
           <Paper elevation={3} className="p-6">
-            <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+            <div className='flex justify-center mb-4  '>
+              <img 
+                src={logo}
+                width={900}
+                height={900}
+                alt='logo teste'
+                loading="lazy"
+              />  
+            </div>
             <div className="space-y-4">
               <TextField
                 label="E-mail"

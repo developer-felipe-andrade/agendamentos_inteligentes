@@ -15,7 +15,7 @@ INSERT INTO users (id, name, login, password, role, profession, phoneNumber, ena
 VALUES (
   '12345678-abcd-1234-efgh-1234567890ab',
   'Admin',
-  'andradefelipedev@gmail.com',
+  'admin@admin.com',
   '$2a$10$gazPrnHS20O4CSZBkfgX4ul9pblrpgfSmnG0jFV7A.bDi16j9XfjS',
   'ADMIN',
   'WORKER',

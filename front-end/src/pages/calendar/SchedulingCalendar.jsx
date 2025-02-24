@@ -14,8 +14,10 @@ import ShareSchedule from './ShareSchedule';
 import dayjs from "dayjs";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from '@mui/material';
 import emailConfig from '../../api/requests/email-config';
+import { useParams } from 'react-router-dom';
 
 export default function SchedulingCalendar() {
+  const { id } = useParams();
   const { renderAlerts, addAlert } = Alert();
   const [classrooms, setClassrooms] = useState([]);  
   const [selectedRoom, setSelectedRoom] = useState('');
@@ -88,7 +90,12 @@ export default function SchedulingCalendar() {
   useEffect(() => {
     checkEmailConfig();
     getClassrooms();
-  }, []);
+
+    if (id) {
+      setSelectedRoom(id);
+      getSchedulings(id);
+    }
+  }, [id]);
 
   return (
     <div className="h-screen w-screen overflow-hidden">

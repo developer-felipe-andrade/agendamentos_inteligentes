@@ -43,7 +43,6 @@ public class SecurityConfiguration {
         return source;
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity

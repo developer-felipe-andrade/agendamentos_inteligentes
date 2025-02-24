@@ -7,7 +7,6 @@ import {
   Select,
   MenuItem,
   Button,
-  Divider,
   TableContainer,
   Paper,
   Table,
@@ -23,19 +22,17 @@ import { useEffect, useState } from "react";
 import Classroom from '../../api/requests/classrooms'
 import Alert from '../../components/UseAlert';
 import Scaffold from "../../components/Scaffold";
-import User from '../../api/requests/user';
 import Resource from '../../api/requests/resource';
 
 const FormClassroom = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    id: '', name: '', qtdPlace: '', block: "", acessible: true, active: true, confirmation: true, idUser: "", idsResources: [{
+    id: '', name: '', qtdPlace: '', block: "", acessible: true, active: true, idsResources: [{
       name: '',
       type: '',
       quantity: 0
     }]
   });
-  const [users, setUsers] = useState([]);
   const { renderAlerts, addAlert } = Alert();
   const { id } = useParams();
   const [dataResource, setDataResources] = useState([]);
@@ -141,7 +138,6 @@ const FormClassroom = () => {
 			block: data.block,
 			acessible: data.acessible,
 			active: data.active,
-			confirmation: data.confirmation,
 			idUser: data.responsible?.id,
 			idsResources: data.idsResources || [] 
 		});
@@ -168,16 +164,6 @@ const FormClassroom = () => {
 		}
 	};
 	
-
-  const getUserResponsibles = async () => {
-    try {
-      const { data } = await User.responsibles();
-      setUsers(data);
-    } catch (error) {
-      console.error('Erro ao buscar dados da API:', error);
-    }
-  };
-
   useEffect(() => {
     const fetchClassroom = async () => {
       if (id) {
@@ -188,15 +174,6 @@ const FormClassroom = () => {
     };
     fetchClassroom();
   }, [id]);
-
-  useEffect(() => {
-    const fetchUserResponsibles = async () => {
-      if (formData.confirmation) {
-        await getUserResponsibles();
-      }
-    };
-    fetchUserResponsibles();
-  }, [formData.confirmation]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -222,7 +199,7 @@ const FormClassroom = () => {
           />
           <TextField
             margin="normal"
-            label="Quantidade"
+            label="Capacidade de pessoas"
             name="qtdPlace"
             fullWidth
             required
@@ -274,48 +251,12 @@ const FormClassroom = () => {
           }
           label="Ativo"
         />
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="confirmation"
-              checked={formData.confirmation}
-              onChange={(e) =>
-                setFormData({ ...formData, confirmation: e.target.checked })
-              }
-              color="primary"
-            />
-          }
-          label="Precisa de confirmação?"
-        />
-        {formData.confirmation && (
-          <FormControl fullWidth variant="outlined" margin="normal">
-            <InputLabel id="responsible-select-field">
-              Selecione o responsável
-            </InputLabel>
-            <Select
-              labelId="responsible-select-field"
-              id="role-select"
-              value={formData.idUser}
-              onChange={(e) =>
-                setFormData({ ...formData, idUser: e.target.value })
-              }
-              label="Selecione o responsável"
-            >
-              {users.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-        <Divider></Divider>
-
+      
         <TableContainer component={Paper} sx={{
-					maxHeight: 'calc(100vh - 400px)',
+					maxHeight: 'calc(100vh - 320px)',
 					overflowY: 'auto',
 					'@media (max-width: 600px)': {
-						maxHeight: 'calc(100vh - 450px)',
+						maxHeight: 'calc(100vh - 350px)',
 					},
 				}}>
 					{dataResource.length === 0 ? (

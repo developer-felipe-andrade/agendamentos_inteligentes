@@ -100,7 +100,7 @@ const Classroom = () => {
             <TableRow>
               <TableCell>Nome da Sala</TableCell>
               <TableCell>Bloco</TableCell>
-              <TableCell>Capacidade</TableCell>
+              <TableCell>Capacidade de pessoas</TableCell>
               <TableCell>É acessível para pessoas com modalidade reduzida?</TableCell>
               <TableCell>Precisa de confirmação?</TableCell>
               <TableCell>Status</TableCell>

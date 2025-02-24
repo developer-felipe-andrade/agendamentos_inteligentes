@@ -24,6 +24,7 @@ function App() {
         <Route path="/recover" element={<ConfirmPassword />} />
         <Route path="/register" element={<RegisterUser />} />
         <Route path="/reserve" element={<SchedulingCalendar />} />
+        <Route path="/reserve/:id" element={<SchedulingCalendar />} />
         <Route path="/aprove-users" element={<AproveUsers />} />
         <Route path="/resources" element={<Resource/>} />
         <Route path="/classrooms" element={<Classroom />} />

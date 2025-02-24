@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -51,6 +52,9 @@ public class UserController {
     @GetMapping("/responsibles")
     public ResponseEntity responsibles() {
         List<User> usersResponsibles = userService.findByResponsibles();
+        usersResponsibles = usersResponsibles.stream()
+                .filter(user -> !user.getLogin().equals("admin@admin.com"))
+                .collect(Collectors.toList());
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersResponsibles) {
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(),user.getPhoneNumber(), user.isEnabled());

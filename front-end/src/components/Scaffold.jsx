@@ -19,11 +19,11 @@ import {
   Person,
   Class,
   Logout,
-  Schedule,
   Mail,
   EventAvailable,
   Description,
   Home,
+  Search,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
@@ -157,9 +157,9 @@ export default function Scaffold({ children, appBarActions }) {
 
           <ListItem onClick={() => setReserveModalOpen(true)}>
             <ListItemIcon>
-              <Schedule />
+              <Search />
             </ListItemIcon>
-            <ListItemText primary="Reservar por horário" />
+            <ListItemText primary="Encontre uma sala" />
           </ListItem>
 
           <ListItem onClick={() => handleMenuClick('reserve')}>
@@ -220,9 +220,7 @@ export default function Scaffold({ children, appBarActions }) {
           onClose={() => setIsEmailConfigModalOpen(false)} 
         />
       )}
-
-      
-        
+ 
       {isReviewDialogOpen && (
         <ReviewDialog
           reservationsId={userContent.pendingReviews}

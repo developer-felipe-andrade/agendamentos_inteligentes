@@ -5,13 +5,12 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Notification;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public record ReservationRequest(
         @NotNull(message = "O titulo é obrgatório")
@@ -53,15 +52,30 @@ public record ReservationRequest(
         return true;
     }
 
+    public boolean hasDuplicateAnticipationTimes() {
+        if (notifications == null || notifications.isEmpty()) {
+            return false;
+        }
+
+        Set<LocalDateTime> uniqueTimes = new HashSet<>();
+        for (NotificationRequest notification : notifications) {
+            if (notification.anticipationTime() != null && !uniqueTimes.add(notification.anticipationTime())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ReservationRequest {
         if (recurrence == null) {
             recurrence = false;
         }
 
         isValidRecurrence();
+        hasDuplicateAnticipationTimes();
     }
 
-    public List<Reservation> toEntities(String userId) {
+    public List<Reservation> toEntities(User user) {
         List<Reservation> reservations = new ArrayList<>();
         LocalDateTime start = this.dtStart;
         LocalDateTime end = this.dtEnd;
@@ -73,9 +87,11 @@ public record ReservationRequest(
             reservation.setDtStart(start);
             reservation.setDtEnd(end);
             reservation.setObs(this.obs);
-
-            User user = new User();
-            user.setId(userId);
+            if (user.getRole().equals(UserRole.USER)) {
+                reservation.setStatus("PENDING");
+            } else {
+                reservation.setStatus("APPROVED");
+            }
             reservation.setUser(user);
 
             Classroom classroom = new Classroom();

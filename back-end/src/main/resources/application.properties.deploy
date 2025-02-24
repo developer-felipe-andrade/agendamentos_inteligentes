@@ -1,11 +1,11 @@
 spring.application.name=smart-scheduling
-spring.datasource.url=jdbc:postgresql://localhost:5432/smart_scheduling
+spring.datasource.url=jdbc:postgresql://db:5432/smart_scheduling
 spring.datasource.username=postgres
 spring.datasource.password=123
 management.endpoints.web.exposure.include=*
 
 api.security.token.secret=${JWT_SECRET:my-secret-key}
-url.front=http://localhost:5173
+url.front=http://localhost
 
 spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl

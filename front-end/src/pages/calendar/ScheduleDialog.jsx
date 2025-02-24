@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import Alert from '../../components/UseAlert';
 import reservation from '../../api/requests/reservation';
 import 'dayjs/locale/pt-br';
+import { Close } from '@mui/icons-material';
 
 ScheduleDialog.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -31,7 +32,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     notifications: []
   });
   
-  const [fields, setFields] = useState([{ form: "EMAIL", anticipationTime: dayjs().hour(0).minute(30) }]);
+  const [fields, setFields] = useState([{ form: "EMAIL", anticipationTime: dayjs(formData.dtStart).subtract(1, 'day')}]);
   const [typeRecurrence, setTypeRecurrence] = useState('none');
   const [timeRecurrence, setTimeRecurrence] = useState(0);
 
@@ -65,7 +66,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   };
 
   const addField = () => {
-    setFields([...fields, { form: "", anticipationTime: dayjs().hour(0).minute(30) }]);
+    setFields([...fields, { form: "", anticipationTime: dayjs(formData.dtStart).subtract(1, 'day')}]);
   };
 
   const handleClose = () => {
@@ -146,6 +147,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                   dtEnd,
                 }));
               }}
+              minDate={dayjs()}
             />
           </LocalizationProvider>
 
@@ -227,45 +229,41 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="py-2">
             <Button
-              disabled={fields.length > 0}
               variant="contained"
               onClick={addField}
             >
               Adicionar Notificação
             </Button>
             
-            <div className="grid grid-cols-2 gap-4 pt-3">
+            <div className="grid grid-cols-2 gap-4 pt-3 mt-2">
               {fields.map((field, index) => (
                 <React.Fragment key={index}>
-                  <FormControl fullWidth>
-                    <InputLabel>Forma</InputLabel>
-                    <Select
-                      id={`notification-type-${index}`}
-                      label="Forma"
-                      value={field.form}
-                      onChange={(e) => {
+                  <div className="flex items-center gap-2">
+                    <DateTimePicker
+                      required
+                      label="Tempo de antecipação"
+                      ampm={false}
+                      value={field.anticipationTime || dayjs(formData.dtStart).subtract(1, 'day')}
+                      onChange={(newValue) => {
                         const updatedFields = [...fields];
-                        updatedFields[index].form = e.target.value;
+                        updatedFields[index].anticipationTime = newValue;
+                        setFields(updatedFields);
+                      }}
+                      slotProps={{ textField: { fullWidth: true } }}
+                      format="DD/MM/YYYY HH:mm"
+                      maxDate={dayjs(formData.dtStart)}
+                      minDate={dayjs()}
+                    />
+                    <IconButton
+                      variant="outlined"
+                      onClick={() => {
+                        const updatedFields = fields.filter((_, i) => i !== index);
                         setFields(updatedFields);
                       }}
                     >
-                      <MenuItem value="EMAIL">E-mail</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  <TimePicker
-                    required
-                    label="Tempo de antecipação."
-                    ampm={false}
-                    format="HH:mm"
-                    value={field.anticipationTime || dayjs().hour(0).minute(0)}
-                    onChange={(newValue) => {
-                      const updatedFields = [...fields];
-                      updatedFields[index].anticipationTime = newValue;
-                      setFields(updatedFields);
-                    }}
-                    slotProps={{ textField: { fullWidth: true } }}
-                  />
+                      <Close />
+                    </IconButton>
+                  </div>
                 </React.Fragment>
               ))}
             </div>

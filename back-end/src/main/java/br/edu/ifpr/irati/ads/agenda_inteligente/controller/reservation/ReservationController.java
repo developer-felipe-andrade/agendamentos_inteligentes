@@ -43,7 +43,7 @@ public class ReservationController {
     ) {
         String username = userDetails.getUsername();
         User user = userService.findByLogin(username);
-        List<Reservation> reservations = request.toEntities(user.getId());
+        List<Reservation> reservations = request.toEntities(user);
         for (Reservation reservation : reservations) {
             reservation.setCreatedByEmail(user.getLogin());
             service.create(reservation);
@@ -93,7 +93,7 @@ public class ReservationController {
         return service.findById(id)
                 .map(existingReservation -> {
                     List<Reservation> updatedReservations = new ArrayList<>();
-                    List<Reservation> newReservations = request.toEntities(user.getId());
+                    List<Reservation> newReservations = request.toEntities(user);
 
                     for (Reservation newReservation : newReservations) {
                         Reservation updated = service.update(id, newReservation);

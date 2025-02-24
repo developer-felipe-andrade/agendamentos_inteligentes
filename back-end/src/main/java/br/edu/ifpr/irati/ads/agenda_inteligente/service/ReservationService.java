@@ -31,14 +31,7 @@ public class ReservationService {
     @Transactional
     public Reservation create(Reservation reservation) {
         reservation.setId(UUID.randomUUID().toString());
-
         checkForConflicts(reservation);
-        Classroom classroom = classroomService.findById(reservation.getClassroom().getId());
-        if (classroom.isConfirmation()) {
-            reservation.setStatus("PENDING");
-        } else {
-            reservation.setStatus("APPROVED");
-        }
 
         return repository.save(reservation);
     }
