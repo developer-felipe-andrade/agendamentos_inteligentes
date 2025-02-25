@@ -29,10 +29,6 @@ public class Classroom {
     @Column(name = "is_accessible")
     private boolean acessible;
     private boolean active;
-    private boolean confirmation;
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User responsible;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -67,7 +63,6 @@ public class Classroom {
         this.qtdPlace = classroom.qtdPlace();
         this.block = classroom.block();
         this.acessible = classroom.acessible();
-        this.confirmation = classroom.confirmation();
         this.active = classroom.active();
     }
 }

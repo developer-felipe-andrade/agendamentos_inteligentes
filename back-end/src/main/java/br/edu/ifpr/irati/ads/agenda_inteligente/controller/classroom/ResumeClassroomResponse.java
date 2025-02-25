@@ -13,7 +13,6 @@ public record ResumeClassroomResponse(
         String block,
         boolean isAccessible,
         boolean active,
-        boolean confirmation,
         List<ResourceResponse> resources
 ) {
     public static ResumeClassroomResponse fromEntity(Classroom classroom) {
@@ -24,7 +23,6 @@ public record ResumeClassroomResponse(
                 classroom.getBlock(),
                 classroom.isAcessible(),
                 classroom.isActive(),
-                classroom.isConfirmation(),
                 classroom.getResources() != null ? classroom.getResources()
                         .stream()
                         .map(resourceClassroom -> new ResourceResponse(resourceClassroom.getResource()))

@@ -24,11 +24,6 @@ public record ClassroomRequest(
         @NotNull
         Boolean active,
 
-        @NotBlank
-        boolean confirmation,
-
-        String idUser,
-
         List<@Valid ResourceQuantity> idsResources
 ) {
         public record ResourceQuantity(

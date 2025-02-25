@@ -1,9 +1,8 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.controller.user;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.auth.requests.ReleaseRequest;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.Review;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
-import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReviewService;
+import br.edu.ifpr.irati.ads.agenda_inteligente.service.EmailService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +21,13 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserService userService;
-
     @Autowired
-    private ReviewService reviewService;
+    private EmailService emailService;
 
     @PostMapping("/release")
     public ResponseEntity release(@RequestBody @Valid ReleaseRequest data) {
         try {
-            userService.releaseUsers(data.users());
+            userService.releaseUsers(data.users(), emailService);
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -43,21 +41,6 @@ public class UserController {
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
             ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.getPhoneNumber(), user.isEnabled());
-            responseUsersList.add(responseUsers);
-        }
-
-        return ResponseEntity.ok(responseUsersList);
-    }
-
-    @GetMapping("/responsibles")
-    public ResponseEntity responsibles() {
-        List<User> usersResponsibles = userService.findByResponsibles();
-        usersResponsibles = usersResponsibles.stream()
-                .filter(user -> !user.getLogin().equals("admin@admin.com"))
-                .collect(Collectors.toList());
-        List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
-        for (User user: usersResponsibles) {
-            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(),user.getPhoneNumber(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
 

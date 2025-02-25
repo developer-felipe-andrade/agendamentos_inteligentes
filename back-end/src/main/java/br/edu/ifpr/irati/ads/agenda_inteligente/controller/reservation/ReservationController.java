@@ -9,6 +9,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReservationService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -141,7 +142,8 @@ public class ReservationController {
     @PutMapping("/approve")
     public ResponseEntity<String> approveReservations(@RequestBody List<String> reservationIds) {
         try {
-            service.approveReservations(reservationIds);
+            service.approveReservations(reservationIds, emailService);
+
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Erro ao aprovar reservas: " + e.getMessage());

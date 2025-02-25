@@ -8,6 +8,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -79,12 +80,13 @@ public class ReservationService {
     }
 
     @Transactional
-    public void approveReservations(List<String> uuidList) {
+    public void approveReservations(List<String> uuidList, EmailService emailService) {
         for (String uuid : uuidList) {
             Reservation reservation = repository.findById(uuid)
                     .orElseThrow(() -> new IllegalArgumentException("Reserva não encontrada para o UUID: " + uuid));
 
             reservation.setStatus("APPROVED");
+            emailService.sendApproveReservation(reservation.getCreatedByEmail(), uuidList);
             repository.save(reservation);
         }
     }

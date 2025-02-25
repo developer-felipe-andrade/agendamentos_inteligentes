@@ -102,9 +102,7 @@ const Classroom = () => {
               <TableCell>Bloco</TableCell>
               <TableCell>Capacidade de pessoas</TableCell>
               <TableCell>É acessível para pessoas com modalidade reduzida?</TableCell>
-              <TableCell>Precisa de confirmação?</TableCell>
               <TableCell>Status</TableCell>
-              <TableCell>Responsável</TableCell>
               <TableCell>Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -115,9 +113,7 @@ const Classroom = () => {
                 <TableCell>{row.block}</TableCell>
                 <TableCell>{row.qtdPlace}</TableCell>
                 <TableCell>{row.acessible ? 'Sim' : 'Não'}</TableCell>
-                <TableCell>{row.confirmation ? 'Sim' : 'Não'}</TableCell>
                 <TableCell>{row.active ? 'Ativo' : 'Inativo'}</TableCell>
-                <TableCell>{row.responsible?.name ?? 'Não necessário'}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => handleOpen(row.id)}

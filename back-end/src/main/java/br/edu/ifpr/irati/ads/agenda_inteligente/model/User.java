@@ -47,11 +47,7 @@ public class User implements UserDetails {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Review> reviews;
-
+    
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();

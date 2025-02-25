@@ -5,6 +5,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.model.EmailConfig;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class EmailService {
     private EmailConfigService emailConfigService;
     @Autowired
     private ReservationService reservationService;
+
+    @Value("${ur.front:http://localhost:5173}")
+    private String frontUrl;
 
     private JavaMailSender mailSender;
 
@@ -70,6 +74,16 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void sendUserApprovalEmail(String email, String name) {
+        String subject = "Seu acesso foi aprovado!";
+        String body = "Olá, " + name + ",\n\n"
+                + "Seu acesso à plataforma foi aprovado. Clique no link abaixo para acessar:\n"
+                + frontUrl + "\n\n"
+                + "Atenciosamente,\nEquipe de Suporte";
+
+        sendEmail(email, subject, body);
+    }
+
     public void sendRejectionEmail(String email, List<String> uuidList, String customMessage) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(getFromEmail());
@@ -78,6 +92,34 @@ public class EmailService {
 
         StringBuilder body = new StringBuilder();
         body.append(customMessage).append("\n\n");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        for (String uuid : uuidList) {
+            Optional<Reservation> reservation = reservationService.findById(uuid);
+            if (reservation.isPresent()) {
+                String formattedDate = reservation.get().getDtStart().format(formatter);
+
+                body.append("Nome da Sala: ").append(reservation.get().getClassroom().getName()).append("\n");
+                body.append("Data e Hora de Início: ").append(formattedDate).append("\n");
+                body.append("----------------------------\n");
+            } else {
+                body.append("Reserva com ID ").append(uuid).append(" não encontrada.\n");
+            }
+        }
+
+        message.setText(body.toString());
+        mailSender.send(message);
+    }
+
+    public void sendApproveReservation(String email, List<String> uuidList) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(getFromEmail());
+        message.setTo(email);
+        message.setSubject("Aprovação de Reserva");
+
+        StringBuilder body = new StringBuilder();
+        body.append("Suas reservas foram aprovadas: ").append("\n\n");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 

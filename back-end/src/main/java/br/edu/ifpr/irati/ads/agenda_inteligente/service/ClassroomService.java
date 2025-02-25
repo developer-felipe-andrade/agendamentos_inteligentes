@@ -46,14 +46,6 @@ public class ClassroomService {
             classroom.setBlock(data.block());
             classroom.setActive(data.active());
             classroom.setAcessible(data.acessible());
-            classroom.setConfirmation(data.confirmation());
-
-            if (data.confirmation()) {
-                User user = userService.findById(data.idUser());
-                classroom.setResponsible(user);
-            } else {
-                classroom.setResponsible(null);
-            }
 
             Classroom classroomSaved = classroomRepository.save(classroom);
 
@@ -102,12 +94,6 @@ public class ClassroomService {
     @Transactional
     public void register(ClassroomRequest data) {
         Classroom classroom = new Classroom(data);
-
-        if (data.confirmation()) {
-            User user = userService.findById(data.idUser());
-            classroom.setResponsible(user);
-        }
-
         Classroom classroomSaved = classroomRepository.save(classroom);
 
         for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {

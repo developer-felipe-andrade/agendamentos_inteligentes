@@ -2,7 +2,9 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,10 +43,11 @@ public class UserService {
         return (User) userRepository.findByLogin(login);
     }
 
-    public void releaseUsers(List<String> uuidUsers) {
+    public void releaseUsers(List<String> uuidUsers, EmailService emailService) {
         for (String uuidUser: uuidUsers) {
             User user = this.findById(uuidUser);
             user.setEnabled(true);
+            emailService.sendUserApprovalEmail(user.getLogin(), user.getName());
             userRepository.save(user);
         }
     }
@@ -54,6 +57,4 @@ public class UserService {
 
         return user.orElse(null);
     }
-
-
 }

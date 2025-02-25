@@ -23,8 +23,8 @@ public class AuthService implements UserDetailsService {
     @Autowired
     UserRepository repository;
 
-    @Lazy
     @Autowired
+    @Lazy
     private AuthenticationManager authenticationManager;
 
     @Autowired
