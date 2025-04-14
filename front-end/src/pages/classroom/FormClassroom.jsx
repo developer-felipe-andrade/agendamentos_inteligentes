@@ -47,13 +47,6 @@ const FormClassroom = () => {
       return true;
     }
 
-    if (formData.idsResources) {
-      const filteredQuantity = formData.idsResources.filter(resource => resource.quantity > 0);
-      if (filteredQuantity.length === 0) {
-        return true;
-      }
-    }
-
     return false;
   };
 

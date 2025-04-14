@@ -7,6 +7,7 @@ services:
   db:
     container_name: smart-scheduling-db
     build: environment_development/postgresql/.
+    restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
@@ -16,29 +17,39 @@ services:
     ports:
       - 5432:5432
 
-  # backend:
-  #   container_name: smart-scheduling-back
-  #   build:
-  #     context: ./back-end
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - db
+  backend:
+    restart: always
+    container_name: smart-scheduling-back
+    build:
+      context: ./back-end
+    volumes:
+      - maven-cache:/root/.m2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/smart_scheduling
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
 
-  # frontend:
-  #   build:
-  #     context: ./front-end
-  #   container_name: smart-scheduling-front
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - backend
+  frontend:
+    restart: always
+    build:
+      context: ./front-end
+    container_name: smart-scheduling-front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
-  # nginx:
-  #   container_name: smart-scheduling-nginx
-  #   build: ./nginx
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - frontend
-  #     - backend
+  nginx:
+    restart: always
+    container_name: smart-scheduling-nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
