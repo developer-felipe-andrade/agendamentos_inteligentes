@@ -53,6 +53,7 @@ public class SecurityConfiguration {
                         response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/recover", "/auth/request-recover").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/exists", "/email-config/authenticate", "/email-config", "/user/pending-release", "/classroom").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasRole("ADMIN")
