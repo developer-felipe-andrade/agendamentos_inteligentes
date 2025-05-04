@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -54,10 +55,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/recover", "/auth/request-recover").permitAll()
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/exists", "/email-config/authenticate", "/email-config", "/user/pending-release", "/classroom").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/resource", "/classroom").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/authenticate", "/email-config", "/user/pending-release").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/resource").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/reservations").hasAnyRole("WORKER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/reservations/reject").hasAnyRole("WORKER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/reservations/responsible").hasAnyRole("WORKER", "ADMIN")

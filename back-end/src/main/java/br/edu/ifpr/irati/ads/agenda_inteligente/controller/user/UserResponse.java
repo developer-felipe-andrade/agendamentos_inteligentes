@@ -9,7 +9,8 @@ public record UserResponse(
         String login,
         UserRole role,
         UserProfession profession,
-        String name
+        String name,
+        Boolean isGodUser
 ) {
     public static UserResponse fromEntity(User user) {
         return new UserResponse(
@@ -17,7 +18,8 @@ public record UserResponse(
                 user.getLogin(),
                 user.getRole(),
                 user.getProfession(),
-                user.getName()
+                user.getName(),
+                user.getLogin().equals("admin@admin.com")
         );
     }
 }

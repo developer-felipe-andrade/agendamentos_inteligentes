@@ -29,8 +29,8 @@ const reservation = {
     return api.get(`reservations/classroom/${id}`);
   },
 
-  async findByResponsible(id, page = 0, size = 99999999) {
-    return api.get(`/reservations/responsible/${id}`, {
+  async findByResponsible(page = 0, size = 99999999) {
+    return api.get(`/reservations/responsible`, {
       params: {
         page,
         size

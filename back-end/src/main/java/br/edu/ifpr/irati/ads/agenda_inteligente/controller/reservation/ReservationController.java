@@ -4,6 +4,7 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.controller.reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Reservation;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
+import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.EmailService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.ReservationService;
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.UserService;
@@ -17,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservations")
@@ -95,8 +98,14 @@ public class ReservationController {
                 .map(existingReservation -> {
                     List<Reservation> updatedReservations = new ArrayList<>();
                     List<Reservation> newReservations = request.toEntities(user);
+                    String loginAuthenticated = SecurityContextHolder.getContext().getAuthentication().getName();
 
                     for (Reservation newReservation : newReservations) {
+
+                        if(!newReservation.getUser().getLogin().equals(loginAuthenticated) && !loginAuthenticated.equals("admin@admin.com")) {
+                            break;
+                        }
+
                         Reservation updated = service.update(id, newReservation);
                         updatedReservations.add(updated);
                     }
@@ -110,21 +119,36 @@ public class ReservationController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/responsible/{userId}")
+    @GetMapping("/responsible")
     public ResponseEntity<Page<ReservationResponse>> findByResponsible(
-            @PathVariable String userId,
             @PageableDefault(sort = "dt_start") Pageable pageable) {
-        
-        Page<ReservationResponse> responses = service.getReservationsByUserId(userId, pageable)
-                .map(ReservationResponse::fromEntity);
+        String login = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByLogin(login);
+        Page<ReservationResponse> responses;
+
+        if (user.getLogin().equals("admin@admin.com")) {
+            responses = service.findByStatus("PENDING", pageable).map(ReservationResponse::fromEntity);
+        } else {
+            responses = service.getReservationsByUserId(user.getId(), pageable).map(ReservationResponse::fromEntity);
+        }
+
         return ResponseEntity.ok(responses);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        if (service.findById(id).isEmpty()) {
+        Optional<Reservation> reservation = service.findById(id);
+        if (reservation.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        Reservation findedReservation = reservation.get();
+        String loginAuthenticated = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if(!findedReservation.getUser().getLogin().equals(loginAuthenticated) && !loginAuthenticated.equals("admin@admin.com")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         service.delete(id);
         return ResponseEntity.noContent().build();
     }

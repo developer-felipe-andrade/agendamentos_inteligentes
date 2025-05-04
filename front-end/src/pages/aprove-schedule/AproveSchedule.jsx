@@ -9,7 +9,6 @@ import { Done, Close as CloseIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
 import Alert from '../../components/UseAlert';
 import reservation from "../../api/requests/reservation";
-import user from '../../api/requests/user';
 import Scaffold from "../../components/Scaffold";
 import emailConfig from '../../api/requests/email-config';
 
@@ -24,8 +23,7 @@ const AproveSchedule = () => {
 
   const getPendingSchedules = async () => {
     try {
-      const response = await user.me();
-      const { data } = await reservation.findByResponsible(response.data.id);
+      const { data } = await reservation.findByResponsible();
       setReservations(data.content);
     } catch (error) {
       console.log(error);

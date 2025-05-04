@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import dayjs from "dayjs";
 import Alert from '../../components/UseAlert';
 import reservation from '../../api/requests/reservation';
+import user from '../../api/requests/user';
 import 'dayjs/locale/pt-br';
 import { Close } from '@mui/icons-material';
 
@@ -35,6 +36,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   const [fields, setFields] = useState([{ form: "EMAIL", anticipationTime: dayjs(formData.dtStart).subtract(1, 'day')}]);
   const [typeRecurrence, setTypeRecurrence] = useState('none');
   const [timeRecurrence, setTimeRecurrence] = useState(0);
+  const [userEmail, setUserEmail] = useState('');
+  const [userConnected, setUserConnected] = useState({});
 
   const handleSave = async () => {
     try {
@@ -96,6 +99,8 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         classroomId: data.classroom.id,
         notifications: data.notifications
       });
+
+      setUserEmail(data.user.login);
     } catch (error) {
       console.log(error);
       addAlert('Erro ao buscar os dados do agendamento', 'error');
@@ -104,6 +109,9 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
   const handleDelete = async () => {
     try {
+      console.log("Excluindo agendamento:", selectedSchedule);
+
+
       await reservation.delete(selectedSchedule);
       addAlert("Agendamento excluído com sucesso!", "success");
     } catch (error) {
@@ -114,14 +122,26 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     }
   };
 
+  async function getUserConnected() {
+    try {
+      const { data } = await user.me();
+      setUserConnected(data);
+
+    } catch {
+      navigate('/login');
+    }
+  }
+
   const isFormValid = formData.title.trim() !== "" && formData.dtStart && formData.dtEnd && fields.every(field => field.anticipationTime);
+  const isEmailValid = userEmail === userConnected.login;
+  const isGodUser = userConnected.isGodUser;
 
   useEffect(() => {
     if (open && selectedSchedule) {
-      console.log('cheguei');
+      getUserConnected();
       getSchedule();
     }
-  }, [])
+  }, []);
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
@@ -274,15 +294,15 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
       <DialogActions>
         {selectedSchedule && (
-          <Button onClick={handleDelete} variant="contained" color="error" style={{ marginRight: "auto" }}>
+          <Button onClick={handleDelete} variant="contained" color="error" style={{ marginRight: "auto" }} disabled={!isEmailValid && !isGodUser}>
             Excluir
           </Button>
         )}
         <Button onClick={handleClose} color="secondary">
           Cancelar
         </Button>
-        <Button onClick={handleSave} variant="contained" color="primary" disabled={!isFormValid}>
-          Salvar
+        <Button onClick={handleSave} variant="contained" color="primary" disabled={!isFormValid || (!isEmailValid && selectedSchedule) && !isGodUser}>
+          Salvar 
         </Button>
       </DialogActions>
     </Dialog>

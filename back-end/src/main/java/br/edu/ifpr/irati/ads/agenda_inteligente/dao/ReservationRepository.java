@@ -18,13 +18,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
     List<Reservation> findAllByIdIn(List<String> ids);
 
     Page<Reservation> findByClassroom_IdAndStatusIn(String classroomId, List<String> statuses, Pageable pageable);
-    Page<Reservation> findByStatusIgnoreCase(String status, Pageable pageable);
+
     @Query(value = "SELECT r.* FROM reservations r WHERE r.user_id = :user AND r.status = :status AND r.dt_start >= CURRENT_TIMESTAMP",
             nativeQuery = true)
-    Page<Reservation> findByUserIdAndStatusAfterCurrentDate(@Param("user") String user,
-                                                            @Param("status") String status,
-                                                            Pageable pageable);
+    Page<Reservation> findByUserIdAndStatusAfterCurrentDate(@Param("user") String user, @Param("status") String status, Pageable pageable);
 
+    @Query(value = "SELECT r.* FROM reservations r WHERE r.status = :status AND r.dt_start >= CURRENT_TIMESTAMP",
+            nativeQuery = true)
+    Page<Reservation> findByStatusAfterCurrentDate(@Param("status") String status, Pageable pageable);
 
     @Query("SELECT r FROM Reservation r WHERE r.classroom.id = :classroomId " +
             "AND ((r.dtStart BETWEEN :start AND :end) OR " +
@@ -41,7 +42,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
                             @Param("classroomId") String classroomId,
                             @Param("dtStart") LocalDateTime dtStart);
 
-    public Page<Reservation> findByDtStartBetween(LocalDateTime dtStart, LocalDateTime dtEnd, Pageable pageable);
+    Page<Reservation> findByDtStartBetween(LocalDateTime dtStart, LocalDateTime dtEnd, Pageable pageable);
 
-    public List<Reservation> findByDtStartBefore(LocalDateTime now);
+    List<Reservation> findByDtStartBefore(LocalDateTime now);
 }

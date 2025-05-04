@@ -31,7 +31,6 @@ public record ReservationRequest(
         String classroomId,
 
         @Valid
-        @NotEmpty(message = "Pelo menos uma notificação deve ser configurada")
         List<NotificationRequest> notifications,
 
         Boolean recurrence,
