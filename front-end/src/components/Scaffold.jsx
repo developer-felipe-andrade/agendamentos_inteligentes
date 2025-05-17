@@ -24,6 +24,7 @@ import {
   Description,
   Home,
   Search,
+  FileUpload as FileUploadIcon,
 } from '@mui/icons-material';
 import auth from '../api/requests/auth';
 import user from '../api/requests/user';
@@ -192,7 +193,7 @@ export default function Scaffold({ children, appBarActions }) {
               { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'},
               { key: 'reportReserves', icon:<Description/>, text: 'Relatório de reservas'},
               { key: 'reportClassroom', icon:<Description/>, text: 'Relatório de recursos por sala'},
-              { key: 'import-users', icon:<Description/>, text: 'Importar Usuários'}
+              { key: 'import-users', icon:<FileUploadIcon />, text: 'Importar Usuários'}
             ].map(({ key, icon, text }) => (
               <ListItem key={key} onClick={() => handleMenuClick(key)}>
                 <ListItemIcon>{icon}</ListItemIcon>

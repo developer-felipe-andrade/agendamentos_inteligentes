@@ -109,7 +109,7 @@ const ConnectionDialog = ({ open, onClose }) => {
       <DialogContent>
         <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />
         <FormControl fullWidth variant="outlined" required margin="normal">
-          <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
+          <InputLabel htmlFor="outlined-adornme nt-password">Senha</InputLabel>
           <OutlinedInput
             id="outlined-adornment-password"
             type={showPassword ? 'text' : 'password'}

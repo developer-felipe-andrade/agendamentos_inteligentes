@@ -100,7 +100,7 @@ const ImportUsers = ({ open, onClose }) => {
       {renderAlerts()}
 
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
-        <Typography variant="h6">Importar Planilha de Usuários</Typography>
+        Importar Planilha de Usuários
       </DialogTitle>
       
       <DialogContent dividers>
