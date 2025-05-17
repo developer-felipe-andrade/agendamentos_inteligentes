@@ -298,7 +298,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
             Excluir
           </Button>
         )}
-        <Button onClick={handleClose} color="secondary">
+        <Button onClick={handleClose} color="primary">
           Cancelar
         </Button>
         <Button onClick={handleSave} variant="contained" color="primary" disabled={!isFormValid || (!isEmailValid && selectedSchedule) && !isGodUser}>

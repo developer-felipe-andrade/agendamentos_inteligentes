@@ -32,6 +32,7 @@ import { useNavigate } from 'react-router-dom';
 import Alert from './UseAlert';
 import ReservePerHour from '../pages/reservePerHour/ReservePerHour';
 import ConnectionDialog from '../pages/config-email/ConnectionDialog';
+import ImportUsersDialog from '../pages/import-users/ImportUsers';
 import ReviewDialog from '../pages/review/ReviewDialog';
 
 const drawerWidth = 240;
@@ -52,6 +53,7 @@ export default function Scaffold({ children, appBarActions }) {
 
   const [isReserveModalOpen, setReserveModalOpen] = useState(false);
   const [isEmailConfigModalOpen, setIsEmailConfigModalOpen] = useState(false);
+  const [isImportUsersModalOpen, setIsImportUsersModalOpen] = useState(false);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -78,10 +80,14 @@ export default function Scaffold({ children, appBarActions }) {
       classroom: '/classrooms',
       approveSchedules: '/aprove-schedule',
       reportReserves: '/report-reserve',
-      reportClassroom: '/report-classroom'
+      reportClassroom: '/report-classroom',
+      importUsers: '/import-users',
     };
+    
     if (componentName === 'config-email') {
       setIsEmailConfigModalOpen(true)
+    } else if (componentName === 'import-users') {
+      setIsImportUsersModalOpen(true);
     } else {
       navigate(routes[componentName] || '/');
       setOpen(false);
@@ -185,7 +191,8 @@ export default function Scaffold({ children, appBarActions }) {
               { key: 'classroom', icon: <Class />, text: 'Salas' },
               { key: 'config-email', icon:<Mail/>, text: 'Configurar E-mail para Envio'},
               { key: 'reportReserves', icon:<Description/>, text: 'Relatório de reservas'},
-              { key: 'reportClassroom', icon:<Description/>, text: 'Relatório de recursos por sala'}
+              { key: 'reportClassroom', icon:<Description/>, text: 'Relatório de recursos por sala'},
+              { key: 'import-users', icon:<Description/>, text: 'Importar Usuários'}
             ].map(({ key, icon, text }) => (
               <ListItem key={key} onClick={() => handleMenuClick(key)}>
                 <ListItemIcon>{icon}</ListItemIcon>
@@ -218,6 +225,13 @@ export default function Scaffold({ children, appBarActions }) {
         <ConnectionDialog 
           open={isEmailConfigModalOpen} 
           onClose={() => setIsEmailConfigModalOpen(false)} 
+        />
+      )}
+
+      {isImportUsersModalOpen && (
+        <ImportUsersDialog 
+          open={isImportUsersModalOpen} 
+          onClose={() => setIsImportUsersModalOpen(false)} 
         />
       )}
  

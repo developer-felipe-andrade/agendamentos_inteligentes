@@ -19,23 +19,19 @@ public class UserImportController {
     @Autowired
     private ExcelImportService excelImportService;
 
-    @PostMapping("/import-users")
+    @PostMapping("/user/import-users")
     public ResponseEntity<?> importUsersFromExcel(@RequestParam("file") MultipartFile file) {
         try {
-            // Verificar se o arquivo está vazio
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest().body("Por favor, envie um arquivo Excel válido.");
             }
 
-            // Verificar se é um arquivo Excel
             if (!file.getOriginalFilename().endsWith(".xls") && !file.getOriginalFilename().endsWith(".xlsx")) {
                 return ResponseEntity.badRequest().body("Por favor, envie um arquivo com extensão .xls ou .xlsx");
             }
 
-            // Importar usuários do Excel
             Map<String, Object> importResult = excelImportService.importUsersFromExcel(file);
 
-            // Criar resposta com informações sobre a importação
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Importação realizada com sucesso");
             response.put("totalImportados", importResult.get("importedCount"));

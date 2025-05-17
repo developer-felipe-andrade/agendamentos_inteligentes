@@ -144,7 +144,6 @@ public class ExcelImportService {
     }
 
     private UserRole findUserRoleByName(String roleName) {
-        // Mapeia os nomes em português para os valores enum
         switch (roleName.toLowerCase()) {
             case "admin":
             case "administrador":
@@ -159,7 +158,6 @@ public class ExcelImportService {
     }
 
     private UserProfession findUserProfessionByName(String professionName) {
-        // Mapeia os nomes em português para os valores enum
         switch (professionName.toLowerCase()) {
             case "servidor":
             case "worker":

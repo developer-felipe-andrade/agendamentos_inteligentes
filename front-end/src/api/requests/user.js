@@ -19,6 +19,17 @@ const user = {
 
   async delete(id) {
     return api.delete(`/user/${id}`);
+  },
+
+  async importUsers(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return api.post('/user/import-users', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
   }
 };
 
