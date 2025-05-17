@@ -3,7 +3,6 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.model.enums;
 public enum UserRole {
     ADMIN("admin"),
     USER("user"),
-    GOD("god"),
     COORDINATOR("coordinator");
 
     private String role;

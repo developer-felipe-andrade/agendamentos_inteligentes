@@ -35,9 +35,17 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseLoginDTO> login(@RequestBody @Valid AuthRequest data) {
-        String token = authService.loginService(data);
+        ResponseLoginDTO responseLoginDTO = authService.loginService(data);
 
-        return ResponseEntity.ok(new ResponseLoginDTO(token));
+        if (responseLoginDTO == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        if (responseLoginDTO.isTmpPassword()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(responseLoginDTO);
+        }
+
+        return ResponseEntity.ok(responseLoginDTO);
     }
 
     @PostMapping("/register")

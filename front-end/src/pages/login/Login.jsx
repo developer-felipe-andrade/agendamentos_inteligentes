@@ -5,12 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import Alert from '../../components/UseAlert';
 import auth from '../../api/requests/auth';
 import Cookies from 'js-cookie';
-import logo from '../../assets/logo.png'
+import logo from '../../assets/logo.png';
+import DefinitionTmpPassword from '../definition-tmp-password/DefinitionTmpPassword';
 
 const Login = () => {
   const [formData, setFormData] = useState({login: '', password: '' });
   const [emailError, setEmailError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [openPasswordModal, setOpenPasswordModal] = useState(false);
+  
   const { renderAlerts, addAlert } = Alert();
   
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -22,8 +25,12 @@ const Login = () => {
         addAlert('Por favor, preencha todos os campos!', 'warning');
         return;
       }
-      
       const { data } = await auth.login(formData);
+
+      if (data.isTmpPassword) {
+        setOpenPasswordModal(true);
+        return;
+      }
 
       Cookies.set('authToken', data.token, { 
         expires: 7,
@@ -37,6 +44,14 @@ const Login = () => {
       console.log(error);
       addAlert('Erro ao acessar!', 'error');
     }
+  };
+
+  const handlePasswordResetSuccess = () => {
+    setFormData({...formData, password: ''});
+  };
+
+  const handleCloseModal = () => {
+    setOpenPasswordModal(false);
   };
 
   const handleLogout = async () => {
@@ -137,6 +152,7 @@ const Login = () => {
                         </IconButton>
                       </InputAdornment>
                     }
+                    value={formData.password}
                     label="Senha"
                   />
                 </FormControl>
@@ -175,6 +191,13 @@ const Login = () => {
           </Paper>
         </Container>
       </div>
+
+      <DefinitionTmpPassword 
+        open={openPasswordModal}
+        onClose={handleCloseModal}
+        userEmail={formData.login}
+        onSuccess={handlePasswordResetSuccess}
+      />
     </>
   );
 };

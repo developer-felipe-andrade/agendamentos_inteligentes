@@ -55,7 +55,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/recover", "/auth/request-recover").permitAll()
                         .requestMatchers(HttpMethod.GET, "/health").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release", "/").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/authenticate", "/email-config", "/user/pending-release").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/resource").hasAnyRole("ADMIN")

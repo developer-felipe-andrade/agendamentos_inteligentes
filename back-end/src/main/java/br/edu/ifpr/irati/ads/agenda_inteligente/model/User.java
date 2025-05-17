@@ -39,6 +39,8 @@ public class User implements UserDetails {
 
     private String phoneNumber;
     private boolean enabled;
+    @Column(name = "tmp_password")
+    private boolean tmpPassword = false;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
