@@ -251,21 +251,7 @@ const FormClassroom = () => {
 					'@media (max-width: 600px)': {
 						maxHeight: 'calc(100vh - 350px)',
 					},
-				}}>
-					{dataResource.length === 0 ? (
-						<Box sx={{ textAlign: 'center', padding: 2 }}>
-							<Typography variant="h6" gutterBottom>
-								Necessário cadastrar ao menos um recurso para a sala.
-							</Typography>
-							<Button 
-								variant="contained" 
-								color="primary" 
-								onClick={() => navigate('/resources')}
-							>
-								Ir até a tela de recursos.
-							</Button>
-						</Box>
-					) : (
+				}}>	
 						<Table stickyHeader>
 							<TableHead>
 								<TableRow>
@@ -294,7 +280,7 @@ const FormClassroom = () => {
 								))}
 							</TableBody>
 						</Table>
-					)}
+					
 				</TableContainer>
 				
         <div className="flex justify-end gap-4 mt-4" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, padding: '16px', backgroundColor: 'white' }}>

@@ -18,10 +18,7 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
     SELECT DISTINCT c.* FROM classrooms c
     LEFT JOIN resource_classroom rc ON c.id = rc.classroom_id
     WHERE c.qtd_place >= :qtdPlace 
-    AND (
-        :isAccessible = true AND c.is_accessible = true
-        OR :isAccessible = false
-    )
+    AND (:isAccessible = false OR c.is_accessible = true)
     AND NOT EXISTS (
         SELECT 1 FROM reservations r 
         WHERE r.classroom_id = c.id 
@@ -31,16 +28,12 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
             OR (:dtStart BETWEEN r.dt_start AND r.dt_end) 
             OR (:dtEnd BETWEEN r.dt_start AND r.dt_end)
         )
-    ) 
-    AND EXISTS (
-        SELECT 1
-        FROM resource_classroom rc
-        WHERE rc.classroom_id = c.id
-        AND (rc.resource_id IN (:idsResources) OR '' = '')
     )
-    AND c.id NOT IN (
-        SELECT DISTINCT r.classroom_id FROM reservations r
-        WHERE r.dt_end < NOW()
+    AND (
+        :idsResources IS NULL OR EXISTS (
+            SELECT 1 FROM resource_classroom rc2
+            WHERE rc2.classroom_id = c.id AND rc2.resource_id IN (:idsResources)
+        )
     )
     """, nativeQuery = true)
     List<Classroom> findAvailableClassrooms(

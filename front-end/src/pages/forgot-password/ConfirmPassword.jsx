@@ -1,14 +1,22 @@
 import React from 'react'
 import Alert from '../../components/UseAlert';
-import { Button, Container, Paper, TextField } from '@mui/material';
+import { Button, Container, Paper, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import auth from '../../api/requests/auth';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const ConfirmPassword = () => {
     const { renderAlerts, addAlert } = Alert();
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({email: '', password: '', confirmPassword: ''});
     const [searchParams] = useSearchParams();
+    const [showNewPassword, setShowNewPassword] = React.useState(false);
+    const [showConfirmNewPassword, setShowConfirmNewPassword] = React.useState(false);
+
+    const handleClickShowNewPassword = () => setShowNewPassword((show) => !show);
+    const handleClickShowConfirmNewPassword = () => setShowConfirmNewPassword((show) => !show);
+
+    
 
     const getParamsUrl = () => {
         setFormData({ ...formData, email: searchParams.get('email') });
@@ -56,26 +64,51 @@ const ConfirmPassword = () => {
               <h2 className="text-2xl font-bold mb-4 text-center">Redefinir Senha</h2>
               <div className="space-y-4">
                 <div>
-                  <TextField
-                    label="Nova Senha"
-                    variant="outlined"
-                    type="password"
-                    fullWidth
-                    required
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  />
+                  <FormControl fullWidth variant="outlined" required margin='normal'>
+                    <InputLabel htmlFor="outlined-new-password">Nova Senha</InputLabel>
+                    <OutlinedInput
+                      id="outlined-new-password"
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowNewPassword}
+                            edge="end"
+                          >
+                            {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Nova Senha"
+                    />
+                  </FormControl>
                 </div>
                 <div>
-                  <TextField
-                    label="Confirme Nova Senha"
-                    variant="outlined"
-                    type="password"
-                    fullWidth
-                    required
-                    value={formData.confirmPassword}
-                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  />
+                  <FormControl fullWidth variant="outlined" required margin='normal'>
+                    <InputLabel htmlFor="outlined-new-password">Confirme Nova Senha</InputLabel>
+                    <OutlinedInput
+                      id="outlined-new-password"
+                      type={showConfirmNewPassword ? 'text' : 'password'}
+                      value={formData.confirmPassword}
+                      required
+                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                        endAdornment={
+                          <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowConfirmNewPassword}
+                            edge="end"
+                          >
+                            {showConfirmNewPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      label="Confirme Nova Senha"
+                    />
+                  </FormControl>
                 </div>
       
                 <div className="flex justify-center">
