@@ -88,9 +88,7 @@ public class ExcelImportService {
                 Cell professionCell = currentRow.getCell(4);
                 if (professionCell != null) {
                     String professionName = getCellValueAsString(professionCell);
-                    UserProfession profession = "servidor".equalsIgnoreCase(professionName) ?
-                            UserProfession.WORKER : findUserProfessionByName(professionName);
-                    user.setProfession(profession);
+                    user.setProfession(findUserProfessionByName(professionName));
                 }
 
                 user.setEnabled(true);
@@ -148,8 +146,8 @@ public class ExcelImportService {
             case "admin":
             case "administrador":
                 return UserRole.ADMIN;
-            case "coordenador":
-                return UserRole.COORDINATOR;
+            case "servidor":
+                return UserRole.SERVER;
             case "usuário":
             case "usuario":
             default:
@@ -159,9 +157,14 @@ public class ExcelImportService {
 
     private UserProfession findUserProfessionByName(String professionName) {
         switch (professionName.toLowerCase()) {
-            case "servidor":
-            case "worker":
-                return UserProfession.WORKER;
+            case "professor":
+                return UserProfession.TEACHER;
+            case "direção":
+            case "direcao":
+                return UserProfession.DIRECTION;
+            case "secretaria":
+            case "secretária":
+                return UserProfession.SECRETARY;
             case "estudante":
             case "aluno":
                 return UserProfession.STUDENT;
@@ -169,7 +172,7 @@ public class ExcelImportService {
             case "externo":
                 return UserProfession.EXTERNAL_COMUNITY;
             default:
-                return UserProfession.WORKER; // padrão conforme solicitado
+                return UserProfession.TEACHER; // padrão conforme solicitado
         }
     }
 }

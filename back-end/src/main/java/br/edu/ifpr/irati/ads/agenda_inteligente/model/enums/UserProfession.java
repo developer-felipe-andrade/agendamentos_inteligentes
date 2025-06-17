@@ -1,8 +1,10 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model.enums;
 
 public enum UserProfession {
-    WORKER("worker"),
+    TEACHER("teacher"),
     STUDENT("student"),
+    DIRECTION("direction"),
+    SECRETARY("secretary"),
     EXTERNAL_COMUNITY("external_comunity");
 
     private String profession;

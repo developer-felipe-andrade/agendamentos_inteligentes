@@ -196,7 +196,7 @@ const RegisterUser = () => {
                   label="Selecione o cargo"
                 >
                   <MenuItem value="ADMIN">Administrador</MenuItem>
-                  <MenuItem value="COORDINATOR">Coordenador</MenuItem>
+                  <MenuItem value="SERVER">Servidor</MenuItem>
                   <MenuItem value="USER">Usuário</MenuItem>
                 </Select>
               </FormControl>
@@ -210,8 +210,10 @@ const RegisterUser = () => {
                   onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
                   label="Papel na faculdade"
                 >
-                  <MenuItem value="WORKER">Aluno</MenuItem>
-                  <MenuItem value="STUDENT">Servidor</MenuItem>
+                  <MenuItem value="STUDENT">Aluno</MenuItem>
+                  <MenuItem value="TEACHER">Professor</MenuItem>
+                  <MenuItem value="DIRECTION">Direção</MenuItem>
+                  <MenuItem value="SECRETARY">Secretária</MenuItem>
                   <MenuItem value="EXTERNAL_COMUNITY">Comunidade Externa</MenuItem>
                 </Select>
               </FormControl>

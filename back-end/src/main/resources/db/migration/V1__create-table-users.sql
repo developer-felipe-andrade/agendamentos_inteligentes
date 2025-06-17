@@ -18,7 +18,7 @@ VALUES (
   'admin@admin.com',
   '$2a$10$gazPrnHS20O4CSZBkfgX4ul9pblrpgfSmnG0jFV7A.bDi16j9XfjS',
   'ADMIN',
-  'WORKER',
+  'TEACHER',
   '(42) 99999-9999',
   true
 );
