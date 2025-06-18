@@ -187,13 +187,13 @@ const RegisterUser = () => {
             
             <div className="grid grid-cols-2 gap-4">
               <FormControl fullWidth variant="outlined" required>
-                <InputLabel id="role-select-label">Selecione o Cargo</InputLabel>
+                <InputLabel id="role-select-label">Selecione o perfil</InputLabel>
                 <Select
                   labelId="role-select-label"
                   id="role-select"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  label="Selecione o cargo"
+                  label="Selecione o perfil"
                 >
                   <MenuItem value="ADMIN">Administrador</MenuItem>
                   <MenuItem value="SERVER">Servidor</MenuItem>
