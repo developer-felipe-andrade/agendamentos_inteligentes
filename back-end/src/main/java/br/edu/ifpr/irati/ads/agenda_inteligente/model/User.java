@@ -1,6 +1,5 @@
 package br.edu.ifpr.irati.ads.agenda_inteligente.model;
 
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserProfession;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -34,9 +33,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Enumerated(EnumType.STRING)
-    private UserProfession profession;
-
     private String phoneNumber;
     private boolean enabled;
     @Column(name = "tmp_password")
@@ -61,12 +57,11 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public User(String name, String login, String password, UserRole role, UserProfession profession, String phoneNumber) {
+    public User(String name, String login, String password, UserRole role, String phoneNumber) {
         this.name = name;
         this.login = login;
         this.password = password;
         this.role = role;
-        this.profession = profession;
         this.enabled = false;
         this.phoneNumber = phoneNumber;
     }

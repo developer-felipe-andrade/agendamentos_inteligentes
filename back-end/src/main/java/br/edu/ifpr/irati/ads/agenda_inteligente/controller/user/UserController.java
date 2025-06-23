@@ -40,7 +40,7 @@ public class UserController {
         List<User> usersPending = userService.findByReleaseUsers();
         List<ResponsePendingUsersDTO> responseUsersList = new ArrayList<>();
         for (User user: usersPending) {
-            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getProfession(), user.getPhoneNumber(), user.isEnabled());
+            ResponsePendingUsersDTO responseUsers = new ResponsePendingUsersDTO(user.getId(), user.getName(), user.getLogin(), user.getRole(), user.getPhoneNumber(), user.isEnabled());
             responseUsersList.add(responseUsers);
         }
 

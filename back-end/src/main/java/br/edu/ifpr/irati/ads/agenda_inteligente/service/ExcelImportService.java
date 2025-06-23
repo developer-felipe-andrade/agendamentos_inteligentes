@@ -2,7 +2,6 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.UserRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserProfession;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.enums.UserRole;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -85,12 +84,6 @@ public class ExcelImportService {
                     user.setRole(UserRole.USER);
                 }
 
-                Cell professionCell = currentRow.getCell(4);
-                if (professionCell != null) {
-                    String professionName = getCellValueAsString(professionCell);
-                    user.setProfession(findUserProfessionByName(professionName));
-                }
-
                 user.setEnabled(true);
                 user.setTmpPassword(true);
                 user.setPhoneNumber("");
@@ -150,29 +143,9 @@ public class ExcelImportService {
                 return UserRole.SERVER;
             case "usuário":
             case "usuario":
+            case "aluno":
             default:
                 return UserRole.USER;
-        }
-    }
-
-    private UserProfession findUserProfessionByName(String professionName) {
-        switch (professionName.toLowerCase()) {
-            case "professor":
-                return UserProfession.TEACHER;
-            case "direção":
-            case "direcao":
-                return UserProfession.DIRECTION;
-            case "secretaria":
-            case "secretária":
-                return UserProfession.SECRETARY;
-            case "estudante":
-            case "aluno":
-                return UserProfession.STUDENT;
-            case "comunidade externa":
-            case "externo":
-                return UserProfession.EXTERNAL_COMUNITY;
-            default:
-                return UserProfession.TEACHER; // padrão conforme solicitado
         }
     }
 }

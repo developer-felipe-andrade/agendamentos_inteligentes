@@ -10,8 +10,7 @@ const RegisterUser = () => {
     email: '', 
     name: '', 
     password: '', 
-    role: '', 
-    profession: '',
+    role: '',
     phoneNumber: ''
   });
   const [emailError, setEmailError] = useState('');
@@ -93,7 +92,6 @@ const RegisterUser = () => {
       login: formData.email,
       password: formData.password,
       role: formData.role,
-      profession: formData.profession,
       phoneNumber: formData.phoneNumber
     }
 
@@ -144,7 +142,7 @@ const RegisterUser = () => {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <FormControl fullWidth variant="outlined" required>
                 <InputLabel htmlFor="outlined-adornment-password">Senha</InputLabel>
                 <OutlinedInput
@@ -183,9 +181,6 @@ const RegisterUser = () => {
                 error={!!phoneError}
                 helperText={phoneError}
               />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
               <FormControl fullWidth variant="outlined" required>
                 <InputLabel id="role-select-label">Selecione o perfil</InputLabel>
                 <Select
@@ -197,28 +192,11 @@ const RegisterUser = () => {
                 >
                   <MenuItem value="ADMIN">Administrador</MenuItem>
                   <MenuItem value="SERVER">Servidor</MenuItem>
-                  <MenuItem value="USER">Usuário</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth variant="outlined" required>
-                <InputLabel id="profession-select-label">Papel na faculdade</InputLabel>
-                <Select
-                  labelId="profession-select-label"
-                  id="profession-select"
-                  value={formData.profession}
-                  onChange={(e) => setFormData({ ...formData, profession: e.target.value })}
-                  label="Papel na faculdade"
-                >
-                  <MenuItem value="STUDENT">Aluno</MenuItem>
-                  <MenuItem value="TEACHER">Professor</MenuItem>
-                  <MenuItem value="DIRECTION">Direção</MenuItem>
-                  <MenuItem value="SECRETARY">Secretária</MenuItem>
-                  <MenuItem value="EXTERNAL_COMUNITY">Comunidade Externa</MenuItem>
+                  <MenuItem value="USER">Aluno</MenuItem>
                 </Select>
               </FormControl>
             </div>
-
+            
             <div className="flex justify-center mt-6">
               <Button
                 onClick={handleSubmit}

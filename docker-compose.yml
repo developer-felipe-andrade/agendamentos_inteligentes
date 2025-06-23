@@ -17,42 +17,42 @@ services:
     ports:
       - 5432:5432
 
-  # backend:
-  #   restart: always
-  #   container_name: smart-scheduling-back
-  #   build:
-  #     context: ./back-end
-  #   volumes:
-  #     - maven-cache:/root/.m2
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     - db
-  #   environment:
-  #     SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/smart_scheduling
-  #     SPRING_DATASOURCE_USERNAME: postgres
-  #     SPRING_DATASOURCE_PASSWORD: 123
-  #     SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
-  #     URL_FRONT: http://localhost
+  backend:
+    restart: always
+    container_name: smart-scheduling-back
+    build:
+      context: ./back-end
+    volumes:
+      - maven-cache:/root/.m2
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/smart_scheduling
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123
+      SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+      URL_FRONT: http://localhost
 
-  # frontend:
-  #   restart: always
-  #   build:
-  #     context: ./front-end
-  #     args:
-  #       - VITE_API_URL=http://localhost:8080
-  #   container_name: smart-scheduling-front
-  #   ports:
-  #     - "5173:5173"
-  #   depends_on:
-  #     - backend
+  frontend:
+    restart: always
+    build:
+      context: ./front-end
+      args:
+        - VITE_API_URL=http://localhost:8080
+    container_name: smart-scheduling-front
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
 
-  # nginx:
-  #   restart: always
-  #   container_name: smart-scheduling-nginx
-  #   build: ./nginx
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - frontend
-  #     - backend
+  nginx:
+    restart: always
+    container_name: smart-scheduling-nginx
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
