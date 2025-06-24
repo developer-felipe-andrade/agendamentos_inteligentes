@@ -7,7 +7,7 @@ const ShareSchedule = ({ selectedRoom }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const qrRef = useRef(null);
 
-  const link = `http://localhost:5173/reserve/${selectedRoom}`;
+  const link = `http://localhost:5173/reserve/${selectedRoom}?offline=true`;
 
   const openModal = () => {
     setIsModalOpen(true);

@@ -56,6 +56,7 @@ export default function Scaffold({ children, appBarActions }) {
   const [isEmailConfigModalOpen, setIsEmailConfigModalOpen] = useState(false);
   const [isImportUsersModalOpen, setIsImportUsersModalOpen] = useState(false);
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -96,6 +97,10 @@ export default function Scaffold({ children, appBarActions }) {
   };
 
   useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const offlineParam = searchParams.get('offline');
+    setIsOffline(offlineParam === 'true');
+  
     async function fetchData() {
       try {
         const { data } = await user.me();
@@ -109,17 +114,19 @@ export default function Scaffold({ children, appBarActions }) {
         navigate('/login');
       }
     }
-    fetchData();
-  }, []);
+    if (!isOffline) {
+      fetchData();
+    }
+  }, [isOffline, navigate]);
 
   const handleCloseReviewDialog = () => {
     setIsReviewDialogOpen(false);
   };
 
-  return (
+  return !isOffline && (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       { renderAlerts() }
-      <AppBar position="fixed" >
+      <AppBar position="fixed">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
             <MenuIcon />

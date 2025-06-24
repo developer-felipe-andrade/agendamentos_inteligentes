@@ -20,7 +20,7 @@ ScheduleDialog.propTypes = {
   passDataToSend: PropTypes.object
 };
 
-export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend }) {
+export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend, isOffline }) {
   const navigate = useNavigate();
   
   const { renderAlerts, addAlert } = Alert();
@@ -138,7 +138,9 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
   useEffect(() => {
     if (open && selectedSchedule) {
-      getUserConnected();
+      if (!isOffline) {
+        getUserConnected();
+      }
       getSchedule();
     }
   }, []);
@@ -152,6 +154,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
             <DateTimePicker
               required
+              disabled={isOffline}
               value={dayjs(formData.dtStart)}
               label="Data"
               onChange={(newValue) => {
@@ -174,6 +177,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
             <TimePicker
               required
+              disabled={isOffline}
               label="Tempo de duração"
               value={dayjs(formData.dtStart).startOf('day').add(formData.durationHours || 0, 'hour').add(formData.durationMinutes ?? 50, 'minute')}
               onChange={(newValue) => {
@@ -198,6 +202,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <div className="pt-2">
           <TextField
             required
+            disabled={isOffline}
             label="Título"
             name="title"
             fullWidth
@@ -210,6 +215,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
           <TextField
             label="Observação"
             name="obs"
+            disabled={isOffline}
             fullWidth
             value={formData.obs}
             onChange={(e) => setFormData((prev) => ({ ...prev, obs: e.target.value }))}
@@ -224,6 +230,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
               <FormControl fullWidth>
                 <InputLabel>Recorrência</InputLabel>
                 <Select
+                  disabled={isOffline}
                   label="Recorrência"
                   value={typeRecurrence}
                   onChange={(e) => setTypeRecurrence(e.target.value)}
@@ -239,7 +246,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                 type="number"
                 value={timeRecurrence}
                 onChange={(e) => setTimeRecurrence(e.target.value)}
-                disabled={typeRecurrence === 'none'}
+                disabled={typeRecurrence === 'none' || isOffline}
                 fullWidth
               />
             </div>
@@ -249,6 +256,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <div className="py-2">
             <Button
+              disabled={isOffline}
               variant="contained"
               onClick={addField}
             >
@@ -260,10 +268,11 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                 <React.Fragment key={index}>
                   <div className="flex items-center gap-2">
                     <DateTimePicker
+                      disabled={isOffline}
                       required
                       label="Tempo de antecipação"
                       ampm={false}
-                      value={field.anticipationTime || dayjs(formData.dtStart).subtract(1, 'day')}
+                      value={dayjs(formData.dtStart).subtract(1, 'day') || field.anticipationTime}
                       onChange={(newValue) => {
                         const updatedFields = [...fields];
                         updatedFields[index].anticipationTime = newValue;
@@ -275,6 +284,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                       minDate={dayjs()}
                     />
                     <IconButton
+                      disabled={isOffline}
                       variant="outlined"
                       onClick={() => {
                         const updatedFields = fields.filter((_, i) => i !== index);

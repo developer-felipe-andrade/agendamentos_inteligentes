@@ -26,6 +26,7 @@ export default function SchedulingCalendar() {
   const [schedulings, setSchedulings] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [openEmailDialog, setOpenEmailDialog] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
 
   const checkEmailConfig = async () => {
     try {
@@ -88,13 +89,19 @@ export default function SchedulingCalendar() {
   }
 
   useEffect(() => {
-    checkEmailConfig();
-    getClassrooms();
+    const searchParams = new URLSearchParams(location.search);
+    const offlineParam = searchParams.get('offline');
+    setIsOffline(offlineParam === 'true');
+    if (!isOffline) { 
+      checkEmailConfig();
+      getClassrooms();
+    }
 
     if (id) {
       setSelectedRoom(id);
       getSchedulings(id);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
@@ -102,23 +109,24 @@ export default function SchedulingCalendar() {
       <Scaffold>
         {renderAlerts()}
 
-        <FormControl fullWidth sx={{ m: 1 }}>
-          <Box display="flex" alignItems="center">
-            {/* Select de Salas de Aula */}
-            <FormControl fullWidth sx={{ m: 1 }}>
-              <Select displayEmpty id="room" value={selectedRoom} onChange={handleChangeClassroom} sx={{ mr: 3 }}>
-                <MenuItem value="" disabled>Selecione uma sala</MenuItem>
-                {classrooms.map((room, index) => (
-                  <MenuItem key={index} value={room.id}>
-                    Nome: {room.name} - Capacidade: {room.qtdPlace} - Bloco: {room.block}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        {!isOffline && (
+          <FormControl fullWidth sx={{ m: 1 }}>
+            <Box display="flex" alignItems="center">
+              <FormControl fullWidth sx={{ m: 1 }}>
+                <Select displayEmpty id="room" value={selectedRoom} onChange={handleChangeClassroom} sx={{ mr: 3 }}>
+                  <MenuItem value="" disabled>Selecione uma sala</MenuItem>
+                  {classrooms.map((room, index) => (
+                    <MenuItem key={index} value={room.id}>
+                      Nome: {room.name} - Capacidade: {room.qtdPlace} - Bloco: {room.block}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
-            <ShareSchedule selectedRoom={selectedRoom} />
-          </Box>
-        </FormControl>
+              <ShareSchedule selectedRoom={selectedRoom} />
+            </Box>
+          </FormControl>
+        )};
 
         <FullCalendar
           validRange={{
@@ -132,7 +140,7 @@ export default function SchedulingCalendar() {
             center: 'title',
             end: 'dayGridMonth,timeGridWeek,timeGridDay'
           }}
-          height="87%"
+          height={isOffline ? '96%' : '87%'}
           eventClick={(info) => handleOpenModal(info)}
           dateClick={(info) => handleOpenModal(info)}
           dayCellClassNames={() => 'cursor-pointer hover:bg-gray-200'}
@@ -152,6 +160,7 @@ export default function SchedulingCalendar() {
           selectedRoom={selectedRoom}
           selectedDate={selectedDate}
           selectedSchedule={selectedSchedule}
+          isOffline={isOffline}
           onClose={handleCloseModal}
         />
       )}
