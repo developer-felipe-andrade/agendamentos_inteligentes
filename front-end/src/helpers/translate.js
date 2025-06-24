@@ -11,7 +11,7 @@ export function translateProfession(role) {
 export function translateRole(role) {
     const translations = {
         ADMIN: "Administrador",
-        USER: "Usuário",
+        USER: "Aluno",
         COORDINATOR: "Coordenador"
     };
 

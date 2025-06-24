@@ -17,7 +17,7 @@ import Notifications from '../../api/requests/notifications';
 import { useEffect, useState } from 'react';
 import Alert from '../../components/UseAlert';
 import { Close, Done } from '@mui/icons-material';
-import { translateProfession, translateRole} from '../../helpers/translate';
+import { translateRole} from '../../helpers/translate';
 import Scaffold from '../../components/Scaffold';
 import emailConfig from '../../api/requests/email-config';
 
@@ -111,8 +111,7 @@ const Users = () => {
               <TableCell>Nome</TableCell>
               <TableCell>E-mail</TableCell>
               <TableCell>Telefone</TableCell>
-              <TableCell>Cargo</TableCell>
-              <TableCell>Papel dentro da faculdade</TableCell>
+              <TableCell>Perfil</TableCell>
               <TableCell>Ações</TableCell>
             </TableRow>
           </TableHead>
@@ -123,7 +122,6 @@ const Users = () => {
                 <TableCell>{row.login}</TableCell>
                 <TableCell>{row.phoneNumber}</TableCell>
                 <TableCell>{translateRole(row.role)}</TableCell>
-                <TableCell>{translateProfession(row.profession)}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => handleAprove(row.id)}

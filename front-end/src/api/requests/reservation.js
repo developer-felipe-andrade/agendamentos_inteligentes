@@ -30,7 +30,7 @@ const reservation = {
   },
 
   async findByResponsible(page = 0, size = 99999999) {
-    return api.get(`/reservations/responsible`, {
+    return api.get(`/reservations/pending`, {
       params: {
         page,
         size

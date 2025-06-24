@@ -110,7 +110,7 @@ export default function SchedulingCalendar() {
                 <MenuItem value="" disabled>Selecione uma sala</MenuItem>
                 {classrooms.map((room, index) => (
                   <MenuItem key={index} value={room.id}>
-                    Nome: {room.name} - Capacidade: {room.qtdPlace} - Bloco: {room.block} - Responsável: {room.responsible?.name ?? 'Não há responsável'}
+                    Nome: {room.name} - Capacidade: {room.qtdPlace} - Bloco: {room.block}
                   </MenuItem>
                 ))}
               </Select>

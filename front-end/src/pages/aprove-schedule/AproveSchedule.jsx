@@ -235,11 +235,11 @@ const AproveSchedule = () => {
                       <TableCell>{reservation.user.login}</TableCell>
                       <TableCell>{reservation.obs || "-"}</TableCell>
                       <TableCell>
-                        <IconButton onClick={() => handleOpenRejectDialogFromIcon(reservation)}>
-                          <CloseIcon />
-                        </IconButton>
                         <IconButton onClick={() => handleApproveFromIcon(reservation)}>
                           <Done />
+                        </IconButton>
+                        <IconButton onClick={() => handleOpenRejectDialogFromIcon(reservation)}>
+                          <CloseIcon />
                         </IconButton>
                       </TableCell>
                     </TableRow>
