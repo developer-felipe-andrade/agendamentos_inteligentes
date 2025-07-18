@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import Api from '../../api/requests/classrooms'
 import { useEffect, useState } from 'react';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import ConfirmationModal from '../../components/ConfirmationModal';
 import Scaffold from '../../components/Scaffold';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Classroom = () => {
   const [dataValues, setDataValues] = useState([]);
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
   const navigate = useNavigate();
@@ -82,8 +82,6 @@ const Classroom = () => {
       />
 
       <Scaffold>
-        {renderAlerts()}
-      
         <div className="flex justify-end mb-4">
           <Button
             variant="contained"

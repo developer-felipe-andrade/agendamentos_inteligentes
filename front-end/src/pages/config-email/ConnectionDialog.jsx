@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import emailConfig from '../../api/requests/email-config';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 
 const ConnectionDialog = ({ open, onClose }) => {
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -104,7 +104,6 @@ const ConnectionDialog = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      {renderAlerts()}
       <DialogTitle>Configurações de Conexão</DialogTitle>
       <DialogContent>
         <TextField label="Email" fullWidth margin="normal" value={email} onChange={(e) => setEmail(e.target.value)} />

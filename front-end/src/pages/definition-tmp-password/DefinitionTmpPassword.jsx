@@ -3,10 +3,10 @@ import { Button, FormControl, InputLabel, OutlinedInput, InputAdornment, IconBut
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import auth from '../../api/requests/auth';
 import PropTypes from 'prop-types';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 
 const DefinitionTmpPassword = ({ open, onClose, onSuccess, userEmail}) => {
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [newPassword, setNewPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   
@@ -44,7 +44,6 @@ const DefinitionTmpPassword = ({ open, onClose, onSuccess, userEmail}) => {
 
   return (
     <Dialog open={open} onClose={handleCloseModal}>
-      {renderAlerts()}
         <DialogTitle>
           Redefina sua senha temporária <br/>
           Sua senha é temporária e precisa ser alterada antes de continuar.

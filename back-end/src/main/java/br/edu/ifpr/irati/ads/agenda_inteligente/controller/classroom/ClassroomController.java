@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/classroom")
@@ -39,23 +38,25 @@ public class ClassroomController {
     }
 
     @GetMapping("/findAvailableClassrooms")
-    public ResponseEntity<List<ResumeClassroomResponse>> findAvailableClassrooms(
+    public ResponseEntity<List<FoundClassroomResponse>> findAvailableClassrooms(
             @RequestParam("dtStart") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dtStart,
             @RequestParam("dtEnd") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dtEnd,
             @RequestParam("qtdPlace") int qtdPlace,
             @RequestParam("isAccessible") boolean isAccessible,
             @RequestParam("idsResources") List<String> idsResources) {
 
-        List<ResumeClassroomResponse> classrooms = classroomService.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, isAccessible, idsResources);
+        List<FoundClassroomResponse> classrooms = classroomService.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, isAccessible, idsResources);
 
         return ResponseEntity.ok(classrooms);
     }
 
     @PostMapping
     public ResponseEntity<Classroom> register(@RequestBody ClassroomRequest data) {
-        classroomService.register(data);
+        if (!classroomService.register(data)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        };
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{id}")

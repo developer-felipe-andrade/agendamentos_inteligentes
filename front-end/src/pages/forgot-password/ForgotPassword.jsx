@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { TextField, Button, Container, Paper} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import auth from '../../api/requests/auth';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -47,7 +47,6 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex items-center justify-center h-screen">
-      {renderAlerts()}
       <Container maxWidth="sm" className="mt-10">
         <Paper elevation={3} className="p-6">
           <h2 className="text-2xl font-bold mb-4 text-center">Esqueceu a senha?</h2>

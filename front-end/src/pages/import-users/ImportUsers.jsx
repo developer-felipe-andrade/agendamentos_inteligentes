@@ -12,11 +12,11 @@ import {
 } from '@mui/material';
 import { GetApp as DownloadIcon, CloudUpload as UploadIcon } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import user from '../../api/requests/user';
 
 const ImportUsers = ({ open, onClose }) => {
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
 
   const [file, setFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -97,8 +97,6 @@ const ImportUsers = ({ open, onClose }) => {
   
   return (
     <Dialog open={open} onClose={onClose}>
-      {renderAlerts()}
-
       <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 2 }}>
         Importar Planilha de Usuários
       </DialogTitle>

@@ -5,7 +5,7 @@ import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pi
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useNavigate } from 'react-router-dom';
 import dayjs from "dayjs";
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import reservation from '../../api/requests/reservation';
 import user from '../../api/requests/user';
 import 'dayjs/locale/pt-br';
@@ -23,7 +23,7 @@ ScheduleDialog.propTypes = {
 export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend, isOffline }) {
   const navigate = useNavigate();
   
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [formData, setFormData] = useState({
     title: "",
     dtStart: passDataToSend?.dtStart ? dayjs(passDataToSend?.dtStart).format("YYYY-MM-DDTHH:mm") : dayjs(selectedDate).hour(new Date().getHours()).minute(new Date().getMinutes()).format("YYYY-MM-DDTHH:mm"),
@@ -147,7 +147,6 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth>
-      {renderAlerts()}
       <DialogTitle>{passDataToSend ? '' : 'Agendar'}</DialogTitle>
       <DialogContent>
         <div className="flex gap-4 pt-3">

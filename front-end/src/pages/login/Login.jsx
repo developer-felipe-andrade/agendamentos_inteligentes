@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { TextField, Button, Container, Paper, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Box } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import auth from '../../api/requests/auth';
 import Cookies from 'js-cookie';
 import logo from '../../assets/logo.png';
@@ -13,8 +13,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [openPasswordModal, setOpenPasswordModal] = useState(false);
-  
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const navigate = useNavigate();
@@ -38,11 +37,12 @@ const Login = () => {
       });
       
       addAlert('Login efetuado com sucesso!', 'success');
-
+      
       navigate('/');
     } catch (error) {
       console.log(error);
       addAlert('Erro ao acessar!', 'error');
+      return;
     }
   };
 
@@ -108,7 +108,6 @@ const Login = () => {
           }
         }}
       >
-      {renderAlerts()}
         <Container maxWidth="sm" className="mt-10">
           <Paper elevation={3} className="p-6">
             <div className='flex justify-center mb-4  '>

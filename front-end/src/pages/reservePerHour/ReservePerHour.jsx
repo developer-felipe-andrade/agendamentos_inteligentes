@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Chip, FormControlLabel, Grid } from '@mui/material';
 import { DateTimePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import dayjs from 'dayjs';
 import resource from '../../api/requests/resource';
 import classroom from '../../api/requests/classrooms';
@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 const ReservePerHour = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
   
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [resources, setResources] = useState([]);
   const [formData, setFormData] = useState({
     dtStart: dayjs().format("YYYY-MM-DDTHH:mm"),
@@ -94,7 +94,6 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
 
   return (
     <>
-      {renderAlerts()}
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <DialogTitle>Agendar Reserva</DialogTitle>
         <DialogContent>

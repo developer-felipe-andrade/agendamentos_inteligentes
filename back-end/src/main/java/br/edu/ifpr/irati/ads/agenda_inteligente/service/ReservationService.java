@@ -149,7 +149,7 @@ public class ReservationService {
         for (Reservation reservation : reservations) {
             reservation.setStatus("REJECTED");
         }
-        repository.saveAll(reservations);
+            repository.saveAll(reservations);
     }
 
     public Page<Reservation> findReservationsByDateRange(LocalDate dtStart, LocalDate dtEnd, Pageable pageable) {

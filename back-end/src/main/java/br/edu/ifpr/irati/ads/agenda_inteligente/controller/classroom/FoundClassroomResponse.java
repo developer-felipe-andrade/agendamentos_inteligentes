@@ -6,7 +6,7 @@ import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record ResumeClassroomResponse(
+public record FoundClassroomResponse(
         String id,
         String name,
         int qtdPlace,
@@ -15,8 +15,8 @@ public record ResumeClassroomResponse(
         boolean active,
         List<ResourceResponse> resources
 ) {
-    public static ResumeClassroomResponse fromEntity(Classroom classroom) {
-        return new ResumeClassroomResponse(
+    public static FoundClassroomResponse fromEntity(Classroom classroom) {
+        return new FoundClassroomResponse(
                 classroom.getId(),
                 classroom.getName(),
                 classroom.getQtdPlace(),

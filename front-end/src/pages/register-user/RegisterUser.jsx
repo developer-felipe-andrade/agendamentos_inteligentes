@@ -3,7 +3,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Button, Paper, TextField, Container, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, Select, MenuItem } from "@mui/material";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 
 const RegisterUser = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const RegisterUser = () => {
   const [phoneError, setPhoneError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
 
   const navigate = useNavigate();
 
@@ -114,7 +114,6 @@ const RegisterUser = () => {
       className="flex items-center justify-center h-screen"
       onKeyDown={(e) => e.key === 'Enter' && isFormValid && handleSubmit()}
     >
-      {renderAlerts()}
       <Container maxWidth="md" className="mt-10">
         <Paper elevation={3} className="p-6">
           <h2 className="text-2xl font-bold mb-4 text-center">Cadastrar</h2>

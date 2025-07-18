@@ -7,10 +7,10 @@ import {
 } from "@mui/material";
 import { Done, Close as CloseIcon } from "@mui/icons-material";
 import dayjs from "dayjs";
-import Alert from '../../components/UseAlert';
 import reservation from "../../api/requests/reservation";
 import Scaffold from "../../components/Scaffold";
 import emailConfig from '../../api/requests/email-config';
+import { useAlert } from "../../components/AlertContext";
 
 const AproveSchedule = () => {
   const [reservations, setReservations] = useState([]);
@@ -18,7 +18,7 @@ const AproveSchedule = () => {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [rejectionMessage, setRejectionMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [openEmailDialog, setOpenEmailDialog] = useState(false);
 
   const getPendingSchedules = async () => {
@@ -162,8 +162,6 @@ const AproveSchedule = () => {
   
   return (
     <Scaffold>
-      {renderAlerts()}
-
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h6">
           Reservas Pendentes ({Object.values(selectedReservations).flat().length} selecionado{Object.values(selectedReservations).flat().length !== 1 ? "s" : ""})

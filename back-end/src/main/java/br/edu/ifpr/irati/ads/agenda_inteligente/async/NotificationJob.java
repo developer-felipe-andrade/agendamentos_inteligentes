@@ -1,4 +1,4 @@
-package br.edu.ifpr.irati.ads.agenda_inteligente.job;
+package br.edu.ifpr.irati.ads.agenda_inteligente.async;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;

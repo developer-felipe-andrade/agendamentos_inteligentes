@@ -1,12 +1,12 @@
 import React from 'react'
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import { Button, Container, Paper, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton, } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import auth from '../../api/requests/auth';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 const ConfirmPassword = () => {
-    const { renderAlerts, addAlert } = Alert();
+    const { addAlert } = useAlert();
     const navigate = useNavigate();
     const [formData, setFormData] = React.useState({email: '', password: '', confirmPassword: ''});
     const [searchParams] = useSearchParams();
@@ -58,7 +58,6 @@ const ConfirmPassword = () => {
 
     return (
         <div className="flex items-center justify-center h-screen">
-          {renderAlerts()}
           <Container maxWidth="sm" className="mt-10">
             <Paper elevation={3} className="p-6">
               <h2 className="text-2xl font-bold mb-4 text-center">Redefinir Senha</h2>

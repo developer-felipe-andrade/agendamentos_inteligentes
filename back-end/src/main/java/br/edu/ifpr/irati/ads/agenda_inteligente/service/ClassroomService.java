@@ -2,12 +2,9 @@ package br.edu.ifpr.irati.ads.agenda_inteligente.service;
 
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomRequest;
 import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ClassroomResponse;
-import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.ResumeClassroomResponse;
-import br.edu.ifpr.irati.ads.agenda_inteligente.controller.user.UserResponse;
+import br.edu.ifpr.irati.ads.agenda_inteligente.controller.classroom.FoundClassroomResponse;
 import br.edu.ifpr.irati.ads.agenda_inteligente.dao.ClassroomRepository;
 import br.edu.ifpr.irati.ads.agenda_inteligente.model.Classroom;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.ResourceClassroom;
-import br.edu.ifpr.irati.ads.agenda_inteligente.model.User;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ClassroomService {
@@ -92,17 +87,24 @@ public class ClassroomService {
     }
 
     @Transactional
-    public void register(ClassroomRequest data) {
+    public boolean register(ClassroomRequest data) {
         Classroom classroom = new Classroom(data);
+
+        if (classroomRepository.existsByNameAndBlock(data.name().trim(), data.block().trim())) {
+            return false;
+        }
+
         Classroom classroomSaved = classroomRepository.save(classroom);
 
         for (ClassroomRequest.ResourceQuantity resourceQuantity : data.idsResources()) {
             resourceClassroomService.addResourceToClassroom(resourceQuantity.id(), classroomSaved, resourceQuantity.quantity());
         }
+
+        return true;
     }
 
-    public List<ResumeClassroomResponse> findAvailableClassrooms(LocalDateTime dtStart, LocalDateTime dtEnd, int qtdPlace,boolean isAccessible, List<String> idsResources) {
+    public List<FoundClassroomResponse> findAvailableClassrooms(LocalDateTime dtStart, LocalDateTime dtEnd, int qtdPlace, boolean isAccessible, List<String> idsResources) {
         List<Classroom> classrooms = classroomRepository.findAvailableClassrooms(dtStart, dtEnd, qtdPlace, isAccessible, idsResources);
-        return classrooms.stream().map(ResumeClassroomResponse::fromEntity).toList();
+        return classrooms.stream().map(FoundClassroomResponse::fromEntity).toList();
     }
 }

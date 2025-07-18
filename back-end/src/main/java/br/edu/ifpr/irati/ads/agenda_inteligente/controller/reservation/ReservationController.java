@@ -120,7 +120,7 @@ public class ReservationController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<Page<ReservationResponse>> findByPending(
+        public ResponseEntity<Page<ReservationResponse>> findByPending(
             @PageableDefault(sort = "dt_start") Pageable pageable) {
         String login = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByLogin(login);

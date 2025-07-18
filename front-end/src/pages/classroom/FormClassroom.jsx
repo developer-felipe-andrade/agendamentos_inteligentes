@@ -20,7 +20,7 @@ import {
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Classroom from '../../api/requests/classrooms'
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import Scaffold from "../../components/Scaffold";
 import Resource from '../../api/requests/resource';
 
@@ -33,7 +33,7 @@ const FormClassroom = () => {
       quantity: 0
     }]
   });
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const { id } = useParams();
   const [dataResource, setDataResources] = useState([]);
   const [errorQuantities, setErrorQuantities] = useState({});
@@ -176,7 +176,6 @@ const FormClassroom = () => {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Scaffold>
-        {renderAlerts()}
         <h2 className="text-2xl font-bold">Cadastrar Sala</h2>
 
         <div style={{ display: 'flex', gap: '16px', width: '100%' }}>

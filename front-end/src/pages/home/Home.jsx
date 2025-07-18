@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import user from '../../api/requests/user';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import Scaffold from '../../components/Scaffold';
 
 export default function Home() {
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function Home() {
       try {
         await user.me();
       } catch {
-        addAlert("Usuário não contectado");
+        addAlert("Usuário não contectado", "error");
         navigate('/login');
       }
     }
@@ -22,9 +22,7 @@ export default function Home() {
 
   return (
     <Scaffold>
-      <div>
-        {renderAlerts()}
-      </div>
+      <div/>
     </Scaffold>
   );
 }

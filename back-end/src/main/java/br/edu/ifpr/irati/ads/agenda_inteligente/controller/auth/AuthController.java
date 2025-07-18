@@ -56,7 +56,7 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("/recover")

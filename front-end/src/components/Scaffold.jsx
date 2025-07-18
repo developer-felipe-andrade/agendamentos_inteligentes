@@ -30,11 +30,11 @@ import auth from '../api/requests/auth';
 import user from '../api/requests/user';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import Alert from './UseAlert';
 import ReservePerHour from '../pages/reservePerHour/ReservePerHour';
 import ConnectionDialog from '../pages/config-email/ConnectionDialog';
 import ImportUsersDialog from '../pages/import-users/ImportUsers';
 import ReviewDialog from '../pages/review/ReviewDialog';
+import { useAlert } from "./AlertContext.jsx";
 
 const drawerWidth = 240;
 
@@ -46,10 +46,9 @@ export default function Scaffold({ children, appBarActions }) {
       onClick: PropTypes.func.isRequired,
     })),
   };
-
+  const { addAlert } = useAlert();
   const [open, setOpen] = React.useState(false);
   const [userContent, setUserContent] = useState({});
-  const { renderAlerts, addAlert } = Alert();
   const navigate = useNavigate();
 
   const [isReserveModalOpen, setReserveModalOpen] = useState(false);
@@ -125,7 +124,6 @@ export default function Scaffold({ children, appBarActions }) {
 
   return !isOffline && (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      { renderAlerts() }
       <AppBar position="fixed">
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>

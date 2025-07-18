@@ -40,14 +40,15 @@ function handleUnauthorized() {
 api.interceptors.response.use(
   (config) => {
     const token = Cookies.get('authToken');
-
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    const url = window.localtion.pathname;
+    if (error.response && error.response.status === 401 && url !== '/login') {
       handleUnauthorized();
     }
     return Promise.reject(error);

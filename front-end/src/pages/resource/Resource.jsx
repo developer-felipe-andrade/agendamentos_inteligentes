@@ -16,14 +16,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import resource from '../../api/requests/resource';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import { useEffect, useState } from 'react';
 import Scaffold from '../../components/Scaffold';
 import ConfirmationModal from '../../components/ConfirmationModal';
 
 const Resource = () => {
   const [dataValues, setDataValues] = useState([]);
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({ name: '', type: '' });
   const [modalOpen, setModalOpen] = useState(false);
@@ -115,8 +115,6 @@ return (
   />
 
   <Scaffold>
-    {renderAlerts()}
-
       <div className="flex justify-end mb-4">
         <Button
           variant="contained"

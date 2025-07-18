@@ -7,7 +7,7 @@ import { Box, FormControl, MenuItem, Select } from '@mui/material'
 import { useEffect, useState } from 'react'
 import Scaffold from '../../components/Scaffold'
 import classroom from '../../api/requests/classrooms'
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx";
 import reservation from '../../api/requests/reservation';
 import ScheduleDialog from './ScheduleDialog';
 import ShareSchedule from './ShareSchedule';
@@ -18,7 +18,7 @@ import { useParams } from 'react-router-dom';
 
 export default function SchedulingCalendar() {
   const { id } = useParams();
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [classrooms, setClassrooms] = useState([]);  
   const [selectedRoom, setSelectedRoom] = useState('');
   const [selectedDate, setSelectedDate] = useState(dayjs().toISOString());
@@ -107,8 +107,6 @@ export default function SchedulingCalendar() {
   return (
     <div className="h-screen w-screen overflow-hidden">
       <Scaffold>
-        {renderAlerts()}
-
         {!isOffline && (
           <FormControl fullWidth sx={{ m: 1 }}>
             <Box display="flex" alignItems="center">

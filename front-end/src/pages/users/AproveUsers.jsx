@@ -15,7 +15,7 @@ import {
 import User from '../../api/requests/user';
 import Notifications from '../../api/requests/notifications';
 import { useEffect, useState } from 'react';
-import Alert from '../../components/UseAlert';
+import { useAlert } from "../../components/AlertContext.jsx"
 import { Close, Done } from '@mui/icons-material';
 import { translateRole} from '../../helpers/translate';
 import Scaffold from '../../components/Scaffold';
@@ -23,7 +23,7 @@ import emailConfig from '../../api/requests/email-config';
 
 
 const Users = () => {
-  const { renderAlerts, addAlert } = Alert();
+  const { addAlert } = useAlert();
   const [dataValues, setDataValues] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [rejectionComment, setRejectionComment] = useState('');
@@ -103,7 +103,6 @@ const Users = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden">
-      {renderAlerts()}
       <Scaffold>
         <Table>
           <TableHead>

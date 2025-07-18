@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom, String> {
+    boolean existsByNameAndBlock(String name, String block);
     boolean existsByIdAndReservationsIsNotEmpty(String id);
 
     @Query(value = """
