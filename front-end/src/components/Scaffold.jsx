@@ -105,7 +105,6 @@ export default function Scaffold({ children, appBarActions }) {
         const { data } = await user.me();
         setUserContent(data);
 
-        // Se existirem avaliações pendentes, abre o diálogo de avaliação
         if (data.pendingReviews && data.pendingReviews.length > 0) {
           setIsReviewDialogOpen(true);
         }
@@ -113,7 +112,7 @@ export default function Scaffold({ children, appBarActions }) {
         navigate('/login');
       }
     }
-    if (!isOffline) {
+    if (!offlineParam) {
       fetchData();
     }
   }, [isOffline, navigate]);
@@ -122,30 +121,36 @@ export default function Scaffold({ children, appBarActions }) {
     setIsReviewDialogOpen(false);
   };
 
-  return !isOffline && (
+  return (
     <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
-      <AppBar position="fixed">
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Agenda Inteligente
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {/* Renderiza ícones da AppBar se forem passados via props */}
-            {appBarActions?.map(({ icon, onClick }, index) => (
-              <IconButton key={index} color="inherit" onClick={onClick}>
-                {icon}
-              </IconButton>
-            ))}
-            <IconButton disabled={!!appBarActions} edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
-              <Logout />
-            </IconButton>
-          </Box>
-        </Toolbar>
-      </AppBar>
-
+        <AppBar position="fixed">
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {!isOffline && (
+                <IconButton disabled={isOffline} edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer}>
+                  <MenuIcon />
+                </IconButton>
+            )}
+            <Typography variant="h6" noWrap>
+              Agenda Inteligente
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              {/* Renderiza ícones da AppBar se forem passados via props */}
+              {appBarActions?.map(({ icon, onClick }, index) => (
+                <IconButton key={index} color="inherit" onClick={onClick}>
+                  {icon}
+                </IconButton>
+              ))}
+              {
+                !isOffline && (
+                <IconButton disabled={!!appBarActions} edge="end" color="inherit" aria-label="logout" onClick={handleLogout}>
+                  <Logout />
+                </IconButton>
+                )
+              }
+            </Box>
+          </Toolbar>
+        </AppBar>
+        
       <Drawer
         variant="temporary"
         open={open}
@@ -181,7 +186,7 @@ export default function Scaffold({ children, appBarActions }) {
             <ListItemText primary="Reservar" />
           </ListItem>
 
-          {['ADMIN', 'WORKER'].includes(userContent.role) && 
+          {['ADMIN', 'SERVER'].includes(userContent.role) && 
             <ListItem key="approveSchedules" onClick={() => handleMenuClick('approveSchedules')}>
               <ListItemIcon>
                 <EventAvailable />

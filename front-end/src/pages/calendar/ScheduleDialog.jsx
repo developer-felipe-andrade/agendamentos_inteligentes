@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem, IconButton } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, FormControl, InputLabel, Select, MenuItem, IconButton, useMediaQuery, useTheme } from "@mui/material";
 import { LocalizationProvider, DateTimePicker, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ ScheduleDialog.propTypes = {
 
 export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedDate, selectedSchedule, passDataToSend, isOffline }) {
   const navigate = useNavigate();
+  const theme = useTheme();
   
   const { addAlert } = useAlert();
   const [formData, setFormData] = useState({
@@ -38,6 +39,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   const [timeRecurrence, setTimeRecurrence] = useState(0);
   const [userEmail, setUserEmail] = useState('');
   const [userConnected, setUserConnected] = useState({});
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleSave = async () => {
     try {
@@ -69,7 +71,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
   };
 
   const addField = () => {
-    setFields([...fields, { form: "", anticipationTime: dayjs(formData.dtStart).subtract(1, 'day')}]);
+    setFields([...fields, { form: "EMAIL", anticipationTime: dayjs(formData.dtStart).subtract(1, 'day')}]);
   };
 
   const handleClose = () => {
@@ -109,9 +111,6 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
 
   const handleDelete = async () => {
     try {
-      console.log("Excluindo agendamento:", selectedSchedule);
-
-
       await reservation.delete(selectedSchedule);
       addAlert("Agendamento excluído com sucesso!", "success");
     } catch (error) {
@@ -149,7 +148,14 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
     <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle>{passDataToSend ? '' : 'Agendar'}</DialogTitle>
       <DialogContent>
-        <div className="flex gap-4 pt-3">
+        <div  
+          className="pt-3"
+          style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: 16
+          }}
+        >
           <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
             <DateTimePicker
               required
@@ -262,7 +268,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
               Adicionar Notificação
             </Button>
             
-            <div className="grid grid-cols-2 gap-4 pt-3 mt-2">
+            <div className={isMobile ? "flex flex-col gap-2 pt-2" : "grid grid-cols-2 gap-4 pt-2"}>
               {fields.map((field, index) => (
                 <React.Fragment key={index}>
                   <div className="flex items-center gap-2">
@@ -271,7 +277,7 @@ export default function ScheduleDialog ({ open, selectedRoom, onClose, selectedD
                       required
                       label="Tempo de antecipação"
                       ampm={false}
-                      value={dayjs(formData.dtStart).subtract(1, 'day') || field.anticipationTime}
+                      value={field.anticipationTime}
                       onChange={(newValue) => {
                         const updatedFields = [...fields];
                         updatedFields[index].anticipationTime = newValue;

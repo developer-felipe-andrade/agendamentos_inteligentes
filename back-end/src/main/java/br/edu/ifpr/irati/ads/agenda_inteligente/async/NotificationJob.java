@@ -10,7 +10,7 @@ public class NotificationJob {
     @Autowired
     private NotificationService notificationService;
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void checkNotifications() {
         System.out.println("Notification Job");
         notificationService.processNotifications();

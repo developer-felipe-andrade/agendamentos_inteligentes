@@ -88,7 +88,7 @@ const RegisterUser = () => {
     }
 
     const request = {
-      name: formData.email,
+      name: formData.name,
       login: formData.email,
       password: formData.password,
       role: formData.role,

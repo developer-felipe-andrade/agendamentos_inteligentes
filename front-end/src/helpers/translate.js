@@ -1,6 +1,6 @@
 export function translateProfession(role) {
     const translations = {
-        WORKER: "Servidor",
+        SERVER: "Servidor",
         STUDENT: "Aluno",
         EXTERNAL_COMUNITY: "Comunidade externa"
     };

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, String> {
-    @Query("SELECT n FROM Notification n WHERE n.anticipationTime BETWEEN :startOfDay AND :now AND n.notified = false AND n.reservation.status = 'APPROVED'")
+    @Query("SELECT n FROM Notification n WHERE n.anticipationTime BETWEEN :startOfDay AND :now AND n.reservation.status = 'APPROVED' OR n.notified = false")
     List<Notification> findPendingApprovedNotifications(
             @Param("startOfDay") LocalDateTime startOfDay,
             @Param("now") LocalDateTime now

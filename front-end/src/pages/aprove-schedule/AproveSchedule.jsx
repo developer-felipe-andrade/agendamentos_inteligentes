@@ -195,6 +195,7 @@ const AproveSchedule = () => {
                 <TableCell>Titulo</TableCell>
                 <TableCell>Data/Hora Início</TableCell>
                 <TableCell>Data/Hora Fim</TableCell>
+                <TableCell>Nome da sala</TableCell>
                 <TableCell>Bloco</TableCell>
                 <TableCell>Nome do Solicitante</TableCell>
                 <TableCell>Email do Solicitante</TableCell>
@@ -228,6 +229,7 @@ const AproveSchedule = () => {
                       <TableCell>{reservation.title}</TableCell>
                       <TableCell>{dayjs(reservation.dtStart).format("DD/MM/YYYY HH:mm")}</TableCell>
                       <TableCell>{dayjs(reservation.dtEnd).format("DD/MM/YYYY HH:mm")}</TableCell>
+                      <TableCell>{reservation.classroom.name}</TableCell>
                       <TableCell>{reservation.classroom.block}</TableCell>
                       <TableCell>{reservation.user.name}</TableCell>
                       <TableCell>{reservation.user.login}</TableCell>

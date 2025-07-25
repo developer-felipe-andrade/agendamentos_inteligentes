@@ -49,21 +49,20 @@ public class SecurityConfiguration {
         return httpSecurity
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) ->
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/recover", "/auth/request-recover").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/health", "/reservations", "/reservations/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/classroom", "/user/release", "/email-config", "/resource", "/classroom", "/user/release", "/").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/user/pending-release", "/email-config/authenticate", "/email-config", "/user/pending-release").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/email-config", "/resource", "/user/delete", "/classroom").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/resource").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/reservations").hasAnyRole("SERVER", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/reservations/reject").hasAnyRole("SERVER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/reservations/responsible").hasAnyRole("SERVER", "ADMIN")
                         .anyRequest().authenticated()
                 )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint((request, response, authException) ->
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED)))
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

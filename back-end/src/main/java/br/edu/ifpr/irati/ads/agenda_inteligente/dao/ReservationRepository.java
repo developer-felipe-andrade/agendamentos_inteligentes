@@ -27,14 +27,19 @@ public interface ReservationRepository extends JpaRepository<Reservation, String
             nativeQuery = true)
     Page<Reservation> findByStatusAfterCurrentDate(@Param("status") String status, Pageable pageable);
 
-    @Query("SELECT r FROM Reservation r WHERE r.classroom.id = :classroomId " +
-            "AND ((r.dtStart BETWEEN :start AND :end) OR " +
-            "(r.dtEnd BETWEEN :start AND :end) OR " +
-            "(r.dtStart <= :start AND r.dtEnd >= :end))")
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.classroom.id = :classroomId " +
+            "AND r.status = 'APPROVED' " +
+            "AND ( " +
+            "     (r.dtStart BETWEEN :start AND :end) OR " +
+            "     (r.dtEnd BETWEEN :start AND :end) OR " +
+            "     (r.dtStart <= :start AND r.dtEnd >= :end) " +
+            ")")
     List<Reservation> findConflictingReservations(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end,
             @Param("classroomId") String classroomId);
+
 
     @Modifying
     @Query("DELETE FROM Reservation r WHERE r.user.id = :userId AND r.classroom.id = :classroomId AND r.dtStart >= :dtStart")

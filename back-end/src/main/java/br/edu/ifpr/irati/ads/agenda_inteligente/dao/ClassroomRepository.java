@@ -28,7 +28,8 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
             OR (r.dt_end BETWEEN :dtStart AND :dtEnd) 
             OR (:dtStart BETWEEN r.dt_start AND r.dt_end) 
             OR (:dtEnd BETWEEN r.dt_start AND r.dt_end)
-        )
+        ) 
+        AND r.status = 'APPROVED'
     )
     AND (
         :idsResources IS NULL OR EXISTS (

@@ -126,7 +126,7 @@ public class ReservationController {
         User user = userService.findByLogin(login);
         Page<ReservationResponse> responses;
 
-        if (user.getLogin().equals("admin@admin.com")) {
+        if (user.getRole().equals(UserRole.ADMIN) || user.getRole().equals(UserRole.SERVER)) {
             responses = service.findByStatus("PENDING", pageable).map(ReservationResponse::fromEntity);
         } else {
             responses = service.getReservationsByUserId(user.getId(), pageable).map(ReservationResponse::fromEntity);
@@ -154,7 +154,7 @@ public class ReservationController {
     }
 
     @PostMapping("/reject")
-    public ResponseEntity<String> rejectReservations(@Valid @RequestBody List<RejectReservationRequest> rejectionsRequest) {
+    public ResponseEntity<String> rejectReservations(@RequestBody List<RejectReservationRequest> rejectionsRequest) {
         for (RejectReservationRequest reject: rejectionsRequest) {
             emailService.sendRejectionEmail(reject.userEmail(), reject.reservationIds(), reject.message());
             service.rejectReservations(reject.reservationIds());

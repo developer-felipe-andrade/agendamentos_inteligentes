@@ -91,8 +91,11 @@ export default function SchedulingCalendar() {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const offlineParam = searchParams.get('offline');
-    setIsOffline(offlineParam === 'true');
-    if (!isOffline) { 
+
+    const offline = offlineParam === 'true';
+    setIsOffline(offline);
+
+    if (!offline) { 
       checkEmailConfig();
       getClassrooms();
     }
@@ -101,11 +104,12 @@ export default function SchedulingCalendar() {
       setSelectedRoom(id);
       getSchedulings(id);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (
     <div className="h-screen w-screen overflow-hidden">
+      <p>Offline mode? {isOffline ? 'SIM' : 'NÃO'}</p>
+
       <Scaffold>
         {!isOffline && (
           <FormControl fullWidth sx={{ m: 1 }}>
@@ -124,7 +128,7 @@ export default function SchedulingCalendar() {
               <ShareSchedule selectedRoom={selectedRoom} />
             </Box>
           </FormControl>
-        )};
+        )}
 
         <FullCalendar
           validRange={{

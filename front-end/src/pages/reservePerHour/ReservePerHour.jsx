@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Chip, FormControlLabel, Grid } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText, Chip, FormControlLabel, Grid, useMediaQuery, useTheme } from '@mui/material';
 import { DateTimePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useAlert } from "../../components/AlertContext.jsx";
@@ -11,9 +11,11 @@ import { useNavigate } from 'react-router-dom';
 
 const ReservePerHour = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
   
   const { addAlert } = useAlert();
   const [resources, setResources] = useState([]);
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [formData, setFormData] = useState({
     dtStart: dayjs().format("YYYY-MM-DDTHH:mm"),
     dtEnd: dayjs().hour(new Date().getHours()).minute(new Date().getMinutes()).add(50, "minute").format("YYYY-MM-DDTHH:mm"),
@@ -97,15 +99,31 @@ const ReservePerHour = ({ isOpen, setIsOpen }) => {
       <Dialog open={isOpen} onClose={() => setIsOpen(false)}>
         <DialogTitle>Agendar Reserva</DialogTitle>
         <DialogContent>
-          <div className="flex gap-4 pt-3">
+          <div  
+            className="pt-3"
+            style={{
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              gap: 16
+            }}
+          >
             <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
               <DateTimePicker
-                value={dayjs(formData.dtStart)} 
+                value={dayjs(formData.dtStart)}
                 label="Data"
-                onChange={(newValue) => setFormData((prev) => ({ 
-                  ...prev, 
-                  dtStart: newValue.format("YYYY-MM-DDTHH:mm") 
-                }))}
+                onChange={(newValue) => {
+                  const updatedStart = newValue.format("YYYY-MM-DDTHH:mm");
+
+                  const updatedDtEnd = dayjs(updatedStart)
+                    .add(formData.durationHours || 0, 'hour')
+                    .add(formData.durationMinutes || 0, 'minute');
+
+                  setFormData((prev) => ({
+                    ...prev,
+                    dtStart: updatedStart,
+                    dtEnd: updatedDtEnd.format("YYYY-MM-DDTHH:mm")
+                  }));
+                }}
                 renderInput={(props) => <TextField {...props} fullWidth />}
               />
             </LocalizationProvider>
